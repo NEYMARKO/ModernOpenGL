@@ -11,7 +11,7 @@ public:
 	VAO();
 
 	// Binds VBO to VAO and creates VBO attribute at (location = layout)
-	void LinkVBO(VBO& VBO, GLuint layout, char dataType);
+	void LinkVBO(VBO& VBO, GLuint layout, GLsizei stride, const GLvoid* pointer);
 	// Binds the VAO
 	void Bind();
 	// Unbinds the VAO

@@ -76,8 +76,8 @@ int main()
 	VBO VBO1(vertices, sizeof(vertices));
 	EBO EBO1(indices, sizeof(indices));
 
-	VAO1.LinkVBO(VBO1, 0, 'p');
-	VAO1.LinkVBO(VBO1, 1, 't');
+	VAO1.LinkVBO(VBO1, 0, 5 * sizeof(float), 0);
+	VAO1.LinkVBO(VBO1, 1, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	VAO1.Unbind();
 	VBO1.Unbind();
