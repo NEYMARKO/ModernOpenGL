@@ -19,6 +19,9 @@
     <Filter Include="Resource Files\Objects">
       <UniqueIdentifier>{d392c83f-69b9-4572-a1f8-614d1bba21e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Textures">
+      <UniqueIdentifier>{225aaab7-b332-42b0-b9d4-410cf6b548e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -37,6 +40,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,5 +72,13 @@
     <Text Include="..\..\..\..\Downloads\dragon.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
+    <Text Include="teddy.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="container.jpg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

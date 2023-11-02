@@ -1,5 +1,4 @@
 #pragma once
-
 #include <glad/glad.h>
 #include "VBO.h"
 
@@ -11,8 +10,8 @@ public:
 	// Constructor that generates a VAO ID
 	VAO();
 
-	// Links a VBO to the VAO using a certain layout
-	void LinkVBO(VBO& VBO, GLuint layout);
+	// Binds VBO to VAO and creates VBO attribute at (location = layout)
+	void LinkVBO(VBO& VBO, GLuint layout, char dataType);
 	// Binds the VAO
 	void Bind();
 	// Unbinds the VAO
