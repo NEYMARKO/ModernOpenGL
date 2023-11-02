@@ -18,14 +18,14 @@ const int width = 800, height = 800;
 
 GLfloat vertices[] =
 {
-	0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+	0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
 	0.5f, 0.5f, -0.5f, 1.0f, 0.0f,
 	-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-	0.5f, -0.5f, 0.5f, 0.0f, 1.0f,
-	0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-	-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-	-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+	0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+	0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+	-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
 };
 
 GLuint indices[] =
@@ -82,9 +82,6 @@ int main()
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-
-	
-
 	GLuint texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -97,7 +94,6 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	int texWidth, texHeight, numColCh;
-	//int data = NULL;
 	unsigned char* data = stbi_load("container.jpg", &texWidth, &texHeight, &numColCh, 0);
 
 	if (data)
