@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Texture.h"
 #include "Shader.h"
 #include "VAO.h"
 #include "VBO.h"
@@ -82,32 +83,7 @@ int main()
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	GLuint texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glActiveTexture(GL_TEXTURE0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	int texWidth, texHeight, numColCh;
-	unsigned char* data = stbi_load("container.jpg", &texWidth, &texHeight, &numColCh, 0);
-
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
+	Texture texture("container.jpg");
 	GLuint tex0Location = glGetUniformLocation(shaderProgram.ID, "tex0");
 	shaderProgram.Activate();
 	glUniform1i(tex0Location, 0);
@@ -130,7 +106,7 @@ int main()
 		//transform = glm::translate(transform, glm::vec3(0.0f, 0.5f, 0.0f));
 		shaderProgram.Activate();
 		glUniform1f(tex0Location, 0.5f);
-		glBindTexture(GL_TEXTURE_2D, texture);
+		texture.Bind();
 		unsigned int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
 		unsigned int viewLocation = glGetUniformLocation(shaderProgram.ID, "view");
 		unsigned int projectionLocation = glGetUniformLocation(shaderProgram.ID, "projection");
@@ -147,7 +123,7 @@ int main()
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	glDeleteTextures(1, &texture);
+	texture.Delete();
 	shaderProgram.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
