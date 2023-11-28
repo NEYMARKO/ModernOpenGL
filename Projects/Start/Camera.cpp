@@ -70,10 +70,29 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 		this->lookAtPosition = this->cameraDirection + this->cameraPos;
 	}
 }
-void Camera::Rotate(GLFWwindow* window)
+void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
 {
-	if (GLFW_MOUSE_BUTTON_RIGHT && GLFW_PRESS)
-	{
-			
-	}
+	//rotate yaw - rotation around y axis (only non changing coordinate is y)
+	//change happening in x0z
+
+	float yaw = (float)(currentX - startingX) * this->sensitivity;
+	float pitch = (float)(currentY - startingY) * this->sensitivity;
+
+	glm::vec3 direction;
+
+
+	//in x0z => z - ordinata, x - apscisa
+	//in y0z => z -apscisa, y -ordinata
+	direction.x = this->cameraDirection.x * cos(glm::radians(yaw)) - this->cameraDirection.z * sin(glm::radians(yaw));
+	direction.z = this->cameraDirection.x * sin(glm::radians(yaw)) + this->cameraDirection.z * cos(glm::radians(yaw))
+		;
+	//direction.y = sin(glm::radians(pitch));
+	direction.y = this->cameraDirection.z * sin(glm::radians(pitch)) + this->cameraDirection.y * cos(glm::radians(pitch));
+
+	this->cameraDirection = glm::normalize(this->cameraDirection + direction);
+	//this->cameraDirection = glm::normalize(this->cameraDirection + direction);
+	std::cout << "CAMERA direction: (" << this->cameraDirection.x << ", " <<
+		this->cameraDirection.y << ", " << this->cameraDirection.z << ")" << std::endl;
+	//rotate pitch rotation around x axis (only non changing coordinate is x)
+	//change happening in y0z
 }
