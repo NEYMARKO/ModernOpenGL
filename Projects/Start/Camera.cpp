@@ -77,8 +77,8 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 	int windowHeight, windowWidth;
 	glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
-	float yaw = (float)(currentX - startingX) / windowWidth * 2.5f;
-	float pitch = (float)(startingY - currentY) / windowHeight;
+	float yaw = (float)(currentX - startingX) / windowWidth * this->sensitivity;
+	float pitch = (float)(startingY - currentY) / windowHeight * this->sensitivity;
 
 	this->totalYaw += (yaw / this->sensitivity);
 	this->totalPitch += (pitch / this->sensitivity);
@@ -87,7 +87,6 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 	std::cout << "CURRENT x: " << currentX<< std::endl;*/
 	
 	//std::cout << "YAW: " << yaw << std::endl;
-	std::cout << "(STARTING X, CURRENT X): (" << startingX << ", " << currentX << ")" << std::endl;
 	//std::cout << "(STARTING Y, CURRENT Y): (" << startingY << ", " << currentY << ")" << std::endl;
 	//if (this->totalYaw > 4000)
 	//{
@@ -128,9 +127,9 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 	direction.y = 0.0f;
 	
 	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(yaw), this->cameraUp);
-	//glm::vec3 cameraRight = - glm::normalize(glm::cross(this->cameraDirection, this->cameraUp));
-	//this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(pitch), cameraRight);
-	//this->cameraUp = glm::cross(this->cameraDirection, cameraRight);
+	glm::vec3 cameraRight = glm::normalize(glm::cross(this->cameraUp, this->cameraDirection));
+	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(pitch), cameraRight);
+	this->cameraUp = glm::cross(this->cameraDirection, cameraRight);
 	//this->cameraDirection = glm::normalize(this->cameraDirection + direction);
 	//this->cameraDirection = glm::normalize(this->cameraDirection + direction);
 	/*std::cout << "CAMERA direction: (" << this->cameraDirection.x << ", " <<

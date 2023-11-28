@@ -66,7 +66,7 @@ float lastFrame = 0.0f;
 double globalMouseXPos = globalWidth / 2;
 double globalMouseYPos = globalHeight / 2;
 bool canRotate = false;
-Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 0.01f);
+Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 2.5f);
 
 
 int main()
