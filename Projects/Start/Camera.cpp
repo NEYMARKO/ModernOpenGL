@@ -90,7 +90,7 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 	float yaw = (float)(currentX - startingX) / windowWidth * this->sensitivity;
 	float pitch = (float)(startingY - currentY) / windowHeight * this->sensitivity;
 
-	std::cout << "YAW: " << yaw << std::endl;
+	//std::cout << "YAW: " << yaw << std::endl;
 	this->totalYaw += (yaw / this->sensitivity);
 	this->totalPitch += (pitch / this->sensitivity);
 
