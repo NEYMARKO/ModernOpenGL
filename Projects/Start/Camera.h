@@ -31,7 +31,7 @@ class Camera
 		
 		glm::mat4 LookAt(glm::vec3 targetPos);
 		
-		void Move(GLFWwindow* window);
+		void Move(GLFWwindow* window, float deltaTime);
 
 		// Rotation of camera is triggered with right mouse click
 		// On release of click, rotation stops

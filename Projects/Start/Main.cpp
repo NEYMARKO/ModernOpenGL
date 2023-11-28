@@ -59,7 +59,9 @@ glm::vec3 cubePositions[] = {
 	glm::vec3(-1.3f, 1.0f, -1.5f)
 };
 
-Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.1f, 1.0f);
+float deltaTime = 0.0f;	// time between current frame and last frame
+float lastFrame = 0.0f;
+Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f);
 
 
 int main()
@@ -113,6 +115,11 @@ int main()
 		globalCamera.cameraPos.y << ", " << globalCamera.cameraPos.z << ")" << std::endl;
 	while (!glfwWindowShouldClose(window))
 	{
+
+		float currentFrame = static_cast<float>(glfwGetTime());
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -133,7 +140,7 @@ int main()
 		//model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 		//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
 		view = globalCamera.LookAt(globalCamera.lookAtPosition);
-		globalCamera.Move(window);
+		globalCamera.Move(window, deltaTime);
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
 		//transform = glm::translate(transform, glm::vec3(0.0f, 0.5f, 0.0f));
 		shaderProgram.Activate();
