@@ -64,76 +64,38 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 		this->cameraPos -= cameraSpeed * glm::cross(this->cameraDirection, this->cameraUp);
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		this->cameraPos += cameraSpeed * this->cameraUp;
+	}
+	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+	{
+		this->cameraPos -= cameraSpeed * this->cameraUp;
+	}
+
 	//glm::vec3 direction = this->cameraPos - this->targetPos;
 	if (!this->focus)
 	{
 		this->lookAtPosition = this->cameraDirection + this->cameraPos;
 	}
 }
+
+//TODO: CLAMP YAW AND PITCH VALUES: YAW [-90, 90] PITCH [-45, 45]
 void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
 {
-	//rotate yaw - rotation around y axis (only non changing coordinate is y)
-	//change happening in x0z
 	int windowHeight, windowWidth;
 	glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
+	//amount which was traversed with cursor in x and y direction on screen
 	float yaw = (float)(currentX - startingX) / windowWidth * this->sensitivity;
 	float pitch = (float)(startingY - currentY) / windowHeight * this->sensitivity;
 
+	std::cout << "YAW: " << yaw << std::endl;
 	this->totalYaw += (yaw / this->sensitivity);
 	this->totalPitch += (pitch / this->sensitivity);
 
-	/*std::cout << "STARTING x: " << startingX << std::endl;
-	std::cout << "CURRENT x: " << currentX<< std::endl;*/
-	
-	//std::cout << "YAW: " << yaw << std::endl;
-	//std::cout << "(STARTING Y, CURRENT Y): (" << startingY << ", " << currentY << ")" << std::endl;
-	//if (this->totalYaw > 4000)
-	//{
-	//	//std::cout << "WIDTH/2: " << halfWidth << " TOTALYAW: " << this->totalYaw << std::endl;
-	//	//std::cout << "WIDTH/2: " << halfWidth << " TOTALYAW: " << this->totalYaw << std::endl;
-	//	yaw = halfWidth * this->sensitivity;
-	//	//std::cout << "YAW: " << yaw << std::endl;
-	//}
-	//else if (this->totalYaw < -4000)
-	//{
-	//	std::cout << "-WIDTH/2: " << halfWidth << " TOTALYAW: " << this->totalYaw << std::endl;
-	//	this->totalYaw = -halfWidth;
-	//	std::cout << "WIDTH/2: " << halfWidth << " TOTALYAW: " << this->totalYaw << std::endl;
-	//	yaw = -halfWidth * this->sensitivity;
-	//	std::cout << "YAW: " << yaw << std::endl;
-	//}
-	//if (this->totalPitch > quarterHeight)
-	//{
-	//	pitch = quarterHeight * this->sensitivity;
-	//}
-	//else if (this->totalPitch < -quarterHeight)
-	//{
-	//	pitch = -quarterHeight * this->sensitivity;
-	//}
-	glm::vec3 direction;
-
-
-	//in x0z => z - ordinata, x - apscisa
-	//in y0z => z -apscisa, y -ordinata
-	//https://www.youtube.com/watch?app=desktop&v=a59YQ4qe7mE&ab_channel=Udacity
-
-
-	direction.x = this->cameraDirection.x * cos(glm::radians(yaw)) - this->cameraDirection.z * sin(glm::radians(yaw));
-	direction.z = this->cameraDirection.x * sin(glm::radians(yaw)) + this->cameraDirection.z * cos(glm::radians(yaw))
-		;
-	//direction.y = sin(glm::radians(pitch));
-	//direction.y = this->cameraDirection.z * sin(glm::radians(pitch)) + this->cameraDirection.y * cos(glm::radians(pitch));
-	direction.y = 0.0f;
-	
 	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(yaw), this->cameraUp);
 	glm::vec3 cameraRight = glm::normalize(glm::cross(this->cameraUp, this->cameraDirection));
 	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(pitch), cameraRight);
 	this->cameraUp = glm::cross(this->cameraDirection, cameraRight);
-	//this->cameraDirection = glm::normalize(this->cameraDirection + direction);
-	//this->cameraDirection = glm::normalize(this->cameraDirection + direction);
-	/*std::cout << "CAMERA direction: (" << this->cameraDirection.x << ", " <<
-		this->cameraDirection.y << ", " << this->cameraDirection.z << ")" << std::endl;*/
-	//rotate pitch rotation around x axis (only non changing coordinate is x)
-	//change happening in y0z
 }

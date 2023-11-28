@@ -217,6 +217,7 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 	{
 		globalCamera.Rotate(window, globalMouseXPos, globalMouseYPos, xpos, ypos);
 	}
+	//std::cout << "(X, Y): (" << xpos << ", " << ypos << ")" << std::endl;
 
 }
 
