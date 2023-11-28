@@ -225,13 +225,11 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
 		canRotate = true;
-		globalMouseXPos = globalWidth / 2;
-		globalMouseYPos = globalHeight / 2;
+		glfwGetCursorPos(window, &globalMouseXPos, &globalMouseYPos);
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
 	{
-		globalMouseXPos = globalWidth / 2;
-		globalMouseYPos = globalHeight / 2;
+
 		canRotate = false;
 	}
 }
