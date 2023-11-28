@@ -18,7 +18,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-const int width = 800, height = 800;
+int globalWidth = 800, globalHeight= 800;
 
 GLfloat vertices[] =
 {
@@ -63,8 +63,8 @@ glm::vec3 cubePositions[] = {
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-double globalMouseXPos = width / 2;
-double globalMouseYPos = height / 2;
+double globalMouseXPos = globalWidth / 2;
+double globalMouseYPos = globalHeight / 2;
 bool canRotate = false;
 Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 0.01f);
 
@@ -225,19 +225,20 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
 		canRotate = true;
-		glfwGetCursorPos(window, &globalMouseXPos, &globalMouseYPos);
+		globalMouseXPos = globalWidth / 2;
+		globalMouseYPos = globalHeight / 2;
 	}
 	else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE)
 	{
-		globalMouseXPos = width / 2;
-		globalMouseYPos = height / 2;
+		globalMouseXPos = globalWidth / 2;
+		globalMouseYPos = globalHeight / 2;
 		canRotate = false;
-		std::cout << "MOUSE RELEASED" << std::endl;
 	}
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
+	glfwGetWindowSize(window, &globalWidth, &globalHeight);
 	glViewport(0, 0, width, height);
 }

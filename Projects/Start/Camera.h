@@ -23,6 +23,8 @@ class Camera
 		float sensitivity;
 		float prevYPos = 0.0f;
 		float prevXPos = 0.0f;
+		float totalYaw = 0.0f;
+		float totalPitch = 0.0f;
 		bool focus = true;
 
 		Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity);
