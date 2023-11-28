@@ -17,17 +17,23 @@ class Camera
 		glm::vec3 targetPos;
 		glm::vec3 cameraPos;
 		glm::vec3 cameraDirection;
+		glm::vec3 cameraUp;
+		glm::vec3 lookAtPosition;
 		float speed;
 		float sensitivity;
-
+		bool focus = true;
 
 		Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity);
 
 		Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 upVector);
 
+		void calculateCameraUp();
+		
 		glm::mat4 LookAt(glm::vec3 targetPos);
 		
 		void Move(GLFWwindow* window);
 
-		void Rotate();
+		// Rotation of camera is triggered with right mouse click
+		// On release of click, rotation stops
+		void Rotate(GLFWwindow* window);
 };

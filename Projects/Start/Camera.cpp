@@ -7,6 +7,8 @@ Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sens
 	this->cameraDirection = glm::normalize(targetPos - cameraPos);
 	this->speed = speed;
 	this->sensitivity = sensitivity;
+	this->lookAtPosition = targetPos;
+	calculateCameraUp();
 }
 
 Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 upVector)
@@ -17,11 +19,21 @@ Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sens
 	this->speed = speed;
 	this->sensitivity = sensitivity;
 	this->upVector = upVector;
+	this->lookAtPosition = targetPos;
+	calculateCameraUp();
 }
 
-glm::mat4 Camera::LookAt(glm::vec3 targetPos)
+void Camera::calculateCameraUp()
 {
-	glm::mat4 view = glm::lookAt(this->cameraPos, this->targetPos, this->upVector);
+	glm::vec3 upVectorNorm = glm::normalize(this->upVector);
+	glm::vec3 cameraRightNorm = glm::cross(upVectorNorm, this->cameraDirection);
+	this->cameraUp = glm::cross(this->cameraDirection, cameraRightNorm);
+}
+
+glm::mat4 Camera::LookAt(glm::vec3 lookAtPoint)
+{
+	//glm::mat4 view = glm::lookAt(this->cameraPos, this->cameraPos + this->cameraForward, this->cameraUp);
+	glm::mat4 view = glm::lookAt(this->cameraPos, lookAtPoint, this->cameraUp);
 	return view;
 }
 
@@ -29,33 +41,38 @@ void Camera::Move(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		glm::vec3 v = this->cameraPos - this->targetPos;
-		std::cout << "DIRECTION: (" << v[0] << ", " << v[1] << ", " << v[2] << ")" << std::endl;
-		std::cout << "LENGTH: " << glm::length(v) << std::endl;
-		if (glm::length(this->cameraPos - this->targetPos) >= 0.75f)
-		{
-			this->cameraPos -= this->speed * this->cameraDirection;
-		}
+		this->cameraPos += this->speed * this->cameraDirection;
+
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		this->cameraPos += this->speed * this->cameraDirection;
+		this->cameraPos -= this->speed * this->cameraDirection;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		this->cameraPos += this->speed * glm::vec3(-1.0f, 0.0f, 0.0f);
+		/*std::cout << "CAMERA position: (" << this->cameraPos.x << ", " <<
+			this->cameraPos.y << ", " << this->cameraPos.z << ")" << std::endl;
+		std::cout << "CAMERA IS LOOKING AT: (" << this->lookAtPosition.x << ", " <<
+			this->lookAtPosition.y << ", " << this->lookAtPosition.z << ")" << std::endl;*/
+		this->cameraPos += this->speed * glm::cross(this->cameraDirection, this->cameraUp);
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		this->cameraPos += this->speed * glm::vec3(1.0f, 0.0f, 0.0f);
+		this->cameraPos -= this->speed * glm::cross(this->cameraDirection, this->cameraUp);
 	}
 
-	glm::vec3 direction = this->cameraPos - this->targetPos;
-	//this->cameraDirection = this->cameraPos[0] < this->targetPos[0] ? 
-		//glm::normalize(direction) : glm::normalize(-direction);
-	this->cameraDirection = direction;
-
-
+	//glm::vec3 direction = this->cameraPos - this->targetPos;
+	if (!this->focus)
+	{
+		this->lookAtPosition = this->cameraDirection + this->cameraPos;
+	}
+}
+void Camera::Rotate(GLFWwindow* window)
+{
+	if (GLFW_MOUSE_BUTTON_RIGHT && GLFW_PRESS)
+	{
+			
+	}
 }

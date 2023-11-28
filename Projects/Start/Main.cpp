@@ -15,7 +15,7 @@
 #include "Camera.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 const int width = 800, height = 800;
 
 GLfloat vertices[] =
@@ -58,6 +58,10 @@ glm::vec3 cubePositions[] = {
 	glm::vec3(1.5f, 0.2f, -1.5f),
 	glm::vec3(-1.3f, 1.0f, -1.5f)
 };
+
+Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.1f, 1.0f);
+
+
 int main()
 {
 	glfwInit();
@@ -77,6 +81,7 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetKeyCallback(window, key_callback);
 	//Load GLAD so it configures OpenGL
 	gladLoadGL();
 	glViewport(0, 0, 800, 800);
@@ -102,12 +107,10 @@ int main()
 	glUniform1i(tex0Location, 0);
 
 
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -10.0f);
-	glm::vec3 targetPos = glm::vec3(0.0f, 0.0f, 0.0f);
-	Camera camera(cameraPos, targetPos, 0.1f, 1.0f);
-
 	glEnable(GL_DEPTH_TEST);
 
+	std::cout << "CAMERA POSITION: (" << globalCamera.cameraPos.x << ", " <<
+		globalCamera.cameraPos.y << ", " << globalCamera.cameraPos.z << ")" << std::endl;
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
@@ -129,8 +132,8 @@ int main()
 		//model = glm::translate(model, glm::vec3(3.5f, 0.0f, 0.0f));
 		//model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 		//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
-		view = camera.LookAt(targetPos);
-		camera.Move(window);
+		view = globalCamera.LookAt(globalCamera.lookAtPosition);
+		globalCamera.Move(window);
 		projection = glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
 		//transform = glm::translate(transform, glm::vec3(0.0f, 0.5f, 0.0f));
 		shaderProgram.Activate();
@@ -145,7 +148,7 @@ int main()
 
 		VAO1.Bind();
 		
-		/*for (unsigned int i = 0; i < 10; i++)
+		for (unsigned int i = 0; i < 10; i++)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, cubePositions[i]);
@@ -155,8 +158,8 @@ int main()
 			unsigned int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
 			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 			glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
-		}*/
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
+		}
+		//glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -171,6 +174,28 @@ int main()
 	// Terminate GLFW before ending the program
 	glfwTerminate();
 	return 0;
+}
+
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	switch (key)
+	{
+	case GLFW_KEY_ESCAPE:
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	case GLFW_KEY_F:
+		if (action == GLFW_PRESS)
+		{
+			globalCamera.focus = !globalCamera.focus;
+			if (!globalCamera.focus)
+				globalCamera.cameraDirection = glm::normalize(globalCamera.targetPos - globalCamera.cameraPos);
+			globalCamera.lookAtPosition = globalCamera.focus ? globalCamera.targetPos : (globalCamera.cameraPos + globalCamera.cameraDirection);
+			/*std::cout << "CAMERA POSITION: (" << globalCamera.cameraPos.x << ", " <<
+				globalCamera.cameraPos.y << ", " << globalCamera.cameraPos.z << ")" << std::endl;*/
+			/*std::cout << "CAMERA lookAtPos: (" << globalCamera.lookAtPosition.x << ", " <<
+				globalCamera.lookAtPosition.y << ", " << globalCamera.lookAtPosition.z << ")" << std::endl;*/
+			/*std::cout << "F" << std::endl;*/
+		}
+	}
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
