@@ -7,6 +7,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
+#include "Shader.h"
 
 // Camera object class
 //	- constructor takes in camera position, target position and world up vector (optional - if not defined, set to (0.0f, 1.0f, 0.0f))
@@ -21,11 +22,7 @@ class Camera
 		glm::vec3 lookAtPosition;
 		float speed;
 		float sensitivity;
-		float prevYPos = 0.0f;
-		float prevXPos = 0.0f;
-		float totalYaw = 0.0f;
-		float totalPitch = 0.0f;
-		bool focus = true;
+		bool focus = false;
 
 		Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity);
 
@@ -33,12 +30,15 @@ class Camera
 
 		void calculateCameraUp();
 		
-		glm::mat4 LookAt(glm::vec3 targetPos);
+		void ViewProjectionMatrix(glm::vec3 targetPos, Shader& shaderProgram);
 		
 		//Moves camera in direction of a 
 		void Move(GLFWwindow* window, float deltaTime);
 
-		// Rotation of camera is triggered with right mouse click
-		// On release of click, rotation stops
+		//Function for camera rotation
+		//Rotation starts after pressing right mouse and ends when mouse gets released
+		//By hovering mouse across screen (while right mouse is pressed), camera gets rotated
 		void Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY);
+
+		void Raycast();
 };

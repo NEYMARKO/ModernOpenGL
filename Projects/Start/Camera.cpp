@@ -30,11 +30,18 @@ void Camera::calculateCameraUp()
 	this->cameraUp = glm::cross(this->cameraDirection, cameraRightNorm);
 }
 
-glm::mat4 Camera::LookAt(glm::vec3 lookAtPoint)
+void Camera::ViewProjectionMatrix(glm::vec3 lookAtPoint, Shader& shaderProgram)
 {
 	//glm::mat4 view = glm::lookAt(this->cameraPos, this->cameraPos + this->cameraForward, this->cameraUp);
-	glm::mat4 view = glm::lookAt(this->cameraPos, lookAtPoint, this->cameraUp);
-	return view;
+	glm::mat4 view = glm::mat4(1.0f);
+	glm::mat4 projection = glm::mat4(1.0f);
+	
+	view = glm::lookAt(this->cameraPos, lookAtPoint, this->cameraUp);
+	projection = glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
+	unsigned int viewLocation = glGetUniformLocation(shaderProgram.ID, "view");
+	unsigned int projectionLocation = glGetUniformLocation(shaderProgram.ID, "projection");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
 void Camera::Move(GLFWwindow* window, float deltaTime)
@@ -52,10 +59,6 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		/*std::cout << "CAMERA position: (" << this->cameraPos.x << ", " <<
-			this->cameraPos.y << ", " << this->cameraPos.z << ")" << std::endl;
-		std::cout << "CAMERA IS LOOKING AT: (" << this->lookAtPosition.x << ", " <<
-			this->lookAtPosition.y << ", " << this->lookAtPosition.z << ")" << std::endl;*/
 		this->cameraPos += cameraSpeed * glm::cross(this->cameraDirection, this->cameraUp);
 	}
 
@@ -80,9 +83,10 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 	}
 }
 
-//TODO: CLAMP YAW AND PITCH VALUES: YAW [-90, 90] PITCH [-45, 45]
 void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
 {
+	//TODO: CLAMP YAW AND PITCH VALUES: YAW [-90, 90] PITCH [-45, 45]
+
 	int windowHeight, windowWidth;
 	glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
@@ -90,12 +94,9 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 	float yaw = (float)(currentX - startingX) / windowWidth * this->sensitivity;
 	float pitch = (float)(startingY - currentY) / windowHeight * this->sensitivity;
 
-	//std::cout << "YAW: " << yaw << std::endl;
-	this->totalYaw += (yaw / this->sensitivity);
-	this->totalPitch += (pitch / this->sensitivity);
-
 	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(yaw), this->cameraUp);
 	glm::vec3 cameraRight = glm::normalize(glm::cross(this->cameraUp, this->cameraDirection));
 	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(pitch), cameraRight);
+	//after applying pitch rotation, cameraUp vector gets changed
 	this->cameraUp = glm::cross(this->cameraDirection, cameraRight);
 }
