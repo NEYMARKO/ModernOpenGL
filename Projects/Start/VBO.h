@@ -1,6 +1,9 @@
 #pragma once
 #include <glad/glad.h>
+#include <iostream>
+#include <vector>
 
+struct Vertex;
 //class for vertex buffer object
 //constructor takes in:
 //		vertices - pointer to the array of data that we want to feed VBO with
@@ -8,8 +11,8 @@
 class VBO
 {
 	public:
-		GLuint id;
-		VBO(GLfloat* vertices, GLsizeiptr size);
+		GLuint ID;
+		VBO(std::vector<Vertex> vertices);
 		//Used for binding buffer which is associated to this object
 		void Bind();
 		//Used for binding buffer which is associated to this object

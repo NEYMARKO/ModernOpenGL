@@ -1,10 +1,10 @@
 #version 330 core
-in vec2 oTex;
-out vec4 FragColor;
 
-uniform sampler2D tex0;
+in vec3 ocolor;  // input variable from the vertex shader
+
+out vec4 FragColor;
 
 void main()
 {
-   FragColor = texture(tex0, oTex);
+    FragColor = vec4(ocolor, 1.0);  // Assuming ocolor is RGB, you might need to adjust if it's not.
 }

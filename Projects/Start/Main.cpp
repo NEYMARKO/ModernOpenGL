@@ -13,6 +13,7 @@
 #include "VBO.h"
 #include "EBO.h"
 #include "Camera.h"
+#include "Mesh.h"
 
 #define GLFW_HAND_CURSOR 0x00036004
 
@@ -22,19 +23,19 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 int globalWidth = 800, globalHeight= 800;
 
-GLfloat vertices[] =
+std::vector<Vertex> vertices =
 {
-	0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-	0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-	-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-	0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-	0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-	-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-	-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+	{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	{glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	{glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	{glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	{glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+	{glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)}
 };
 
-GLuint indices[] =
+std::vector<unsigned int> indices =
 {
 	0, 1, 2,  // Front face
 	2, 3, 0,
@@ -94,27 +95,16 @@ int main()
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
 	//Load GLAD so it configures OpenGL
 	gladLoadGL();
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, globalWidth, globalHeight);
 
 	Shader shaderProgram("default.vert", "default.frag");
 
-	VAO VAO1;
-	VAO1.Bind();
+	Mesh mesh(vertices, indices);
 
-	VBO VBO1(vertices, sizeof(vertices));
-	EBO EBO1(indices, sizeof(indices));
-
-	VAO1.LinkVBO(VBO1, 0, 5 * sizeof(float), 0);
-	VAO1.LinkVBO(VBO1, 1, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-
-	VAO1.Unbind();
-	VBO1.Unbind();
-	EBO1.Unbind();
-
-	Texture texture("container.jpg");
-	GLuint tex0Location = glGetUniformLocation(shaderProgram.ID, "tex0");
+	//Texture texture("container.jpg");
+	//GLuint tex0Location = glGetUniformLocation(shaderProgram.ID, "tex0");
 	shaderProgram.Activate();
-	glUniform1i(tex0Location, 0);
+	//glUniform1i(tex0Location, 0);
 
 
 	glEnable(GL_DEPTH_TEST);
@@ -134,10 +124,10 @@ int main()
 		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram);
 		globalCamera.Move(window, deltaTime);
 
-		glUniform1f(tex0Location, 0.5f);
-		texture.Bind();
+		//glUniform1f(tex0Location, 0.5f);
+		//texture.Bind();
 
-		VAO1.Bind();
+		mesh.meshVAO.Bind();
 		
 		for (unsigned int i = 0; i < 10; i++)
 		{
@@ -148,17 +138,14 @@ int main()
 				glm::vec3(1.0f, 0.3f, 0.5f));
 			unsigned int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
 			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-			glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		}
 		//glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	VAO1.Delete();
-	VBO1.Delete();
-	EBO1.Delete();
-	texture.Delete();
+	//texture.Delete();
 	shaderProgram.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);

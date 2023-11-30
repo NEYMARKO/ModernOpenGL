@@ -1,15 +1,16 @@
 #include "VBO.h"
+#include "Mesh.h"
 
-VBO::VBO(GLfloat* vertices, GLsizeiptr size)
+VBO::VBO(std::vector<Vertex> vertices)
 {
-	glGenBuffers(1, &id);
-	glBindBuffer(GL_ARRAY_BUFFER, id);
-	glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+	glGenBuffers(1, &ID);
+	glBindBuffer(GL_ARRAY_BUFFER, ID);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
 }
 
 void VBO::Bind()
 {
-	glBindBuffer(GL_ARRAY_BUFFER, id);
+	glBindBuffer(GL_ARRAY_BUFFER, ID);
 }
 
 void VBO::Unbind()
@@ -19,5 +20,5 @@ void VBO::Unbind()
 
 void VBO::Delete()
 {
-	glDeleteBuffers(1, &id);
+	glDeleteBuffers(1, &ID);
 }
