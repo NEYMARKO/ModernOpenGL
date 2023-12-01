@@ -14,6 +14,7 @@
 #include "EBO.h"
 #include "Camera.h"
 #include "Mesh.h"
+#include "Lighting.h"
 
 #define GLFW_HAND_CURSOR 0x00036004
 
@@ -98,12 +99,16 @@ int main()
 	glViewport(0, 0, globalWidth, globalHeight);
 
 	Shader shaderProgram("default.vert", "default.frag");
+	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 
-	Mesh mesh(vertices, indices);
+	Mesh cube(vertices, indices);
+	Lighting light(glm::vec3(0.0f, 5.0f, 5.0f), cube);
+
+	glm::mat4 lightModelMatrix = light.ModelMatrix();
 
 	//Texture texture("container.jpg");
 	//GLuint tex0Location = glGetUniformLocation(shaderProgram.ID, "tex0");
-	shaderProgram.Activate();
+	//shaderProgram.Activate();
 	//glUniform1i(tex0Location, 0);
 
 
@@ -117,17 +122,23 @@ int main()
 
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		shaderProgram.Activate();
-
+		
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
-		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram);
+		//lightingShaderProgram.Activate();
+
+		//light.BindVAO();
+		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
 		globalCamera.Move(window, deltaTime);
+		//
+		//unsigned int lightModelMatrixLocation = glGetUniformLocation(lightingShaderProgram.ID, "model");
+		//glUniformMatrix4fv(lightModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(lightModelMatrix));
+		////glUniform1f(tex0Location, 0.5f);
+		////texture.Bind();
+		//light.UnbindVAO();
 
-		//glUniform1f(tex0Location, 0.5f);
-		//texture.Bind();
-
-		mesh.meshVAO.Bind();
+		shaderProgram.Activate();
+		cube.meshVAO.Bind();
 		
 		for (unsigned int i = 0; i < 10; i++)
 		{
@@ -137,9 +148,17 @@ int main()
 			model = glm::rotate(model, glm::radians(angle),
 				glm::vec3(1.0f, 0.3f, 0.5f));
 			unsigned int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
+			unsigned int objectColorLocation = glGetUniformLocation(shaderProgram.ID, "objectColor");
+			unsigned int lightColorLocation = glGetUniformLocation(shaderProgram.ID, "lightColor");
+			glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
+			glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+			glUniform3fv(objectColorLocation, 1, glm::value_ptr(objectColor));
+			glUniform3fv(lightColorLocation, 1, glm::value_ptr(lightColor));
 			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		}
+
+		cube.meshVAO.Unbind();
 		//glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -206,4 +225,4 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// height will be significantly larger than specified on retina displays.
 	glfwGetWindowSize(window, &globalWidth, &globalHeight);
 	glViewport(0, 0, width, height);
-}
+} 

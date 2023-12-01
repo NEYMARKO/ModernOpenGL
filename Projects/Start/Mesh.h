@@ -15,7 +15,6 @@ struct Vertex
 	glm::vec3 color;
 };
 
-
 class Mesh
 {
 	private:
@@ -32,4 +31,6 @@ class Mesh
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 		~Mesh();
 		void Draw(Shader& shader);
+		unsigned int getVBO();
+		unsigned int getEBO();
 };

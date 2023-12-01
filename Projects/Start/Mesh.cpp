@@ -30,7 +30,7 @@ void Mesh::setupMesh()
 	this->_EBO = EBO1.ID;
 
 	meshVAO.LinkVBO(VBO1, 0, sizeof(Vertex), 0);
-	meshVAO.LinkVBO(VBO1, 1, sizeof(Vertex), (void*)(offsetof(Vertex, color)));
+	//meshVAO.LinkVBO(VBO1, 1, sizeof(Vertex), (void*)(offsetof(Vertex, color)));
 
 	//VAO1.Unbind();
 	meshVAO.Unbind();
@@ -42,4 +42,14 @@ void Mesh::setupMesh()
 void Mesh::Draw(Shader& shader)
 {
 	std::cout << "Something";
+}
+
+unsigned int Mesh::getVBO()
+{
+	return this->_VBO;
+}
+
+unsigned int Mesh::getEBO()
+{
+	return this->_EBO;
 }

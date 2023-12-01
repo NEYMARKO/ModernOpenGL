@@ -30,7 +30,7 @@ void Camera::calculateCameraUp()
 	this->cameraUp = glm::cross(this->cameraDirection, cameraRightNorm);
 }
 
-void Camera::ViewProjectionMatrix(glm::vec3 lookAtPoint, Shader& shaderProgram)
+void Camera::ViewProjectionMatrix(glm::vec3 lookAtPoint, Shader& shaderProgram, Shader& lightShaderProgram)
 {
 	//glm::mat4 view = glm::lookAt(this->cameraPos, this->cameraPos + this->cameraForward, this->cameraUp);
 	glm::mat4 view = glm::mat4(1.0f);
@@ -40,8 +40,15 @@ void Camera::ViewProjectionMatrix(glm::vec3 lookAtPoint, Shader& shaderProgram)
 	projection = glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
 	unsigned int viewLocation = glGetUniformLocation(shaderProgram.ID, "view");
 	unsigned int projectionLocation = glGetUniformLocation(shaderProgram.ID, "projection");
+	
+	unsigned int lightViewLocation = glGetUniformLocation(lightShaderProgram.ID, "view");
+	unsigned int lightProjectionLocation = glGetUniformLocation(lightShaderProgram.ID, "projection");
+	
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+
+	glUniformMatrix4fv(lightViewLocation, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(lightProjectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
 void Camera::Move(GLFWwindow* window, float deltaTime)
