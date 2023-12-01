@@ -28,5 +28,6 @@ public:
 	void InitializeShape();
 	void BindVAO();
 	void UnbindVAO();
+	void Draw();
 	glm::mat4 ModelMatrix();
 };

@@ -125,21 +125,28 @@ int main()
 		
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 
-		//lightingShaderProgram.Activate();
+		lightingShaderProgram.Activate();
 
 		//light.BindVAO();
 		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
 		globalCamera.Move(window, deltaTime);
-		//
-		//unsigned int lightModelMatrixLocation = glGetUniformLocation(lightingShaderProgram.ID, "model");
-		//glUniformMatrix4fv(lightModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(lightModelMatrix));
-		////glUniform1f(tex0Location, 0.5f);
-		////texture.Bind();
+		
+		unsigned int lightModelMatrixLocation = glGetUniformLocation(lightingShaderProgram.ID, "model");
+		glUniformMatrix4fv(lightModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(lightModelMatrix));
+		//glUniform1f(tex0Location, 0.5f);
+		//texture.Bind();
+		
+		//light.Draw();
+
+		cube.meshVAO.Bind();
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		cube.meshVAO.Unbind();
 		//light.UnbindVAO();
 
 		shaderProgram.Activate();
 		cube.meshVAO.Bind();
-		
+		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
+		globalCamera.Move(window, deltaTime);
 		for (unsigned int i = 0; i < 10; i++)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
