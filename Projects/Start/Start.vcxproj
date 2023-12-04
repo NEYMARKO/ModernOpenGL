@@ -153,6 +153,7 @@
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="EBO.h" />
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="VAO.h" />
@@ -177,7 +179,12 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\Downloads\dragon.txt" />
+    <Text Include="all.txt" />
+    <Text Include="arena.txt" />
+    <Text Include="bird.txt" />
+    <Text Include="bull.txt" />
     <Text Include="teddy.txt" />
+    <Text Include="tsd00.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg" />

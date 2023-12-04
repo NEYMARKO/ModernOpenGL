@@ -24,17 +24,30 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 int globalWidth = 800, globalHeight= 800;
 
+//std::vector<Vertex> vertices =
+//{
+//	{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+//	{glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)},
+//	{glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 1.0f)},
+//	{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+//	{glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 1.0f)},
+//	{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+//	{glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
+//	{glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)}
+//};
+
 std::vector<Vertex> vertices =
 {
-	{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	{glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	{glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	{glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	{glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-	{glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)}
+	{glm::vec3(0.5f, -0.5f, -0.5f) },
+	{glm::vec3(0.5f, 0.5f, -0.5f) },
+	{glm::vec3(-0.5f, 0.5f, -0.5f) },
+	{glm::vec3(-0.5f, -0.5f, -0.5f) },
+	{glm::vec3(0.5f, -0.5f, 0.5f) },
+	{glm::vec3(0.5f, 0.5f, 0.5f) },
+	{glm::vec3(-0.5f, 0.5f, 0.5f) },
+	{glm::vec3(-0.5f, -0.5f, 0.5f)}
 };
+
 
 std::vector<unsigned int> indices =
 {
@@ -102,6 +115,7 @@ int main()
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 
 	Mesh cube(vertices, indices);
+	Mesh all("arena.txt");
 	Lighting light(glm::vec3(0.0f, 5.0f, 5.0f), cube);
 
 	glm::mat4 lightModelMatrix = light.ModelMatrix();
@@ -145,10 +159,26 @@ int main()
 		//light.UnbindVAO();
 
 		shaderProgram.Activate();
-		cube._VAO.Bind();
+
+		//OVO TREBA RADIT PRIJE CRTANJA SVAKOG OBJEKTA JER SE VIEW I PROJECTION MATRIX NE RETURNAJU UZ POMOC FUNKCIJE
 		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
 		globalCamera.Move(window, deltaTime);
-		for (unsigned int i = 0; i < 10; i++)
+
+		model = glm::scale(model, glm::vec3(all.scalingFactor, all.scalingFactor, all.scalingFactor));
+		unsigned int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
+		unsigned int objectColorLocation = glGetUniformLocation(shaderProgram.ID, "objectColor");
+		unsigned int lightColorLocation = glGetUniformLocation(shaderProgram.ID, "lightColor");
+		glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
+		glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+		glUniform3fv(objectColorLocation, 1, glm::value_ptr(objectColor));
+		glUniform3fv(lightColorLocation, 1, glm::value_ptr(lightColor));
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+		all.Draw(shaderProgram);
+		/*cube.mVAO.Bind();
+		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
+		globalCamera.Move(window, deltaTime);
+		for (unsigned int i = 1; i < 10; i++)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, cubePositions[i]);
@@ -166,7 +196,7 @@ int main()
 			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		}
 
-		cube._VAO.Unbind();
+		cube.mVAO.Unbind();*/
 		//glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();

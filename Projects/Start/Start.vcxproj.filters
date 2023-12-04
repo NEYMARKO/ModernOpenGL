@@ -57,6 +57,9 @@
     <ClCompile Include="Lighting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MeshLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -97,12 +100,30 @@
     <ClInclude Include="Lighting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MeshLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\Downloads\dragon.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
     <Text Include="teddy.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="all.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="bird.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="bull.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="arena.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="tsd00.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
   </ItemGroup>

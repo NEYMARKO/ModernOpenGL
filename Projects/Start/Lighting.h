@@ -25,9 +25,6 @@ public:
 	Lighting(glm::vec3 position, Mesh& mesh);
 	//Uses information about lighting to position it and draw object
 	//that represents lighting source.
-	void InitializeShape();
-	void BindVAO();
-	void UnbindVAO();
 	void Draw();
 	glm::mat4 ModelMatrix();
 };

@@ -16,27 +16,34 @@
 struct Vertex
 {
 	glm::vec3 position;
-	glm::vec3 color;
 };
+//struct Vertex
+//{
+//	glm::vec3 position;
+//	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+//};
 
 class Mesh
 {
 	private:
-		VBO _VBO;
-		EBO _EBO;
+		VBO mVBO;
+		EBO mEBO;
 		void setupMesh();
 	public:
-		VAO _VAO;
+		VAO mVAO;
 
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
+		float scalingFactor;
 		//std::vector<Texture> textures;
 
+		Mesh(const char* filePath);
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 		//Deconstructor for Mesh object
 		//Deletes VAO, VBO and EBO associated with mesh
 		~Mesh();
-		//Binds EBO and draws Mesh
+		void LoadMesh(const char* filePath);
+		//Binds VAO and draws Mesh
 		void Draw(Shader& shader);
 		//Returns VBO ID
 		unsigned int getVBO();
