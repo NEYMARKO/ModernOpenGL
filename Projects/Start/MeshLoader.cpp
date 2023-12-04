@@ -8,16 +8,7 @@ MeshLoader::MeshLoader(const char* filePath, Mesh* mesh)
     if (!file.fail())
     {
         ReadFile(file, mesh);
-        std::cout << "Before normalization: (X, Y, Z): (" << mesh->vertices[0].position.x << ", " <<
-            mesh->vertices[0].position.y << ", " << mesh->vertices[0].position.z << ")" << std::endl;
         NormalizeObject(mesh);
-        std::cout << "After normalization: (X, Y, Z): (" << mesh->vertices[0].position.x << ", " <<
-            mesh->vertices[0].position.y << ", " << mesh->vertices[0].position.z << ")" << std::endl;
-
-       /* for (int i = 1; i < mesh->indices.size() - 1; i += 3)
-        {
-            std::cout << "f " << mesh->indices[i - 1] << " " << mesh->indices[i] << " " << mesh->indices[i + 1] << std::endl;
-        }*/
     }
     else
     {
@@ -31,7 +22,6 @@ void MeshLoader::ReadFile(std::ifstream& file, Mesh* mesh)
     while (std::getline(file, line))
     {
         FillVertexInfo(line, mesh);
-        //std::cout << line << std::endl;
     }
     return;
 }
@@ -42,13 +32,11 @@ void MeshLoader::FillVertexInfo(std::string line, Mesh* mesh)
     {
         line = line.substr(2, line.length());
         SplitLine(line, 'v', mesh);
-        //vertex->vertices.push_back({0.0f, 0.0f, 0.0f});
     }
     else if (line[0] == 'f')
     {
         line = line.substr(2, line.length());
         SplitLine(line, 'f', mesh);
-        //vertex->indices.push_back(1);
     }
     return;
 }
@@ -132,9 +120,4 @@ void MeshLoader::NormalizeObject(Mesh* mesh)
     float zmax = maxExtremes[2];
     float firstComparison = std::max(1 / (xmax - xmin), 1 / (ymax - ymin));
     this->scalingFactor = std::max(firstComparison, 1 / (zmax - zmin));
-
-    /*for (int i = 0; i < mesh->vertices.size(); i++)
-    {
-        mesh->vertices[i].position = mesh->vertices[i].position * scalingFactor;
-    }*/
 }

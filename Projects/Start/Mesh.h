@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "Shader.h"
 #include "VAO.h"
 #include "VBO.h"
@@ -44,7 +45,7 @@ class Mesh
 		~Mesh();
 		void LoadMesh(const char* filePath);
 		//Binds VAO and draws Mesh
-		void Draw(Shader& shader);
+		void Draw(Shader& shaderProgram);
 		//Returns VBO ID
 		unsigned int getVBO();
 		//Returns EBO ID

@@ -24,18 +24,6 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 int globalWidth = 800, globalHeight= 800;
 
-//std::vector<Vertex> vertices =
-//{
-//	{glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-//	{glm::vec3(0.5f, 0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 1.0f)},
-//	{glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 1.0f)},
-//	{glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-//	{glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 0.0f, 1.0f)},
-//	{glm::vec3(0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-//	{glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)},
-//	{glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)}
-//};
-
 std::vector<Vertex> vertices =
 {
 	{glm::vec3(0.5f, -0.5f, -0.5f) },
@@ -63,19 +51,6 @@ std::vector<unsigned int> indices =
 	7, 3, 2,
 	0, 4, 5,  // Left face
 	5, 1, 0
-};
-
-glm::vec3 cubePositions[] = {
-	glm::vec3(0.0f, 0.0f, 0.0f),
-	glm::vec3(2.0f, 5.0f, -15.0f),
-	glm::vec3(-1.5f, -2.2f, -2.5f),
-	glm::vec3(-3.8f, -2.0f, -12.3f),
-	glm::vec3(2.4f, -0.4f, -3.5f),
-	glm::vec3(-1.7f, 3.0f, -7.5f),
-	glm::vec3(1.3f, -2.0f, -2.5f),
-	glm::vec3(1.5f, 2.0f, -2.5f),
-	glm::vec3(1.5f, 0.2f, -1.5f),
-	glm::vec3(-1.3f, 1.0f, -1.5f)
 };
 
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -115,16 +90,11 @@ int main()
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 
 	Mesh cube(vertices, indices);
-	Mesh all("arena.txt");
+	Mesh dragon("dragon.txt");
+	Mesh temple("tsd00.txt");
 	Lighting light(glm::vec3(0.0f, 5.0f, 5.0f), cube);
 
 	glm::mat4 lightModelMatrix = light.ModelMatrix();
-
-	//Texture texture("container.jpg");
-	//GLuint tex0Location = glGetUniformLocation(shaderProgram.ID, "tex0");
-	//shaderProgram.Activate();
-	//glUniform1i(tex0Location, 0);
-
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -137,26 +107,17 @@ int main()
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+		glm::mat4 model = glm::mat4(1.0f); // if matrix is initialized outside of the loop, objects won't get rendered
 
 		lightingShaderProgram.Activate();
 
-		//light.BindVAO();
 		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
 		globalCamera.Move(window, deltaTime);
 		
 		unsigned int lightModelMatrixLocation = glGetUniformLocation(lightingShaderProgram.ID, "model");
 		glUniformMatrix4fv(lightModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(lightModelMatrix));
-		//glUniform1f(tex0Location, 0.5f);
-		//texture.Bind();
-		
-		//light.Draw();
 
 		light.Draw();
-		/*cube.meshVAO.Bind();
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		cube.meshVAO.Unbind();*/
-		//light.UnbindVAO();
 
 		shaderProgram.Activate();
 
@@ -164,46 +125,27 @@ int main()
 		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
 		globalCamera.Move(window, deltaTime);
 
-		model = glm::scale(model, glm::vec3(all.scalingFactor, all.scalingFactor, all.scalingFactor));
+		model = glm::scale(model, glm::vec3(dragon.scalingFactor, dragon.scalingFactor, dragon.scalingFactor));
 		unsigned int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
-		unsigned int objectColorLocation = glGetUniformLocation(shaderProgram.ID, "objectColor");
-		unsigned int lightColorLocation = glGetUniformLocation(shaderProgram.ID, "lightColor");
-		glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
-		glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-		glUniform3fv(objectColorLocation, 1, glm::value_ptr(objectColor));
-		glUniform3fv(lightColorLocation, 1, glm::value_ptr(lightColor));
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
-		all.Draw(shaderProgram);
-		/*cube.mVAO.Bind();
+		dragon.Draw(shaderProgram);
+
 		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
 		globalCamera.Move(window, deltaTime);
-		for (unsigned int i = 1; i < 10; i++)
-		{
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-			float angle = 20.0f * i;
-			model = glm::rotate(model, glm::radians(angle),
-				glm::vec3(1.0f, 0.3f, 0.5f));
-			unsigned int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
-			unsigned int objectColorLocation = glGetUniformLocation(shaderProgram.ID, "objectColor");
-			unsigned int lightColorLocation = glGetUniformLocation(shaderProgram.ID, "lightColor");
-			glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
-			glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
-			glUniform3fv(objectColorLocation, 1, glm::value_ptr(objectColor));
-			glUniform3fv(lightColorLocation, 1, glm::value_ptr(lightColor));
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		}
 
-		cube.mVAO.Unbind();*/
-		//glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
+		model = glm::translate(model, glm::vec3(1.0f, -1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(temple.scalingFactor, temple.scalingFactor, temple.scalingFactor));
+		modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+		temple.Draw(shaderProgram);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	//texture.Delete();
 	shaderProgram.Delete();
+	lightingShaderProgram.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program

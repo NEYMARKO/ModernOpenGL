@@ -36,8 +36,14 @@ void Mesh::setupMesh()
 
 }
 
-void Mesh::Draw(Shader& shader)
+void Mesh::Draw(Shader& shaderProgram)
 {
+	unsigned int objectColorLocation = glGetUniformLocation(shaderProgram.ID, "objectColor");
+	unsigned int lightColorLocation = glGetUniformLocation(shaderProgram.ID, "lightColor");
+	glm::vec3 objectColor = glm::vec3(1.0f, 0.5f, 0.31f);
+	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+	glUniform3fv(objectColorLocation, 1, glm::value_ptr(objectColor));
+	glUniform3fv(lightColorLocation, 1, glm::value_ptr(lightColor));
 	mVAO.Bind();
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	mVAO.Unbind();
