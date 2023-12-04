@@ -1,6 +1,5 @@
 #include "Mesh.h"
-#include "VBO.h"
-#include "EBO.h"
+
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 {
 	this->vertices = vertices;
@@ -10,46 +9,43 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 
 Mesh::~Mesh()
 {
-	glDeleteBuffers(1, &_VAO);
-	glDeleteBuffers(1, &_VBO);
-	glDeleteBuffers(1, &_EBO);
+	_VAO.Delete();
+	_VBO.Delete();
+	_EBO.Delete();
+	/*glDeleteBuffers(1, &_VAO.ID);
+	glDeleteBuffers(1, &_VBO.ID);
+	glDeleteBuffers(1, &_EBO.ID);*/
 	std::cout << "DELETED ALL BUFFERS" << std::endl;
 }
 
 void Mesh::setupMesh()
 {
 	//VAO VAO1;
-	meshVAO.Bind();
+	this->_VAO.Bind();
+	this->_VBO = VBO(vertices);
+	this->_EBO = EBO(indices);
 
-	VBO VBO1(vertices);
-	EBO EBO1(indices);
+	this->_VAO.LinkVBO(_VBO, 0, sizeof(Vertex), 0);
 
-	//this->_VAO = VAO1.ID;
-	this->_VAO = meshVAO.ID;
-	this->_VBO = VBO1.ID;
-	this->_EBO = EBO1.ID;
-
-	meshVAO.LinkVBO(VBO1, 0, sizeof(Vertex), 0);
-	//meshVAO.LinkVBO(VBO1, 1, sizeof(Vertex), (void*)(offsetof(Vertex, color)));
-
-	//VAO1.Unbind();
-	meshVAO.Unbind();
-	VBO1.Unbind();
-	EBO1.Unbind();
+	this->_VAO.Unbind();
+	this->_VBO.Unbind();
+	this->_EBO.Unbind();
 
 }
 
 void Mesh::Draw(Shader& shader)
 {
-	std::cout << "Something";
+	_VAO.Bind();
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	_VAO.Unbind();
 }
 
 unsigned int Mesh::getVBO()
 {
-	return this->_VBO;
+	return this->_VBO.ID;
 }
 
 unsigned int Mesh::getEBO()
 {
-	return this->_EBO;
+	return this->_EBO.ID;
 }

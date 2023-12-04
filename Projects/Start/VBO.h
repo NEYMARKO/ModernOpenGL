@@ -12,6 +12,7 @@ class VBO
 {
 	public:
 		GLuint ID;
+		VBO();
 		VBO(std::vector<Vertex> vertices);
 		//Used for binding buffer which is associated to this object
 		void Bind();

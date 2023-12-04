@@ -1,18 +1,19 @@
 #include "Mesh.h"
-#include "Lighting.h"
 #include "VAO.h"
+#include "Lighting.h"
 #include "VBO.h"
 
 Lighting::Lighting(glm::vec3 position, Mesh& mesh) : meshContainer(mesh)
 {
 	this->position = position;
-	InitializeShape();
+	this->lightVAO = mesh._VAO;
+	//InitializeShape();
 
 }
 
 void Lighting::InitializeShape()
 {
-	lightVAO.Bind();
+	/*lightVAO.Bind();
 	unsigned int VBO = this->meshContainer.getVBO();
 	unsigned int EBO = this->meshContainer.getEBO();
 	std::cout << "EBO: " << EBO << std::endl;
@@ -24,7 +25,8 @@ void Lighting::InitializeShape()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->meshContainer.indices.size() * sizeof(unsigned int), &this->meshContainer.indices[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	lightVAO.Unbind();
+	lightVAO.Unbind();*/
+	std::cout << "Nothing should be happening here" << std::endl;
 }
 
 void Lighting::BindVAO()
@@ -39,7 +41,11 @@ void Lighting::UnbindVAO()
 
 void Lighting::Draw()
 {
+	BindVAO();
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->meshContainer.getEBO());
 	glDrawElements(GL_TRIANGLES, this->meshContainer.indices.size(), GL_UNSIGNED_INT, 0);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	UnbindVAO();
 }
 glm::mat4 Lighting::ModelMatrix()
 {

@@ -138,13 +138,14 @@ int main()
 		
 		//light.Draw();
 
-		cube.meshVAO.Bind();
+		light.Draw();
+		/*cube.meshVAO.Bind();
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		cube.meshVAO.Unbind();
+		cube.meshVAO.Unbind();*/
 		//light.UnbindVAO();
 
 		shaderProgram.Activate();
-		cube.meshVAO.Bind();
+		cube._VAO.Bind();
 		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
 		globalCamera.Move(window, deltaTime);
 		for (unsigned int i = 0; i < 10; i++)
@@ -165,7 +166,7 @@ int main()
 			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		}
 
-		cube.meshVAO.Unbind();
+		cube._VAO.Unbind();
 		//glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(GLuint), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();

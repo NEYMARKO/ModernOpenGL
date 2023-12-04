@@ -7,8 +7,12 @@
 #include <glm/glm.hpp>
 #include "Shader.h"
 #include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
 
 //[pos.x, pos.y, pos.z, normal.x, normal.y, normal.z, textx, texy]
+
+
 struct Vertex
 {
 	glm::vec3 position;
@@ -18,19 +22,24 @@ struct Vertex
 class Mesh
 {
 	private:
-		//since VAO, VBO and EBO headers are included, VAO is reffering to
-		//object, so variables shouldn't be named same as objects
-		unsigned int _VAO, _VBO, _EBO;
+		VBO _VBO;
+		EBO _EBO;
 		void setupMesh();
 	public:
-		VAO meshVAO;
+		VAO _VAO;
+
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 		//std::vector<Texture> textures;
 
 		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
+		//Deconstructor for Mesh object
+		//Deletes VAO, VBO and EBO associated with mesh
 		~Mesh();
+		//Binds EBO and draws Mesh
 		void Draw(Shader& shader);
+		//Returns VBO ID
 		unsigned int getVBO();
+		//Returns EBO ID
 		unsigned int getEBO();
 };
