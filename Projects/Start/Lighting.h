@@ -25,6 +25,6 @@ public:
 	Lighting(glm::vec3 position, Mesh& mesh);
 	//Uses information about lighting to position it and draw object
 	//that represents lighting source.
-	void Draw();
+	void Draw(Shader& shader, Camera& camera);
 	glm::mat4 ModelMatrix();
 };

@@ -30,7 +30,7 @@ class Camera
 
 		void calculateCameraUp();
 		
-		void ViewProjectionMatrix(glm::vec3 targetPos, Shader& shaderProgram, Shader& lightShaderProgram);
+		void ViewProjectionMatrix(glm::vec3 targetPos, Shader& shaderProgram);
 		
 		//Moves camera in direction of a 
 		void Move(GLFWwindow* window, float deltaTime);

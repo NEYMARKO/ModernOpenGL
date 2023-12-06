@@ -2,16 +2,11 @@
 #include <vector>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <stb/stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Texture.h"
 #include "Shader.h"
-#include "VAO.h"
-#include "VBO.h"
-#include "EBO.h"
 #include "Camera.h"
 #include "Mesh.h"
 #include "Lighting.h"
@@ -23,35 +18,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 int globalWidth = 800, globalHeight= 800;
-
-std::vector<Vertex> vertices =
-{
-	{glm::vec3(0.5f, -0.5f, -0.5f) },
-	{glm::vec3(0.5f, 0.5f, -0.5f) },
-	{glm::vec3(-0.5f, 0.5f, -0.5f) },
-	{glm::vec3(-0.5f, -0.5f, -0.5f) },
-	{glm::vec3(0.5f, -0.5f, 0.5f) },
-	{glm::vec3(0.5f, 0.5f, 0.5f) },
-	{glm::vec3(-0.5f, 0.5f, 0.5f) },
-	{glm::vec3(-0.5f, -0.5f, 0.5f)}
-};
-
-
-std::vector<unsigned int> indices =
-{
-	0, 1, 2,  // Front face
-	2, 3, 0,
-	4, 5, 6,  // Back face
-	6, 7, 4,
-	0, 3, 7,  // Top face
-	7, 4, 0,
-	1, 2, 6,  // Bottom face
-	6, 5, 1,
-	2, 6, 7,  // Right face
-	7, 3, 2,
-	0, 4, 5,  // Left face
-	5, 1, 0
-};
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
@@ -89,9 +55,12 @@ int main()
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 
-	Mesh cube(vertices, indices);
+	Mesh cube("kocka.txt");
 	Mesh dragon("dragon.txt");
 	Mesh temple("tsd00.txt");
+	Mesh bull("bull.txt");
+	Mesh teddy("teddy.txt");
+
 	Lighting light(glm::vec3(0.0f, 5.0f, 5.0f), cube);
 
 	glm::mat4 lightModelMatrix = light.ModelMatrix();
@@ -106,40 +75,22 @@ int main()
 
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		glm::mat4 model = glm::mat4(1.0f); // if matrix is initialized outside of the loop, objects won't get rendered
 
 		lightingShaderProgram.Activate();
 
-		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
-		globalCamera.Move(window, deltaTime);
-		
-		unsigned int lightModelMatrixLocation = glGetUniformLocation(lightingShaderProgram.ID, "model");
-		glUniformMatrix4fv(lightModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(lightModelMatrix));
-
-		light.Draw();
+		light.Draw(lightingShaderProgram, globalCamera);
 
 		shaderProgram.Activate();
 
-		//OVO TREBA RADIT PRIJE CRTANJA SVAKOG OBJEKTA JER SE VIEW I PROJECTION MATRIX NE RETURNAJU UZ POMOC FUNKCIJE
-		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
+		dragon.Draw(shaderProgram, globalCamera, glm::vec3(0.0f, 0.0f, 0.0f));
+
+		temple.Draw(shaderProgram, globalCamera, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		bull.Draw(shaderProgram, globalCamera, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		teddy.Draw(shaderProgram, globalCamera, glm::vec3(0.0f, -1.0f, 0.0f));
 		globalCamera.Move(window, deltaTime);
 
-		model = glm::scale(model, glm::vec3(dragon.scalingFactor, dragon.scalingFactor, dragon.scalingFactor));
-		unsigned int modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-		dragon.Draw(shaderProgram);
-
-		globalCamera.ViewProjectionMatrix(globalCamera.lookAtPosition, shaderProgram, lightingShaderProgram);
-		globalCamera.Move(window, deltaTime);
-
-		model = glm::translate(model, glm::vec3(1.0f, -1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(temple.scalingFactor, temple.scalingFactor, temple.scalingFactor));
-		modelLocation = glGetUniformLocation(shaderProgram.ID, "model");
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-		temple.Draw(shaderProgram);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

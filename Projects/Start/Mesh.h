@@ -5,11 +5,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Shader.h"
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+#include "Camera.h"
 
 //[pos.x, pos.y, pos.z, normal.x, normal.y, normal.z, textx, texy]
 
@@ -39,15 +41,9 @@ class Mesh
 		//std::vector<Texture> textures;
 
 		Mesh(const char* filePath);
-		Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices);
 		//Deconstructor for Mesh object
 		//Deletes VAO, VBO and EBO associated with mesh
 		~Mesh();
-		void LoadMesh(const char* filePath);
 		//Binds VAO and draws Mesh
-		void Draw(Shader& shaderProgram);
-		//Returns VBO ID
-		unsigned int getVBO();
-		//Returns EBO ID
-		unsigned int getEBO();
+		void Draw(Shader& shaderProgram, Camera& camera, glm::vec3 position);
 };

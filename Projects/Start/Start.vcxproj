@@ -183,6 +183,7 @@
     <Text Include="arena.txt" />
     <Text Include="bird.txt" />
     <Text Include="bull.txt" />
+    <Text Include="kocka.txt" />
     <Text Include="teddy.txt" />
     <Text Include="tsd00.txt" />
   </ItemGroup>

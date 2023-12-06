@@ -126,6 +126,9 @@
     <Text Include="tsd00.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
+    <Text Include="kocka.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">

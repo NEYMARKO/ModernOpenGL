@@ -9,8 +9,14 @@ Lighting::Lighting(glm::vec3 position, Mesh& mesh) : meshContainer(mesh)
 	this->lightVAO = mesh.mVAO;
 }
 
-void Lighting::Draw()
+void Lighting::Draw(Shader& shaderProgram, Camera& camera)
 {
+	//meshContainer.Draw(shaderProgram, camera, this->position);
+	glm::mat4 lightModelMatrix = ModelMatrix();
+	camera.ViewProjectionMatrix(camera.lookAtPosition, shaderProgram);
+	unsigned int lightModelMatrixLocation = glGetUniformLocation(shaderProgram.ID, "model");
+	glUniformMatrix4fv(lightModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(lightModelMatrix));
+
 	lightVAO.Bind();
 	glDrawElements(GL_TRIANGLES, this->meshContainer.indices.size(), GL_UNSIGNED_INT, 0);
 	lightVAO.Unbind();
