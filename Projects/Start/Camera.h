@@ -14,7 +14,6 @@
 class Camera
 {
 	public:
-		glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 		glm::vec3 targetPos;
 		glm::vec3 cameraPos;
 		glm::vec3 cameraDirection;
@@ -28,11 +27,13 @@ class Camera
 
 		Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 upVector);
 
-		void calculateCameraUp();
+		//Calculates cameraUp vector
+		void calculateCameraUp(glm::vec3 upVector);
 		
+		//Initializes view and projection matrices and sends them to shader as uniforms
 		void ViewProjectionMatrix(glm::vec3 targetPos, Shader& shaderProgram);
 		
-		//Moves camera in direction of a 
+		//Moves camera in all 4 directions and up/down
 		void Move(GLFWwindow* window, float deltaTime);
 
 		//Function for camera rotation

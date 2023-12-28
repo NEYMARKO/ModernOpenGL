@@ -13,18 +13,15 @@ class Lighting
 public:
 	glm::vec3 position;
 	glm::vec3 lightColor;
-	float ambientStrength;
 	float specularStrength;
 	//since VAO has default constructor, lightVAO is already
 	//initialized here. VERTEX_ARRAY_BUFFER has been generated
 	VAO lightVAO;
 	Mesh meshContainer;
 
-	//Assigns position and mesh to the lighting
-	//If mesh is not defined, cube is used as default
-	Lighting(glm::vec3 position, Mesh& mesh);
-	//Uses information about lighting to position it and draw object
-	//that represents lighting source.
+	//Initializes object to "mesh" and assigns it color "lightColor"
+	Lighting(Mesh& mesh, glm::vec3 lightColor);
+	//Calculates MVP matrices, assigns uniforms and draws mesh that represents source of light
+	//Uses light shader program
 	void Draw(Shader& shader, Camera& camera);
-	glm::mat4 ModelMatrix();
 };

@@ -8,7 +8,8 @@ Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sens
 	this->speed = speed;
 	this->sensitivity = sensitivity;
 	this->lookAtPosition = targetPos;
-	calculateCameraUp();
+	glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
+	calculateCameraUp(upVector);
 }
 
 Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 upVector)
@@ -18,16 +19,15 @@ Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sens
 	this->cameraDirection = glm::normalize(targetPos - cameraPos);
 	this->speed = speed;
 	this->sensitivity = sensitivity;
-	this->upVector = upVector;
 	this->lookAtPosition = targetPos;
-	calculateCameraUp();
+	calculateCameraUp(upVector);
 }
 
-void Camera::calculateCameraUp()
+void Camera::calculateCameraUp(glm::vec3 upVector)
 {
-	glm::vec3 upVectorNorm = glm::normalize(this->upVector);
-	glm::vec3 cameraRightNorm = glm::cross(upVectorNorm, this->cameraDirection);
-	this->cameraUp = glm::cross(this->cameraDirection, cameraRightNorm);
+	glm::vec3 upVectorNorm = glm::normalize(upVector);
+	glm::vec3 cameraRightNorm = glm::cross(this->cameraDirection, upVectorNorm);
+	this->cameraUp = glm::cross(cameraRightNorm, this->cameraDirection);
 }
 
 void Camera::ViewProjectionMatrix(glm::vec3 lookAtPoint, Shader& shaderProgram)
@@ -47,27 +47,35 @@ void Camera::ViewProjectionMatrix(glm::vec3 lookAtPoint, Shader& shaderProgram)
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
+//Good orientation 
+//Camera is converging to negative x when Right key is pressed because camera is positioned behind the origin of the world
+//Draw (0, 0, 0) and your camera at (0, 0, 5) and (0, 0, -5) and check cameraUp and cameraRight for those cases - everything works fine and makes sense
+
 void Camera::Move(GLFWwindow* window, float deltaTime)
 {
 	float cameraSpeed = this->speed * deltaTime;
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
 		this->cameraPos += cameraSpeed * this->cameraDirection;
+		//std::cout << this->cameraPos.x << " " << this->cameraPos.y << " " << this->cameraPos.z << std::endl;
 
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
 		this->cameraPos -= cameraSpeed * this->cameraDirection;
+		//std::cout << this->cameraPos.x << " " << this->cameraPos.y << " " << this->cameraPos.z << std::endl;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
 		this->cameraPos += cameraSpeed * glm::cross(this->cameraDirection, this->cameraUp);
+		//std::cout << this->cameraPos.x << " " << this->cameraPos.y << " " << this->cameraPos.z << std::endl;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
 		this->cameraPos -= cameraSpeed * glm::cross(this->cameraDirection, this->cameraUp);
+		//std::cout << this->cameraPos.x << " " << this->cameraPos.y << " " << this->cameraPos.z << std::endl;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
@@ -78,6 +86,7 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 	{
 		this->cameraPos -= cameraSpeed * this->cameraUp;
 	}
+	
 
 	//glm::vec3 direction = this->cameraPos - this->targetPos;
 	if (!this->focus)

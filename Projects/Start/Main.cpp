@@ -17,8 +17,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-int globalWidth = 800, globalHeight= 800;
 
+int globalWidth = 800, globalHeight= 800;
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 double globalMouseXPos = globalWidth / 2;
@@ -55,15 +55,20 @@ int main()
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 
-	Mesh cube("kocka.txt");
-	Mesh dragon("dragon.txt");
-	Mesh temple("tsd00.txt");
-	Mesh bull("bull.txt");
-	Mesh teddy("teddy.txt");
+	Mesh lightBulb("lightBulb.txt", glm::vec3(-4.0f, 2.0f, 1.0f));
+	Mesh dragon("dragonSmooth.txt", glm::vec3(0.0f, 0.0f, 0.0f));
+	Mesh temple("templeFlat.txt", glm::vec3(1.0f, 1.0f, 0.0f));
+	Mesh frog("frogSmooth.txt", glm::vec3(0.0f, 1.0f, 2.0f));
+	Mesh teddy("teddyFlat.txt", glm::vec3(0.0f, -2.0f, 2.0f));
 
-	Lighting light(glm::vec3(0.0f, 5.0f, 5.0f), cube);
+	/*Mesh cube("cubeFlat.txt", glm::vec3(0.0f, -1.0f, 0.0f));
 
-	glm::mat4 lightModelMatrix = light.ModelMatrix();
+	cube.Print();*/
+	Lighting light(lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
+
+	glm::mat4 lightModelMatrix;
+
+	lightModelMatrix = glm::translate(lightModelMatrix, light.position);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -82,13 +87,15 @@ int main()
 
 		shaderProgram.Activate();
 
-		dragon.Draw(shaderProgram, globalCamera, glm::vec3(0.0f, 0.0f, 0.0f));
+		dragon.Draw(shaderProgram, globalCamera, light);
 
-		temple.Draw(shaderProgram, globalCamera, glm::vec3(1.0f, 0.0f, 0.0f));
+		temple.Draw(shaderProgram, globalCamera, light);
+		temple.Draw(shaderProgram, globalCamera, light);
+		temple.Draw(shaderProgram, globalCamera, light);
 
-		bull.Draw(shaderProgram, globalCamera, glm::vec3(0.0f, 1.0f, 0.0f));
+		frog.Draw(shaderProgram, globalCamera, light);
 
-		teddy.Draw(shaderProgram, globalCamera, glm::vec3(0.0f, -1.0f, 0.0f));
+		teddy.Draw(shaderProgram, globalCamera, light);
 		globalCamera.Move(window, deltaTime);
 
 		glfwSwapBuffers(window);

@@ -7,46 +7,38 @@ MeshLoader::MeshLoader(const char* filePath, Mesh* mesh)
     file.open(filePath);
     if (!file.fail())
     {
-        ReadFile(file, mesh);
+        std::vector<glm::vec3> normalVectors;
+        ReadFile(file, mesh, normalVectors);
         NormalizeObject(mesh);
     }
     else
     {
         std::cout << "There was a problem with opening the file";
     }
+    file.close();
 }
 
-void MeshLoader::ReadFile(std::ifstream& file, Mesh* mesh)
+void MeshLoader::ReadFile(std::ifstream& file, Mesh* mesh, std::vector<glm::vec3>& normalVectors)
 {
     std::string line;
     while (std::getline(file, line))
     {
-        FillVertexInfo(line, mesh);
+        SplitLine(line, mesh, normalVectors);
     }
     return;
 }
 
-void MeshLoader::FillVertexInfo(std::string line, Mesh* mesh)
-{
-    if (line[0] == 'v')
-    {
-        line = line.substr(2, line.length());
-        SplitLine(line, 'v', mesh);
-    }
-    else if (line[0] == 'f')
-    {
-        line = line.substr(2, line.length());
-        SplitLine(line, 'f', mesh);
-    }
-    return;
-}
 
-void MeshLoader::SplitLine(std::string line, char state, Mesh* mesh)
+void MeshLoader::SplitLine(std::string line, Mesh* mesh, std::vector<glm::vec3>& normalVectors)
 {
+    std::string state = line.substr(0, 2);
+    if (state == "vn") line = line.substr(3, line.length());
+    else line = line.substr(2, line.length());
+
     std::stringstream lineStream(line);
     std::string word;
 
-    if (state == 'v')
+    if (state == "v " || state == "vn")
     {
         Vertex v;
         glm::vec3 vec3(1.0f, 1.0f, 1.0f);
@@ -58,33 +50,33 @@ void MeshLoader::SplitLine(std::string line, char state, Mesh* mesh)
             {
             case 0:
                 vec3.x = coordinate;
-                if (coordinate < minExtremes[0])
+                if (state == "v " && coordinate < minExtremes[0])
                 {
                     minExtremes[0] = coordinate;
                 }
-                else if (coordinate > maxExtremes[0])
+                else if (state == "v " && coordinate > maxExtremes[0])
                 {
                     maxExtremes[0] = coordinate;
                 }
                 break;
             case 1:
                 vec3.y = coordinate;
-                if (coordinate < minExtremes[1])
+                if (state == "v " && coordinate < minExtremes[1])
                 {
                     minExtremes[1] = coordinate;
                 }
-                else if (coordinate > maxExtremes[1])
+                else if (state == "v " && coordinate > maxExtremes[1])
                 {
                     maxExtremes[1] = coordinate;
                 }
                 break;
             case 2:
                 vec3.z = coordinate;
-                if (coordinate < minExtremes[2])
+                if (state == "v " && coordinate < minExtremes[2])
                 {
                     minExtremes[2] = coordinate;
                 }
-                else if (coordinate > maxExtremes[2])
+                else if (state == "v " && coordinate > maxExtremes[2])
                 {
                     maxExtremes[2] = coordinate;
                 }
@@ -94,15 +86,34 @@ void MeshLoader::SplitLine(std::string line, char state, Mesh* mesh)
             }
             pos++;
         }
-        v.position = vec3;
-        mesh->vertices.push_back(v);
+        if (state == "v ")
+        {
+            v.position = vec3;
+            mesh->vertices.push_back(v);
+        }
+        else
+        {
+            normalVectors.push_back(vec3);
+        }
         return;
     }
-    else if (state == 'f')
+    else if (state == "f ")
     {
         while (std::getline(lineStream, word, ' '))
         {
-            unsigned int index = std::stoul(word) - 1;
+            size_t delimiterPos = word.find("//");
+            std::string indexString = word.substr(0, delimiterPos);
+            std::string normalIndexString = word.substr(delimiterPos + 2, word.length());
+
+            //std::cout << "INDEX STRING: " << indexString << "NORMAL INDEX: " << normalIndexString << std::endl;
+            // std::cout << "WORD: " << word << std::endl;
+            // std::cout << "Index: " << indexString << std::endl;
+            // std::cout << "Normal index: " << normalIndexString << std::endl;
+            // std::cout << std::endl;
+
+            unsigned int index = std::stoul(indexString) - 1;
+            unsigned int normalPos = std::stoul(normalIndexString) - 1;
+            mesh->vertices[index].normal = normalVectors[normalPos];
             mesh->indices.push_back(index);
         }
         return;
@@ -120,4 +131,9 @@ void MeshLoader::NormalizeObject(Mesh* mesh)
     float zmax = maxExtremes[2];
     float firstComparison = std::max(1 / (xmax - xmin), 1 / (ymax - ymin));
     this->scalingFactor = std::max(firstComparison, 1 / (zmax - zmin));
+}
+
+MeshLoader::~MeshLoader()
+{
+    std::cout << "Deleted loader" << std::endl;
 }
