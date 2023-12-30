@@ -19,7 +19,7 @@ class MeshLoader
 		float scalingFactor;
 		MeshLoader(const char* filePath, Mesh* mesh);
 		void ReadFile(std::ifstream& file, Mesh* mesh, std::vector<glm::vec3>& normalVectors);
-		void SplitLine(std::string line, Mesh* mesh, std::vector<glm::vec3>& normalVectors);
+		void SplitLine(std::string& line, Mesh* mesh, std::vector<glm::vec3>& normalVectors);
 		void NormalizeObject(Mesh* mesh);
 		~MeshLoader();
 };

@@ -40,11 +40,8 @@ void Camera::ViewProjectionMatrix(glm::vec3 lookAtPoint, Shader& shaderProgram)
 	//width/height instead of harcoded values (800/800)
 	projection = glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
 
-	unsigned int viewLocation = glGetUniformLocation(shaderProgram.ID, "view");
-	unsigned int projectionLocation = glGetUniformLocation(shaderProgram.ID, "projection");
-	
-	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
-	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+	shaderProgram.SetMat4("view", view);
+	shaderProgram.SetMat4("projection", projection);
 }
 
 //Good orientation 

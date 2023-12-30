@@ -14,15 +14,11 @@ void Lighting::Draw(Shader& shaderProgram, Camera& camera)
 {
 	glm::mat4 model;
 	model = glm::translate(model, this->position);
-	model = glm::rotate(model, glm::radians(-90.f), glm::vec3(1.0f, 0.0f, 0.0f));
 	
 	camera.ViewProjectionMatrix(camera.lookAtPosition, shaderProgram);
-	
-	unsigned int lightModelMatrixLocation = glGetUniformLocation(shaderProgram.ID, "model");
-	unsigned int lightColorLocation = glGetUniformLocation(shaderProgram.ID, "lightColor");
 
-	glUniformMatrix4fv(lightModelMatrixLocation, 1, GL_FALSE, glm::value_ptr(model));
-	glUniform3fv(lightColorLocation, 1, glm::value_ptr(this->lightColor));
+	shaderProgram.SetMat4("model", model);
+	shaderProgram.SetVec3("lightColor", this->lightColor);
 
 	lightVAO.Bind();
 	glDrawElements(GL_TRIANGLES, this->meshContainer.indices.size(), GL_UNSIGNED_INT, 0);

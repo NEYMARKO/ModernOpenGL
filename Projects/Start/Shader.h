@@ -5,6 +5,8 @@
 #include <sstream>
 #include <iostream>
 #include <cerrno>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 std::string get_file_contents(const char* filename);
 
@@ -23,4 +25,14 @@ public:
 	void Activate();
 	// Deletes the Shader Program
 	void Delete();
+
+	void SetVec2(const std::string& name, const glm::vec2& value);
+
+	void SetVec3(const std::string& name, const glm::vec3& value);
+
+	void SetVec4(const std::string& name, const glm::vec4& value);
+
+	void SetMat3(const std::string& name, const glm::mat3& value);
+
+	void SetMat4(const std::string& name, const glm::mat4& value);
 };

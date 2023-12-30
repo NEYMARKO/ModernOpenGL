@@ -15,7 +15,6 @@ MeshLoader::MeshLoader(const char* filePath, Mesh* mesh)
     {
         std::cout << "There was a problem with opening the file";
     }
-    file.close();
 }
 
 void MeshLoader::ReadFile(std::ifstream& file, Mesh* mesh, std::vector<glm::vec3>& normalVectors)
@@ -29,7 +28,7 @@ void MeshLoader::ReadFile(std::ifstream& file, Mesh* mesh, std::vector<glm::vec3
 }
 
 
-void MeshLoader::SplitLine(std::string line, Mesh* mesh, std::vector<glm::vec3>& normalVectors)
+void MeshLoader::SplitLine(std::string& line, Mesh* mesh, std::vector<glm::vec3>& normalVectors)
 {
     std::string state = line.substr(0, 2);
     if (state == "vn") line = line.substr(3, line.length());
@@ -131,6 +130,8 @@ void MeshLoader::NormalizeObject(Mesh* mesh)
     float zmax = maxExtremes[2];
     float firstComparison = std::max(1 / (xmax - xmin), 1 / (ymax - ymin));
     this->scalingFactor = std::max(firstComparison, 1 / (zmax - zmin));
+    minExtremes *= scalingFactor;
+    maxExtremes *= scalingFactor;
 }
 
 MeshLoader::~MeshLoader()

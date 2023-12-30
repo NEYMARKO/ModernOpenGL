@@ -55,7 +55,7 @@ int main()
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 
-	Mesh lightBulb("lightBulb.txt", glm::vec3(-4.0f, 2.0f, 1.0f));
+	Mesh lightBulb("lightBulb.txt", glm::vec3(0.0f, 5.0f, 1.0f));
 	Mesh dragon("dragonSmooth.txt", glm::vec3(0.0f, 0.0f, 0.0f));
 	Mesh temple("templeFlat.txt", glm::vec3(1.0f, 1.0f, 0.0f));
 	Mesh frog("frogSmooth.txt", glm::vec3(0.0f, 1.0f, 2.0f));

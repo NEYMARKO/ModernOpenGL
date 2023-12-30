@@ -13,9 +13,6 @@
 #include "EBO.h"
 #include "Camera.h"
 
-//[pos.x, pos.y, pos.z, normal.x, normal.y, normal.z, textx, texy]
-
-
 class Lighting;
 
 struct Vertex
@@ -23,11 +20,6 @@ struct Vertex
 	glm::vec3 position;
 	glm::vec3 normal;
 };
-//struct Vertex
-//{
-//	glm::vec3 position;
-//	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
-//};
 
 class Mesh
 {
@@ -51,5 +43,4 @@ class Mesh
 		~Mesh();
 		//Binds VAO, calculates MVP matrices, assigns uniforms and draws object using EBO info
 		void Draw(Shader& shaderProgram, Camera& camera, Lighting& lighting);
-		void Print();
 };
