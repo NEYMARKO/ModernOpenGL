@@ -1,7 +1,4 @@
-#include "Mesh.h"
-#include "VAO.h"
 #include "Lighting.h"
-#include "VBO.h"
 
 Lighting::Lighting(Mesh& mesh, glm::vec3 lightColor) : meshContainer(mesh)
 {

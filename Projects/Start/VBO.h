@@ -1,7 +1,8 @@
 #pragma once
-#include <glad/glad.h>
 #include <iostream>
 #include <vector>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 
 struct Vertex;
 //class for vertex buffer object
@@ -12,7 +13,9 @@ class VBO
 {
 	public:
 		GLuint ID;
+		//This needs to exist because of declaration of VBO in private spectar of Mesh and BoundingBox
 		VBO();
+		VBO(std::vector<glm::vec3> verticesPositions);
 		VBO(std::vector<Vertex> vertices);
 		//Used for binding buffer which is associated to this object
 		void Bind();

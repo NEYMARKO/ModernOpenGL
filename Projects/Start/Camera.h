@@ -1,13 +1,9 @@
 #pragma once
-#include <iostream>
-#include <glad/glad.h>
+#include "Shader.h"
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
-#include "Shader.h"
 
 // Camera object class
 //	- constructor takes in camera position, target position and world up vector (optional - if not defined, set to (0.0f, 1.0f, 0.0f))

@@ -1,7 +1,5 @@
 #pragma once
-#include <glad/glad.h>
-
-class VBO;  // Forward declaration
+#include "VBO.h"
 
 class VAO
 {

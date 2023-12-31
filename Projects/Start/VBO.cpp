@@ -1,10 +1,17 @@
 #include "VBO.h"
 #include "Mesh.h"
-
 VBO::VBO()
 {
 
 }
+
+VBO::VBO(std::vector<glm::vec3> verticesPositions)
+{
+	glGenBuffers(1, &ID);
+	glBindBuffer(GL_ARRAY_BUFFER, ID);
+	glBufferData(GL_ARRAY_BUFFER, verticesPositions.size() * sizeof(glm::vec3), &verticesPositions[0], GL_STATIC_DRAW);
+}
+
 VBO::VBO(std::vector<Vertex> vertices)
 {
 	glGenBuffers(1, &ID);

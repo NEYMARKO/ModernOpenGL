@@ -1,5 +1,4 @@
 #include "Mesh.h"
-#include "MeshLoader.h"
 #include "Lighting.h"
 
 Mesh::Mesh(const char* filePath, glm::vec3 objectPos)

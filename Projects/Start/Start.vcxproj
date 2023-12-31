@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
@@ -167,6 +168,7 @@
     <None Include="lighting.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="Lighting.h" />

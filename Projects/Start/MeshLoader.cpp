@@ -1,5 +1,4 @@
 #include "MeshLoader.h"
-#include "Mesh.h"
 
 MeshLoader::MeshLoader(const char* filePath, Mesh* mesh)
 {
