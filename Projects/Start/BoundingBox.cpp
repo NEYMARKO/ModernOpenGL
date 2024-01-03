@@ -23,10 +23,10 @@ void BoundingBox::Initialize()
 {
 	//std::cout << "Creating bounding box" << std::endl;
 	float xmin = this->bounds[0];
-	float ymin = this->bounds[1];
-	float zmin = this->bounds[2];
-	float xmax = this->bounds[3];
-	float ymax = this->bounds[4];
+	float xmax = this->bounds[1];
+	float ymin = this->bounds[2];
+	float ymax = this->bounds[3];
+	float zmin = this->bounds[4];
 	float zmax = this->bounds[5];
 
 	this->vertices = {

@@ -189,6 +189,7 @@
     <Text Include="bull.txt" />
     <Text Include="cubeFlat.txt" />
     <Text Include="dragonSmooth.txt" />
+    <Text Include="dragonSmoothRotated.txt" />
     <Text Include="frogSmooth.txt" />
     <Text Include="kocka.txt" />
     <Text Include="lightBulb.txt" />
