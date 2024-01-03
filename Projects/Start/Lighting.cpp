@@ -7,6 +7,10 @@ Lighting::Lighting(Mesh& mesh, glm::vec3 lightColor) : meshContainer(mesh)
 	this->lightVAO = mesh.mVAO;
 }
 
+Lighting::~Lighting()
+{
+	std::cout << "DELETED LIGHTING" << std::endl;
+}
 void Lighting::Draw(Shader& shaderProgram, Camera& camera)
 {
 	glm::mat4 model;

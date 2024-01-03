@@ -77,6 +77,12 @@
     <None Include="lighting.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="borderBox.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="borderBox.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">

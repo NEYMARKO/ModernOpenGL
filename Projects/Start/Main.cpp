@@ -1,6 +1,4 @@
-#include "Shader.h"
 #include "Camera.h"
-#include "Mesh.h"
 #include "Lighting.h"
 
 #define GLFW_HAND_CURSOR 0x00036004
@@ -46,12 +44,14 @@ int main()
 
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
+	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
 
-	Mesh lightBulb("lightBulb.txt", glm::vec3(0.0f, 5.0f, 1.0f));
-	Mesh dragon("dragonSmooth.txt", glm::vec3(0.0f, 0.0f, 0.0f));
-	Mesh temple("templeFlat.txt", glm::vec3(1.0f, 1.0f, 0.0f));
-	Mesh frog("frogSmooth.txt", glm::vec3(0.0f, 1.0f, 2.0f));
-	Mesh teddy("teddyFlat.txt", glm::vec3(0.0f, -2.0f, 2.0f));
+	float id = 0;
+	Mesh lightBulb("lightBulb.txt", glm::vec3(0.0f, 5.0f, 1.0f), id);
+	Mesh dragon("dragonSmooth.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
+	Mesh temple("templeFlat.txt", glm::vec3(-3.0f, 1.0f, 0.0f), ++id);
+	Mesh frog("frogSmooth.txt", glm::vec3(0.0f, -2.0f, 2.0f), ++id);
+	Mesh teddy("teddyFlat.txt", glm::vec3(0.0f, -2.0f, 5.0f), ++id);
 
 	/*Mesh cube("cubeFlat.txt", glm::vec3(0.0f, -1.0f, 0.0f));
 
@@ -79,15 +79,14 @@ int main()
 
 		shaderProgram.Activate();
 
-		dragon.Draw(shaderProgram, globalCamera, light);
+		dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 
-		temple.Draw(shaderProgram, globalCamera, light);
-		temple.Draw(shaderProgram, globalCamera, light);
-		temple.Draw(shaderProgram, globalCamera, light);
+		temple.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		
+		frog.Draw(shaderProgram, boundingBoxShaderProgram,  globalCamera, light);
+		
+		teddy.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 
-		frog.Draw(shaderProgram, globalCamera, light);
-
-		teddy.Draw(shaderProgram, globalCamera, light);
 		globalCamera.Move(window, deltaTime);
 
 		glfwSwapBuffers(window);

@@ -129,8 +129,6 @@ void MeshLoader::NormalizeObject(Mesh* mesh)
     float zmax = maxExtremes[2];
     float firstComparison = std::max(1 / (xmax - xmin), 1 / (ymax - ymin));
     this->scalingFactor = std::max(firstComparison, 1 / (zmax - zmin));
-    minExtremes *= scalingFactor;
-    maxExtremes *= scalingFactor;
 }
 
 MeshLoader::~MeshLoader()

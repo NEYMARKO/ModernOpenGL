@@ -94,6 +94,11 @@ void Shader::Delete()
 	glDeleteProgram(ID);
 }
 
+void Shader::SetFloat(const std::string& name, const float value)
+{
+	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+}
+
 void Shader::SetVec2(const std::string& name, const glm::vec2& value)
 {
 	glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);

@@ -26,6 +26,8 @@ public:
 	// Deletes the Shader Program
 	void Delete();
 
+	void SetFloat(const std::string& name, const float value);
+
 	void SetVec2(const std::string& name, const glm::vec2& value);
 
 	void SetVec3(const std::string& name, const glm::vec3& value);

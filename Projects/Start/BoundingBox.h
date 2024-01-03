@@ -1,5 +1,10 @@
 #pragma once
-#include "Mesh.h"
+#include "Shader.h"
+#include "Camera.h"
+#include "VAO.h"
+#include "VBO.h"
+#include "EBO.h"
+class Mesh;
 
 class BoundingBox
 {
@@ -7,15 +12,15 @@ class BoundingBox
 		Mesh& parentMesh;
 		VBO boxVBO;
 		EBO boxEBO;
+		VAO boxVAO;
 	public:
 		std::vector<float> bounds;
 		std::vector<glm::vec3> vertices;
 		std::vector<unsigned int> indices;
-		VAO& boxVAO;
 		//Constructor for BoundingBox 
 		//Uses extremes of Mesh to create box which contains all vertices of Mesh object
 		BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& parentMesh);
-
+		~BoundingBox();
 		void Initialize();
 
 		void SetupBuffers();

@@ -1,6 +1,7 @@
+#include "Mesh.h"
 #include "BoundingBox.h"
 
-BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& parentMesh) : parentMesh(parentMesh), boxVAO(parentMesh.mVAO)
+BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& parentMesh) : parentMesh(parentMesh)
 {
 	//Bounds: [xmin, xmax, ymin, ymax, zmin, zmax]
 	for (int i = 0; i < 3; i++)
@@ -11,9 +12,16 @@ BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& par
 	Initialize();
 	SetupBuffers();
 }
-
+BoundingBox::~BoundingBox()
+{
+	boxVAO.Delete();
+	boxVBO.Delete();
+	boxEBO.Delete();
+	//std::cout << "Deleted bounding box" << std::endl;
+}
 void BoundingBox::Initialize()
 {
+	//std::cout << "Creating bounding box" << std::endl;
 	float xmin = this->bounds[0];
 	float ymin = this->bounds[1];
 	float zmin = this->bounds[2];
@@ -33,24 +41,12 @@ void BoundingBox::Initialize()
 	};
 
 	this->indices = {
-		// front
-		0, 1, 2,
-		2, 3, 0,
-		// right
-		1, 5, 6,
-		6, 2, 1,
-		// back
-		7, 6, 5,
-		5, 4, 7,
-		// left
-		4, 0, 3,
-		3, 7, 4,
-		// bottom
-		4, 5, 1,
-		1, 0, 4,
-		// top
-		3, 2, 6,
-		6, 7, 3
+		// Bottom face
+		0, 1, 1, 2, 2, 3, 3, 0,
+		// Top face
+		4, 5, 5, 6, 6, 7, 7, 4,
+		// Side edges
+		0, 4, 1, 5, 2, 6, 3, 7
 	};
 }
 
@@ -69,5 +65,19 @@ void BoundingBox::SetupBuffers()
 
 void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 {
+	shaderProgram.Activate();
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, this->parentMesh.objectPos);
+	model = glm::scale(model, glm::vec3(this->parentMesh.scalingFactor, this->parentMesh.scalingFactor, this->parentMesh.scalingFactor));
 
+	shaderProgram.SetMat4("model", model);
+	shaderProgram.SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));
+
+	camera.ViewProjectionMatrix(camera.lookAtPosition, shaderProgram);
+
+	boxVAO.Bind();
+
+	glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, 0);
+
+	boxVAO.Unbind();
 }

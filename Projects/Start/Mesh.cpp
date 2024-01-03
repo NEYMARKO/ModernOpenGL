@@ -1,12 +1,15 @@
 #include "Mesh.h"
 #include "Lighting.h"
 
-Mesh::Mesh(const char* filePath, glm::vec3 objectPos)
+
+Mesh::Mesh(const char* filePath, glm::vec3 objectPos, float id)
 {
 	MeshLoader meshLoader(filePath, this);
 	this->scalingFactor = meshLoader.scalingFactor;
 	this->objectPos = objectPos;
 	setupMesh();
+	this->boundingBox = new BoundingBox(meshLoader.minExtremes, meshLoader.maxExtremes, *this);
+	this->id = id;
 }
 
 Mesh::~Mesh()
@@ -14,7 +17,15 @@ Mesh::~Mesh()
 	mVAO.Delete();
 	mVBO.Delete();
 	mEBO.Delete();
-	std::cout << "DELETED ALL BUFFERS" << std::endl;
+	//std::cout << "ID: " << id << std::endl;
+	//std::cout << "BEFORE: " << this->boundingBox << std::endl;
+	if (this->boundingBox != nullptr) {
+		delete this->boundingBox;
+		this->boundingBox = nullptr;  // Set to nullptr after deletion to avoid double deletion
+	}
+	//std::cout << "AFTER: " << this->boundingBox << std::endl;
+
+	//std::cout << "DELETED ALL BUFFERS" << std::endl;
 }
 
 void Mesh::setupMesh()
@@ -32,8 +43,9 @@ void Mesh::setupMesh()
 
 }
 
-void Mesh::Draw(Shader& shaderProgram, Camera& camera, Lighting& lighting)
+void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting)
 {
+	shaderProgram.Activate();
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, this->objectPos);
 	model = glm::scale(model, glm::vec3(this->scalingFactor, this->scalingFactor, this->scalingFactor));
@@ -48,4 +60,7 @@ void Mesh::Draw(Shader& shaderProgram, Camera& camera, Lighting& lighting)
 	mVAO.Bind();
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	mVAO.Unbind();
+
+	boundingBoxShaderProgram.Activate();
+	this->boundingBox->Draw(boundingBoxShaderProgram, camera);
 }
