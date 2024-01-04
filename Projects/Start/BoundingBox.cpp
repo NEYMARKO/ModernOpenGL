@@ -73,7 +73,7 @@ void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 	shaderProgram.SetMat4("model", model);
 	shaderProgram.SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));
 
-	camera.ViewProjectionMatrix(camera.lookAtPosition, shaderProgram);
+	camera.ViewProjectionMatrix(shaderProgram);
 
 	boxVAO.Bind();
 

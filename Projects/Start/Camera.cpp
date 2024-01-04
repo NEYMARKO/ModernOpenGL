@@ -1,6 +1,7 @@
 #include "Camera.h"
+#include "Ray.h"
 
-Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity)
+Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, int width, int height)
 {
 	this->cameraPos = cameraPos;
 	this->targetPos = targetPos;
@@ -8,11 +9,14 @@ Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sens
 	this->speed = speed;
 	this->sensitivity = sensitivity;
 	this->lookAtPosition = targetPos;
+	this->width = (float) width;
+	this->height = (float) height;
+	this->ray = nullptr;
 	glm::vec3 upVector = glm::vec3(0.0f, 1.0f, 0.0f);
 	calculateCameraUp(upVector);
 }
 
-Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 upVector)
+Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 upVector, int width, int height)
 {
 	this->cameraPos = cameraPos;
 	this->targetPos = targetPos;
@@ -20,6 +24,9 @@ Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sens
 	this->speed = speed;
 	this->sensitivity = sensitivity;
 	this->lookAtPosition = targetPos;
+	this->width = (float) width;
+	this->height = (float) height;
+	this->ray = nullptr;
 	calculateCameraUp(upVector);
 }
 
@@ -30,15 +37,15 @@ void Camera::calculateCameraUp(glm::vec3 upVector)
 	this->cameraUp = glm::cross(cameraRightNorm, this->cameraDirection);
 }
 
-void Camera::ViewProjectionMatrix(glm::vec3 lookAtPoint, Shader& shaderProgram)
+void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 {
 	//glm::mat4 view = glm::lookAt(this->cameraPos, this->cameraPos + this->cameraForward, this->cameraUp);
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 	
-	view = glm::lookAt(this->cameraPos, lookAtPoint, this->cameraUp);
+	view = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
 	//width/height instead of harcoded values (800/800)
-	projection = glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(45.0f), this->width / this->height, 0.1f, 100.0f);
 
 	shaderProgram.SetMat4("view", view);
 	shaderProgram.SetMat4("projection", projection);
@@ -108,4 +115,39 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(pitch), cameraRight);
 	//after applying pitch rotation, cameraUp vector gets changed
 	this->cameraUp = glm::cross(this->cameraDirection, cameraRight);
+}
+
+void Camera::UpdateViewportDimensions(const int& width, const int& height)
+{
+	this->width = (float)width;
+	this->height = (float)height;
+}
+void Camera::Raycast(GLFWwindow* window, Shader& shaderProgram, double mouseX, double mouseY)
+{
+	//normalised device coordinates
+	float x = (2.0f * mouseX) / width - 1.0f;
+	float y = 1.0f - (2.0f * mouseY) / height;
+
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), this->width / this->height, 0.1f, 100.0f);
+	glm::mat4 viewMatrix = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
+
+	glm::vec4 ray_clip = glm::vec4(x, y, -1.0, 1.0);
+	glm::vec4 ray_eye = glm::inverse(projectionMatrix) * ray_clip;
+
+	ray_eye = glm::vec4(ray_eye.x, ray_eye.y, -1.0, 0.0);
+	
+	glm::vec3 ray_wor = glm::vec3(glm::inverse(viewMatrix) * ray_eye);
+	// don't forget to normalise the vector at some point
+	ray_wor = glm::normalize(ray_wor);
+
+	if (this->ray == nullptr)
+	{
+		this->ray = new Ray(ray_wor, this->cameraDirection, 100);
+	}
+	else
+	{
+		this->ray->UpdatePosition(ray_wor);
+		this->ray->UpdateDirection(this->cameraDirection);
+	}
+	this->ray->Draw(shaderProgram, *this);
 }

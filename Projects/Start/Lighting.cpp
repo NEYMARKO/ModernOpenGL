@@ -17,7 +17,7 @@ void Lighting::Draw(Shader& shaderProgram, Camera& camera)
 	model = glm::translate(model, this->position);
 	
 	shaderProgram.SetMat4("model", model);
-	camera.ViewProjectionMatrix(camera.lookAtPosition, shaderProgram);
+	camera.ViewProjectionMatrix(shaderProgram);
 
 	shaderProgram.SetVec3("lightColor", this->lightColor);
 

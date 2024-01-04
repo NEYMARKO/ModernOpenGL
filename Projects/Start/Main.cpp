@@ -15,8 +15,8 @@ double globalMouseXPos = globalWidth / 2;
 double globalMouseYPos = globalHeight / 2;
 bool canRotate = false;
 GLFWcursor* cursor = nullptr;
-Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 2.5f);
-
+Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 2.5f, globalWidth, globalHeight);
+Shader boundingBoxShaderProgram;
 
 int main()
 {
@@ -44,10 +44,10 @@ int main()
 
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
-	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
+	boundingBoxShaderProgram = Shader("borderBox.vert", "borderBox.frag");
 
 	float id = 0;
-	Mesh lightBulb("lightBulb.txt", glm::vec3(0.0f, -3.0f, 3.0f), id);
+	Mesh lightBulb("lightBulb.txt", glm::vec3(-10.0f, 0.0f, 0.0f), id);
 	Mesh dragon("dragonSmooth.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
 	//Mesh dragonRotated("dragonSmoothRotated.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
 	Mesh temple("templeFlat.txt", glm::vec3(-3.0f, 1.0f, 0.0f), ++id);
@@ -135,17 +135,28 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	switch (button)
 	{
-		canRotate = true;
-		glfwGetCursorPos(window, &globalMouseXPos, &globalMouseYPos);
-		GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
-		glfwSetCursor(window, cursor);
-	}
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_RELEASE)
-	{
-		glfwSetCursor(window, NULL);
-		canRotate = false;
+		case GLFW_MOUSE_BUTTON_RIGHT:
+			if (action == GLFW_PRESS)
+			{
+				canRotate = true;
+				glfwGetCursorPos(window, &globalMouseXPos, &globalMouseYPos);
+				GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+				glfwSetCursor(window, cursor);
+			}
+			else
+			{
+				glfwSetCursor(window, NULL);
+				canRotate = false;
+			}
+		case GLFW_MOUSE_BUTTON_LEFT:
+			if (action == GLFW_PRESS)
+			{
+				double xpos, ypos;
+				glfwGetCursorPos(window, &xpos, &ypos);
+				globalCamera.Raycast(window, boundingBoxShaderProgram, xpos, ypos);
+			}
 	}
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -153,5 +164,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
 	glfwGetWindowSize(window, &globalWidth, &globalHeight);
-	glViewport(0, 0, width, height);
+	globalCamera.UpdateViewportDimensions(globalWidth, globalHeight);
+	glViewport(0, 0, globalWidth, globalHeight);
 } 

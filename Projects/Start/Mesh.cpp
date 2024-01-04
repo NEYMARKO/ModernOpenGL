@@ -51,7 +51,7 @@ void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera&
 	model = glm::scale(model, glm::vec3(this->scalingFactor, this->scalingFactor, this->scalingFactor));
 
 	shaderProgram.SetMat4("model", model);
-	camera.ViewProjectionMatrix(camera.lookAtPosition, shaderProgram);
+	camera.ViewProjectionMatrix(shaderProgram);
 
 	shaderProgram.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 	shaderProgram.SetVec3("lightColor", lighting.lightColor);
