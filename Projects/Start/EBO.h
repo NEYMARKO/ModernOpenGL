@@ -8,7 +8,7 @@ public:
 	GLuint ID;
 	EBO();
 	// Constructor that generates a Elements Buffer Object and links it to indices
-	EBO(std::vector<unsigned int> indices);
+	EBO(const std::vector<unsigned int>& indices);
 	// Binds the EBO
 	void Bind();
 	// Unbinds the EBO

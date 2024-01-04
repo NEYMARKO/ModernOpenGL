@@ -47,7 +47,7 @@ int main()
 	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
 
 	float id = 0;
-	Mesh lightBulb("lightBulb.txt", glm::vec3(0.0f, 5.0f, 1.0f), id);
+	Mesh lightBulb("lightBulb.txt", glm::vec3(0.0f, -3.0f, 3.0f), id);
 	Mesh dragon("dragonSmooth.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
 	//Mesh dragonRotated("dragonSmoothRotated.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
 	Mesh temple("templeFlat.txt", glm::vec3(-3.0f, 1.0f, 0.0f), ++id);
@@ -59,9 +59,9 @@ int main()
 	cube.Print();*/
 	Lighting light(lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
 
-	glm::mat4 lightModelMatrix;
+	/*glm::mat4 lightModelMatrix;
 
-	lightModelMatrix = glm::translate(lightModelMatrix, light.position);
+	lightModelMatrix = glm::translate(lightModelMatrix, light.position);*/
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -77,8 +77,6 @@ int main()
 		lightingShaderProgram.Activate();
 
 		light.Draw(lightingShaderProgram, globalCamera);
-
-		shaderProgram.Activate();
 
 		dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		//dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);

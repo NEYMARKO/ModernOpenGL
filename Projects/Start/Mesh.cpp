@@ -51,16 +51,17 @@ void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera&
 	model = glm::scale(model, glm::vec3(this->scalingFactor, this->scalingFactor, this->scalingFactor));
 
 	shaderProgram.SetMat4("model", model);
+	camera.ViewProjectionMatrix(camera.lookAtPosition, shaderProgram);
+
 	shaderProgram.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 	shaderProgram.SetVec3("lightColor", lighting.lightColor);
-	shaderProgram.SetVec3("lightPost", lighting.position);
+	shaderProgram.SetVec3("lightPos", lighting.position);
 
-	camera.ViewProjectionMatrix(camera.lookAtPosition, shaderProgram);
 	
 	mVAO.Bind();
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	mVAO.Unbind();
 
-	boundingBoxShaderProgram.Activate();
-	this->boundingBox->Draw(boundingBoxShaderProgram, camera);
+	/*boundingBoxShaderProgram.Activate();
+	this->boundingBox->Draw(boundingBoxShaderProgram, camera);*/
 }

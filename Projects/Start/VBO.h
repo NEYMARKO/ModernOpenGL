@@ -15,8 +15,8 @@ class VBO
 		GLuint ID;
 		//This needs to exist because of declaration of VBO in private spectar of Mesh and BoundingBox
 		VBO();
-		VBO(std::vector<glm::vec3> verticesPositions);
-		VBO(std::vector<Vertex> vertices);
+		VBO(const std::vector<glm::vec3>& verticesPositions);
+		VBO(const std::vector<Vertex>& vertices);
 		//Used for binding buffer which is associated to this object
 		void Bind();
 		//Used for binding buffer which is associated to this object
