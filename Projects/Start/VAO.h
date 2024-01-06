@@ -10,7 +10,8 @@ public:
 	VAO();
 
 	// Binds VBO to VAO and creates VBO attribute at (location = layout)
-	void LinkVBO(VBO& VBO, GLuint layout, GLsizei stride, const GLvoid* pointer);
+	//Size - number of components per generic vertex attribute (for example: position has 3 (xyz), color has 4 (rgba))
+	void LinkVBO(VBO& VBO, GLuint layout, GLint size, GLsizei stride, const GLvoid* pointer);
 	// Binds the VAO
 	void Bind();
 	// Unbinds the VAO

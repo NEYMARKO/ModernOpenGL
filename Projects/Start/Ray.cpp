@@ -32,7 +32,7 @@ void Ray::SetupBuffers()
 	this->rayVBO = VBO(this->vertices);
 	this->rayEBO = EBO(this->indices);
 
-	this->rayVAO.LinkVBO(rayVBO, 0, sizeof(glm::vec3), 0);
+	this->rayVAO.LinkVBO(rayVBO, 0, 3, sizeof(glm::vec3), 0);
 
 	this->rayVAO.Unbind();
 	this->rayVBO.Unbind();
@@ -51,7 +51,7 @@ void Ray::UpdateDirection(glm::vec3 direction)
 
 void Ray::Draw(Shader& shaderProgram, Camera& camera)
 {
-	std::cout << "Drawing ray" << std::endl;
+	//std::cout << "Drawing ray" << std::endl;
 	shaderProgram.Activate();
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, this->start);

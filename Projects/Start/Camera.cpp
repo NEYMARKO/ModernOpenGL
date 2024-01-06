@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "Ray.h"
 
 Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, int width, int height)
 {
@@ -45,7 +44,7 @@ void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 	
 	view = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
 	//width/height instead of harcoded values (800/800)
-	projection = glm::perspective(glm::radians(45.0f), this->width / this->height, 0.1f, 100.0f);
+	projection = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
 
 	shaderProgram.SetMat4("view", view);
 	shaderProgram.SetMat4("projection", projection);
@@ -99,6 +98,11 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 	}
 }
 
+void Camera::Zoom(double amount)
+{
+	this->fov += amount * 2;
+}
+
 void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
 {
 	//TODO: CLAMP YAW AND PITCH VALUES: YAW [-90, 90] PITCH [-45, 45]
@@ -124,11 +128,11 @@ void Camera::UpdateViewportDimensions(const int& width, const int& height)
 }
 void Camera::Raycast(GLFWwindow* window, Shader& shaderProgram, double mouseX, double mouseY)
 {
-	//normalised device coordinates
+	//normalized device coordinates
 	float x = (2.0f * mouseX) / width - 1.0f;
 	float y = 1.0f - (2.0f * mouseY) / height;
 
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), this->width / this->height, 0.1f, 100.0f);
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
 	glm::mat4 viewMatrix = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
 
 	glm::vec4 ray_clip = glm::vec4(x, y, -1.0, 1.0);
@@ -138,16 +142,20 @@ void Camera::Raycast(GLFWwindow* window, Shader& shaderProgram, double mouseX, d
 	
 	glm::vec3 ray_wor = glm::vec3(glm::inverse(viewMatrix) * ray_eye);
 	// don't forget to normalise the vector at some point
-	ray_wor = glm::normalize(ray_wor);
+	//ray_wor = glm::normalize(ray_wor);
 
+	float d = -this->cameraPos.x * this->cameraDirection.x - this->cameraPos.y * this->cameraDirection.y - this->cameraPos.z * this->cameraDirection.z;
+	float ray_z = (-ray_wor.x * this->cameraDirection.x - ray_wor.y * this->cameraDirection.y - d) / this->cameraDirection.z;
+
+	ray_wor.z = ray_z;
 	if (this->ray == nullptr)
 	{
-		this->ray = new Ray(ray_wor, this->cameraDirection, 100);
+		this->ray = new Ray(ray_wor, this->cameraDirection, 500);
 	}
 	else
 	{
 		this->ray->UpdatePosition(ray_wor);
 		this->ray->UpdateDirection(this->cameraDirection);
 	}
-	this->ray->Draw(shaderProgram, *this);
+	//this->ray->Draw(shaderProgram, *this);
 }

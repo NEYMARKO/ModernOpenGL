@@ -6,10 +6,10 @@ VAO::VAO()
 	glGenVertexArrays(1, &ID);
 }
 
-void VAO::LinkVBO(VBO& VBO, GLuint layout, GLsizei stride, const GLvoid* pointer)
+void VAO::LinkVBO(VBO& VBO, GLuint layout, GLint size, GLsizei stride, const GLvoid* pointer)
 {
 	VBO.Bind();
-	glVertexAttribPointer(layout, 3, GL_FLOAT, GL_FALSE, stride, pointer);
+	glVertexAttribPointer(layout, size, GL_FLOAT, GL_FALSE, stride, pointer);
 	glEnableVertexAttribArray(layout);
 	VBO.Unbind();
 }

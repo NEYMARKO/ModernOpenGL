@@ -7,6 +7,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset);
 
 int globalWidth = 800, globalHeight= 800;
 float deltaTime = 0.0f;	// time between current frame and last frame
@@ -14,6 +15,7 @@ float lastFrame = 0.0f;
 double globalMouseXPos = globalWidth / 2;
 double globalMouseYPos = globalHeight / 2;
 bool canRotate = false;
+bool canDrawRay = false;
 GLFWcursor* cursor = nullptr;
 Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 2.5f, globalWidth, globalHeight);
 Shader boundingBoxShaderProgram;
@@ -38,6 +40,7 @@ int main()
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
+	glfwSetScrollCallback(window, mouse_scroll_back);
 	//Load GLAD so it configures OpenGL
 	gladLoadGL();
 	glViewport(0, 0, globalWidth, globalHeight);
@@ -87,6 +90,8 @@ int main()
 		
 		teddy.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 
+		if (canDrawRay) globalCamera.ray->Draw(boundingBoxShaderProgram, globalCamera);
+
 		globalCamera.Move(window, deltaTime);
 
 		glfwSwapBuffers(window);
@@ -115,6 +120,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			globalCamera.focus = !globalCamera.focus;
 			if (!globalCamera.focus)
 			{
+				//reset camera direction to face target (it wasn't getting updated while focus was on)
 				globalCamera.cameraDirection = glm::normalize(globalCamera.targetPos - globalCamera.cameraPos);
 			}
 			globalCamera.lookAtPosition = globalCamera.focus ? globalCamera.targetPos : (globalCamera.cameraPos + globalCamera.cameraDirection);
@@ -150,15 +156,27 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 				glfwSetCursor(window, NULL);
 				canRotate = false;
 			}
+			break;
 		case GLFW_MOUSE_BUTTON_LEFT:
 			if (action == GLFW_PRESS)
 			{
 				double xpos, ypos;
 				glfwGetCursorPos(window, &xpos, &ypos);
 				globalCamera.Raycast(window, boundingBoxShaderProgram, xpos, ypos);
+				canDrawRay = true;
 			}
+			break;
+		default:
+			break;
 	}
 }
+
+void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset)
+{
+	std::cout << "ZOOM: " << yoffset << std::endl;
+	globalCamera.Zoom(yoffset);
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 

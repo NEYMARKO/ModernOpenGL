@@ -56,7 +56,7 @@ void BoundingBox::SetupBuffers()
 	this->boxVBO = VBO(this->vertices);
 	this->boxEBO = EBO(this->indices);
 
-	this->boxVAO.LinkVBO(boxVBO, 0, sizeof(glm::vec3), 0);
+	this->boxVAO.LinkVBO(boxVBO, 0, 3, sizeof(glm::vec3), 0);
 
 	this->boxVAO.Unbind();
 	this->boxVBO.Unbind();

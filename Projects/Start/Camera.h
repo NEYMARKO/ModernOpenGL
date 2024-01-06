@@ -4,11 +4,12 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
-
-class Ray;
+#include "Ray.h"
 
 class Camera
 {
+	private:
+		float fov = 45.0f;
 	public:
 		glm::vec3 targetPos;
 		glm::vec3 cameraPos;
@@ -34,6 +35,7 @@ class Camera
 		//Moves camera in all 4 directions and up/down
 		void Move(GLFWwindow* window, float deltaTime);
 
+		void Zoom(double amount);
 		//Function for camera rotation
 		//Rotation starts after pressing right mouse and ends when mouse gets released
 		//By hovering mouse across screen (while right mouse is pressed), camera gets rotated

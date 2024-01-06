@@ -34,8 +34,8 @@ void Mesh::setupMesh()
 	this->mVBO = VBO(vertices);
 	this->mEBO = EBO(indices);
 
-	this->mVAO.LinkVBO(mVBO, 0, sizeof(Vertex), 0);
-	this->mVAO.LinkVBO(mVBO, 1, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+	this->mVAO.LinkVBO(mVBO, 0, 3, sizeof(Vertex), 0);
+	this->mVAO.LinkVBO(mVBO, 1, 3, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
 	this->mVAO.Unbind();
 	this->mVBO.Unbind();
@@ -62,6 +62,6 @@ void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera&
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	mVAO.Unbind();
 
-	/*boundingBoxShaderProgram.Activate();
-	this->boundingBox->Draw(boundingBoxShaderProgram, camera);*/
+	boundingBoxShaderProgram.Activate();
+	this->boundingBox->Draw(boundingBoxShaderProgram, camera);
 }
