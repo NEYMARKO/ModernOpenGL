@@ -17,7 +17,7 @@ double globalMouseYPos = globalHeight / 2;
 bool canRotate = false;
 bool canDrawRay = false;
 GLFWcursor* cursor = nullptr;
-Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 2.5f, globalWidth, globalHeight);
+Camera globalCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), 5.5f, 2.5f, globalWidth, globalHeight);
 Shader boundingBoxShaderProgram;
 
 int main()
@@ -80,9 +80,9 @@ int main()
 
 		lightingShaderProgram.Activate();
 
-		/*light.Draw(lightingShaderProgram, globalCamera);
+		light.Draw(lightingShaderProgram, globalCamera);
 
-		dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
+		//dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		////dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 
 		/*temple.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
@@ -92,6 +92,7 @@ int main()
 		teddy.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
 
 		cube.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		
 		if (canDrawRay) globalCamera.ray->Draw(boundingBoxShaderProgram, globalCamera);
 
 		globalCamera.Move(window, deltaTime);
