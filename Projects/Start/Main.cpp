@@ -51,11 +51,12 @@ int main()
 
 	float id = 0;
 	Mesh lightBulb("lightBulb.txt", glm::vec3(-10.0f, 0.0f, 0.0f), id);
-	Mesh dragon("dragonSmooth.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
-	//Mesh dragonRotated("dragonSmoothRotated.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
-	Mesh temple("templeFlat.txt", glm::vec3(-3.0f, 1.0f, 0.0f), ++id);
+	Mesh cube("cubeFlat.txt", glm::vec3(0.0f, 0.0f, 0.0f), id);
+	//Mesh dragon("dragonSmooth.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
+	////Mesh dragonRotated("dragonSmoothRotated.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
+	/*Mesh temple("templeFlat.txt", glm::vec3(-3.0f, 1.0f, 0.0f), ++id);
 	Mesh frog("frogSmooth.txt", glm::vec3(0.0f, -2.0f, 2.0f), ++id);
-	Mesh teddy("teddyFlat.txt", glm::vec3(0.0f, -2.0f, 5.0f), ++id);
+	Mesh teddy("teddyFlat.txt", glm::vec3(0.0f, -2.0f, 5.0f), ++id);*/
 
 	/*Mesh cube("cubeFlat.txt", glm::vec3(0.0f, -1.0f, 0.0f));
 
@@ -79,17 +80,18 @@ int main()
 
 		lightingShaderProgram.Activate();
 
-		light.Draw(lightingShaderProgram, globalCamera);
+		/*light.Draw(lightingShaderProgram, globalCamera);
 
-		dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-		//dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
+		////dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 
-		temple.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		/*temple.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		
 		frog.Draw(shaderProgram, boundingBoxShaderProgram,  globalCamera, light);
 		
-		teddy.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		teddy.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
 
+		cube.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		if (canDrawRay) globalCamera.ray->Draw(boundingBoxShaderProgram, globalCamera);
 
 		globalCamera.Move(window, deltaTime);

@@ -14,7 +14,7 @@ Ray::Ray(glm::vec3 rayStart, glm::vec3 rayDirection, float rayLength)
 
 	this->indices = { 0, 1 };
 	SetupBuffers();
-	std::cout << "Ray created" << std::endl;
+	//std::cout << "Ray created" << std::endl;
 }
 
 Ray::~Ray()
@@ -23,7 +23,7 @@ Ray::~Ray()
 	rayVBO.Delete();
 	rayEBO.Delete();
 
-	std::cout << "Ray deleted" << std::endl;
+	//std::cout << "Ray deleted" << std::endl;
 }
 
 void Ray::SetupBuffers()
