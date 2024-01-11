@@ -128,49 +128,10 @@ void Camera::UpdateViewportDimensions(const int& width, const int& height)
 }
 void Camera::Raycast(GLFWwindow* window, Shader& shaderProgram, double mouseX, double mouseY)
 {
-	//normalized device coordinates
-	//float normalizedX = (2.0f * mouseX) / this->width - 1.0f;
-	//float normalizedY = 1.0f - (2.0f * mouseY) / this->height;
-
-	//std::cout << "NORMALIZED X,Y: (" << normalizedX << ", " << normalizedY << ")" << std::endl;
-
-	//glm::mat4 projectionMatrix = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
-	//glm::mat4 viewMatrix = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
-
-	//glm::vec4 homogenousPoint = glm::vec4(normalizedX, normalizedY, -1.0f, 1.0f);
-	//glm::vec4 viewSpacePoint = glm::inverse(projectionMatrix) * homogenousPoint;
-	//viewSpacePoint = glm::vec4(viewSpacePoint.x, viewSpacePoint.y, 0.0, 1.0);
-	//std::cout << "VIEWSPACE X,Y,Z: (" << viewSpacePoint.x << ", " << viewSpacePoint.y << ", " << viewSpacePoint.z << ")" << std::endl;
-	//glm::vec4 worldPoint = glm::inverse(viewMatrix) * viewSpacePoint;
-	//// don't forget to normalise the vector at some point
-	////ray_wor = glm::normalize(ray_wor);
-
-	//std::cout << "WORLD X,Y,Z: (" << worldPoint.x << ", " << worldPoint.y << ", " << worldPoint.z << ")" << std::endl;
-	//float d = -this->cameraPos.x * this->cameraDirection.x - this->cameraPos.y * this->cameraDirection.y - this->cameraPos.z * this->cameraDirection.z;
-	//float ray_z = (-worldPoint.x * this->cameraDirection.x - worldPoint.y * this->cameraDirection.y - d) / this->cameraDirection.z;
-
-	//worldPoint.z = ray_z;
-
-	//if (this->ray == nullptr)
-	//{
-	//	this->ray = new Ray(worldPoint, this->cameraDirection, 1000);
-	//}
-	//else
-	//{
-	//	this->ray->UpdatePosition(worldPoint);
-	//	this->ray->UpdateDirection(this->cameraDirection);
-	//}
-	////this->ray->Draw(shaderProgram, *this);
-
 	float xNDC = (2.0f * mouseX) / this->width - 1.0f;
 	float yNDC = 1.0f - (2.0f * mouseY) / this->height;
-	/*std::cout << mouseX << std::endl;
-	std::cout << mouseY << std::endl;
 
-	std::cout << xNDC << std::endl;
-	std::cout << yNDC << std::endl;*/
-
-	glm::vec4 rayStartNDC = glm::vec4(xNDC, yNDC, -1.0, 1.0);
+	glm::vec4 rayStartNDC = glm::vec4(xNDC, yNDC, 0.0, 1.0);
 
 	glm::vec4 rayEndNDC = glm::vec4(xNDC, yNDC, 1.0, 1.0);
 
@@ -181,42 +142,22 @@ void Camera::Raycast(GLFWwindow* window, Shader& shaderProgram, double mouseX, d
 	glm::vec4 rayStartView = invProjection * rayStartNDC;
 	glm::vec4 rayEndView = invProjection * rayEndNDC;
 
-	/*glm::mat4 invView = glm::inverse(viewMatrix);
+	glm::mat4 invView = glm::inverse(viewMatrix);
 	glm::vec4 rayStartWorld = invView * rayStartView;
-	glm::vec4 rayEndWorld = invView * rayEndWorld;*/
-	rayStartView.w = -rayStartView.w;
-	rayStartView /= rayStartView.w;
-	rayEndView /= rayEndView.w;
+	glm::vec4 rayEndWorld = invView * rayEndView;
+	rayStartWorld /= rayStartWorld.w;
+	rayEndWorld /= rayEndWorld.w;
 
-	//std::cout << "START: " << rayStartWorld.x << " " << rayStartWorld.y << " " << rayStartWorld.z << std::endl;
-	//std::cout << "END: " << rayEndWorld.x << " " << rayEndWorld.y << " " << rayEndWorld.z << std::endl;
-
-	glm::vec3 rayDirectionWorld = glm::vec3(rayEndView - rayStartView);
-	float length = glm::length(rayDirectionWorld);
-	//glm::vec3 rayDirectionWorld = glm::vec3(rayEndWorld) - this->cameraPos;
+	glm::vec3 rayDirectionWorld = glm::vec3(rayEndWorld - rayStartWorld);
 	rayDirectionWorld = glm::normalize(rayDirectionWorld);
 
-
-	/*float d = -this->cameraPos.x * this->cameraDirection.x - this->cameraPos.y * this->cameraDirection.y - this->cameraPos.z * this->cameraDirection.z;
-	float ray_z = (-rayEndWorld.x * this->cameraDirection.x - rayEndWorld.y * this->cameraDirection.y - d) / this->cameraDirection.z;
-
-	std::cout << "NEW Z: " << ray_z << std::endl;
-	std::cout << this->cameraPos.z << std::endl;
-	rayStartWorld.z = ray_z;*/
-
-	//std::cout << rayStartWorld.x << " " << rayStartWorld.y << " " << rayStartWorld.z << std::endl;
-	//std::cout << this->cameraPos.x << " " << this->cameraPos.y << " " << this->cameraPos.z << std::endl;
 	if (this->ray == nullptr)
 	{
-		//this->ray = new Ray(this->cameraPos, rayDirectionWorld, 1000);
-		this->ray = new Ray(this->cameraPos, rayDirectionWorld, length);
+		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 1000);
 	}
 	else
 	{
 		delete this->ray;
-		//this->ray = new Ray(this->cameraPos, rayDirectionWorld, 1000);
-		this->ray = new Ray(this->cameraPos, rayDirectionWorld, length);
+		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 1000);
 	}
-	//this->ray->Draw(shaderProgram, *this);
-
 }
