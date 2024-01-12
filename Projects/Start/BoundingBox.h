@@ -39,8 +39,6 @@ class BoundingBox
 		void SetupBuffers();
 
 		void VerticesToWorld();
-		Plane CalculatePlaneCoefficients(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3);
-		void UpdatePlanes();
 		//Checks if ray intersects with bounding box in world space
 		bool Intersects(Camera& camera, float step);
 		//Used for updating BoundingBox bounds when Mesh is transformed

@@ -65,6 +65,7 @@ int main()
 	objectsInScene.push_back(&temple);
 	objectsInScene.push_back(&lightBulb);
 	objectsInScene.push_back(&teddy);
+	objectsInScene.push_back(&frog);
 
 	Lighting light(lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
 
@@ -172,9 +173,10 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 				globalCamera.Raycast(window, boundingBoxShaderProgram, xpos, ypos);
 				Ray* ray = globalCamera.ray;
 
+				bool objectPicked = false;
 				for (int obj = 0; obj < objectsInScene.size(); obj++)
 				{
-					objectsInScene[obj]->boundingBox->UpdatePlanes();
+					if (objectPicked) break;
 					for (float i = 0; i < ray->GetRayLength(); i += 0.5)
 					{
 						if (objectsInScene[obj]->boundingBox->Intersects(globalCamera, i))
@@ -182,6 +184,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 							/*glm::vec3 point = ray->GetRayStart() + ray->GetRayDirection() *  i;
 							std::cout << "INTERSECTION AT: (" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
 							std::cout << "I: " << i << std::endl;*/
+							objectPicked = true;
 							break;
 						}
 					}
