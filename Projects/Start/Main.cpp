@@ -14,7 +14,12 @@ float deltaTime = 0.0f, lastFrame = 0.0f;
 double globalMouseXPos = globalWidth / 2, globalMouseYPos = globalHeight / 2;
 bool canRotate = false;
 bool canDrawRay = false;
+bool canAdd = false;
+float id = 0;
+
 std::vector<Mesh*> objectsInScene;
+MeshLoader cubeLoader("cubeFlat.txt");
+
 
 GLFWcursor* cursor = nullptr;
 Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, -1.0f), 5.5f, 2.5f, globalWidth, globalHeight);
@@ -49,9 +54,7 @@ int main()
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 	boundingBoxShaderProgram = Shader("borderBox.vert", "borderBox.frag");
 
-	float id = 0;
 	MeshLoader lightBulbLoader("lightBulb.txt");
-	MeshLoader cubeLoader("cubeFlat.txt");
 	MeshLoader dragonLoader("dragonSmooth.txt");
 	/*MeshLoader templeLoader("templeFlat.txt");
 	MeshLoader frogLoader("frogSmooth.txt");
@@ -59,24 +62,24 @@ int main()
 
 	Mesh lightBulb(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	Mesh cube(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
+	/*Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	Mesh dragon2(&dragonLoader, glm::vec3(5.0f + 2.0f, 4.0f - 3.0f, 0.0f - 3.0f), id++);
 	Mesh dragon3(&dragonLoader, glm::vec3(5.0f - 3.0f, 4.0f + 2.0f, 0.0f), id++);
 	Mesh dragon4(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	Mesh dragon5(&dragonLoader, glm::vec3(5.0f - 3.0f, 4.0f, 0.0f + 2.0f), id++);
-	Mesh dragon6(&dragonLoader, glm::vec3(5.0f, 4.0f - 3.0f, 0.0f), id++);
+	Mesh dragon6(&dragonLoader, glm::vec3(5.0f, 4.0f - 3.0f, 0.0f), id++);*/
 	/*Mesh temple(&templeLoader, glm::vec3(-3.0f, 2.0f, 0.0f), id++);
 	Mesh frog(&frogLoader, glm::vec3(0.0f, -4.0f, 0.0f), id++);
 	Mesh teddy(&teddyLoader, glm::vec3(-2.0f, 4.0f, 0.0f), id++);*/
 
-	objectsInScene.push_back(&cube);
+	/*objectsInScene.push_back(&cube);
 	objectsInScene.push_back(&dragon);
 	objectsInScene.push_back(&dragon2);
 	objectsInScene.push_back(&dragon3);
 	objectsInScene.push_back(&dragon4);
 	objectsInScene.push_back(&dragon5);
 	objectsInScene.push_back(&dragon6);
-	objectsInScene.push_back(&lightBulb);
+	objectsInScene.push_back(&lightBulb);*/
 	/*objectsInScene.push_back(&teddy);
 	objectsInScene.push_back(&temple);
 	objectsInScene.push_back(&frog);*/
@@ -96,12 +99,17 @@ int main()
 
 		light.Draw(lightingShaderProgram, boundingBoxShaderProgram, globalCamera);
 
-		dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		/*dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		dragon2.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		dragon3.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		dragon4.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		dragon5.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-		dragon6.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		dragon6.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
+
+		for (int i = 0; i < objectsInScene.size(); i++)
+		{
+			objectsInScene[i]->Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		}
 		//dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 
 		/*temple.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
@@ -123,6 +131,10 @@ int main()
 		glfwPollEvents();
 	}
 
+	for (int i = 0; i < objectsInScene.size(); i++)
+	{
+		if (objectsInScene[i] != nullptr) delete objectsInScene[i];
+	}
 	shaderProgram.Delete();
 	lightingShaderProgram.Delete();
 	// Delete window before ending the program
@@ -151,6 +163,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			globalCamera.lookAtPosition = globalCamera.focus ? globalCamera.targetPos : (globalCamera.cameraPos + globalCamera.cameraDirection);
 		}
 		break;
+	case GLFW_KEY_A:
+		if (action == GLFW_PRESS)
+		{
+			canAdd = !canAdd;
+		}
 	default:
 		break;
 	}
@@ -190,28 +207,38 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 				globalCamera.Raycast(window, boundingBoxShaderProgram, xpos, ypos);
 				Ray* ray = globalCamera.ray;
 
-				bool objectPicked = false;
-				int pickedId = -1;
-				for (int obj = 0; obj < objectsInScene.size(); obj++)
+				std::cout << "CAN ADD: " << (canAdd == false ? "false" : "true") << std::endl;
+				if (canAdd)
 				{
-					if (objectPicked) break;
-					for (float i = 0; i < ray->GetRayLength(); i += 0.5)
+					std::cout << "IN HERE" << std::endl;
+					Mesh* obj = new Mesh(&cubeLoader, (ray->GetRayStart() + ray->GetRayDirection() * 5.0f), id++);
+					objectsInScene.push_back(obj);
+				}
+				else
+				{
+					bool objectPicked = false;
+					int pickedId = -1;
+					for (int obj = 0; obj < objectsInScene.size(); obj++)
 					{
-						if (objectsInScene[obj]->boundingBox->Intersects(globalCamera, i))
+						if (objectPicked) break;
+						for (float i = 0; i < ray->GetRayLength(); i += 0.5)
 						{
-							objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
-							pickedId = objectsInScene[obj]->id;
-							objectPicked = true;
-							break;
+							if (objectsInScene[obj]->boundingBox->Intersects(globalCamera, i))
+							{
+								objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
+								pickedId = objectsInScene[obj]->id;
+								objectPicked = true;
+								break;
+							}
 						}
 					}
+					//removing selective color if current click doesn't intersect with any of the objects
+					for (int i = 0; i < objectsInScene.size(); i++)
+					{
+						if (objectsInScene[i]->id != pickedId) objectsInScene[i]->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
+					}
+					canDrawRay = true;
 				}
-				//removing selective color if current click doesn't intersect with any of the objects
-				for (int i = 0; i < objectsInScene.size(); i++)
-				{
-					if (objectsInScene[i]->id != pickedId) objectsInScene[i]->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
-				}
-				canDrawRay = true;
 			}
 			break;
 		default:

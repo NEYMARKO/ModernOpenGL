@@ -9,6 +9,7 @@ Mesh::Mesh(MeshLoader* meshLoader, glm::vec3 objectPos, float id)
 	this->id = id;
 	setupMesh();
 	this->boundingBox = new BoundingBox(meshLoader->minExtremes, meshLoader->maxExtremes, *this);
+	std::cout << "MESH WITH ID: " << id << " CREATED" << std::endl;
 }
 
 Mesh::~Mesh()
@@ -21,6 +22,8 @@ Mesh::~Mesh()
 		delete this->boundingBox;
 		this->boundingBox = nullptr;  
 	}
+
+	std::cout << "DESTROYED MESH: " << id << std::endl;
 }
 
 void Mesh::setupMesh()
