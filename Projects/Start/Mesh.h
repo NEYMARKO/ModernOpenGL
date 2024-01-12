@@ -41,7 +41,7 @@ class Mesh
 		//Deletes VAO, VBO and EBO associated with mesh
 		~Mesh();
 		//Binds VAO, calculates MVP matrices, assigns uniforms and draws object using EBO info
-		void ChangeColor();
+		void ChangeColor(const glm::vec3& color);
 		void Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting);
 		void PrintIndices();
 };

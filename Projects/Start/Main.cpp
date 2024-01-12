@@ -174,6 +174,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 				Ray* ray = globalCamera.ray;
 
 				bool objectPicked = false;
+				int pickedId = -1;
 				for (int obj = 0; obj < objectsInScene.size(); obj++)
 				{
 					if (objectPicked) break;
@@ -184,11 +185,17 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 							/*glm::vec3 point = ray->GetRayStart() + ray->GetRayDirection() *  i;
 							std::cout << "INTERSECTION AT: (" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
 							std::cout << "I: " << i << std::endl;*/
-							objectsInScene[obj]->ChangeColor();
+							objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
+							pickedId = objectsInScene[obj]->id;
 							objectPicked = true;
 							break;
 						}
 					}
+				}
+
+				for (int i = 0; i < objectsInScene.size(); i++)
+				{
+					if (objectsInScene[i]->id != pickedId) objectsInScene[i]->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
 				}
 				canDrawRay = true;
 			}

@@ -46,13 +46,13 @@ void Mesh::setupMesh()
 
 }
 
-void Mesh::ChangeColor()
+void Mesh::ChangeColor(const glm::vec3& color)
 {
 	/*this->mVAO.Bind();
 	glm::vec3 newColor(0.0f, 1.0f, 0.0f);
 	glBufferSubData(GL_ARRAY_BUFFER, offsetof(Vertex, color), sizeof(glm::vec3), &newColor);
 	this->mVAO.Unbind();*/
-	this->color = glm::vec3(0.0f, 1.0f, 0.0f);
+	this->color = color;
 }
 
 void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting)
