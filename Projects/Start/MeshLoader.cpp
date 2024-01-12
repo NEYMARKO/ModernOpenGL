@@ -1,14 +1,14 @@
 #include "MeshLoader.h"
 
-MeshLoader::MeshLoader(const char* filePath, Mesh* mesh)
+MeshLoader::MeshLoader(const char* filePath)
 {
     std::ifstream file;
     file.open(filePath);
     if (!file.fail())
     {
         std::vector<glm::vec3> normalVectors;
-        ReadFile(file, mesh, normalVectors);
-        NormalizeObject(mesh);
+        ReadFile(file, normalVectors);
+        CalculateScalingFactor();
     }
     else
     {
@@ -16,18 +16,18 @@ MeshLoader::MeshLoader(const char* filePath, Mesh* mesh)
     }
 }
 
-void MeshLoader::ReadFile(std::ifstream& file, Mesh* mesh, std::vector<glm::vec3>& normalVectors)
+void MeshLoader::ReadFile(std::ifstream& file, std::vector<glm::vec3>& normalVectors)
 {
     std::string line;
     while (std::getline(file, line))
     {
-        SplitLine(line, mesh, normalVectors);
+        SplitLine(line, normalVectors);
     }
     return;
 }
 
 
-void MeshLoader::SplitLine(std::string& line, Mesh* mesh, std::vector<glm::vec3>& normalVectors)
+void MeshLoader::SplitLine(std::string& line, std::vector<glm::vec3>& normalVectors)
 {
     std::string state = line.substr(0, 2);
     if (state == "vn") line = line.substr(3, line.length());
@@ -87,7 +87,7 @@ void MeshLoader::SplitLine(std::string& line, Mesh* mesh, std::vector<glm::vec3>
         if (state == "v ")
         {
             v.position = vec3;
-            mesh->vertices.push_back(v);
+            this->vertices.push_back(v);
         }
         else
         {
@@ -111,15 +111,15 @@ void MeshLoader::SplitLine(std::string& line, Mesh* mesh, std::vector<glm::vec3>
 
             unsigned int index = std::stoul(indexString) - 1;
             unsigned int normalPos = std::stoul(normalIndexString) - 1;
-            mesh->vertices[index].normal = normalVectors[normalPos];
-            mesh->indices.push_back(index);
+            this->vertices[index].normal = normalVectors[normalPos];
+            this->indices.push_back(index);
         }
         return;
     }
     return;
 }
 
-void MeshLoader::NormalizeObject(Mesh* mesh)
+void MeshLoader::CalculateScalingFactor()
 {
     float xmin = minExtremes[0];
     float ymin = minExtremes[1];

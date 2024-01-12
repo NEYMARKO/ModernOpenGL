@@ -63,7 +63,7 @@ void BoundingBox::VerticesToWorld()
 {
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, this->parentMesh.objectPos);
-	model = glm::scale(model, glm::vec3(this->parentMesh.scalingFactor, this->parentMesh.scalingFactor, this->parentMesh.scalingFactor));
+	model = glm::scale(model, glm::vec3(this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor));
 
 	this->minExtremes = glm::vec3(model * glm::vec4(this->minExtremes, 1.0));
 	this->maxExtremes = glm::vec3(model * glm::vec4(this->maxExtremes, 1.0));
@@ -79,7 +79,7 @@ bool BoundingBox::Intersects(Camera& camera, float step)
 	{
 		if (rayPoint[i] > maxExtremes[i] || rayPoint[i] < minExtremes[i]) return false;
 	}
-	std::cout << "Clicked on: " << this->parentMesh.name << std::endl;
+	
 	return true;
 }
 
@@ -88,7 +88,7 @@ void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 	shaderProgram.Activate();
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, this->parentMesh.objectPos);
-	model = glm::scale(model, glm::vec3(this->parentMesh.scalingFactor, this->parentMesh.scalingFactor, this->parentMesh.scalingFactor));
+	model = glm::scale(model, glm::vec3(this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor));
 
 	shaderProgram.SetMat4("model", model);
 	shaderProgram.SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));

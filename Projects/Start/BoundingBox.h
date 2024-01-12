@@ -6,12 +6,6 @@
 #include "EBO.h"
 class Mesh;
 
-
-struct Plane
-{
-	glm::vec3 normal;
-	float D;
-};
 class BoundingBox
 {
 	private:
@@ -21,20 +15,14 @@ class BoundingBox
 		Mesh& parentMesh;
 		glm::vec3 minExtremes;
 		glm::vec3 maxExtremes;
-	public:
-		//std::vector<float> bounds;
-		std::vector<Plane> planeCoefficients;
-		//After filling VBO with info, vertices are converted to world space because they are no longer needed in object space
 		std::vector<glm::vec3> vertices;
 		std::vector<unsigned int> indices;
-		//Constructor for BoundingBox 
-		//Uses extremes of Mesh to create box which contains all vertices of Mesh object
+	public:
 		BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& parentMesh);
 		~BoundingBox();
-		
 		//Initializes borders, fills vertices and indices with data 
 		void Initialize();
-		//Sets up VAO, VBO and EBO buffers
+		//Initializes buffers, fills VBO & EBO with data, in the end unbinds buffers
 		void SetupBuffers();
 		//Translates box bounds (extremes) to world space and checks intersection with ray in world space
 		void VerticesToWorld();
