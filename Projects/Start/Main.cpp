@@ -184,6 +184,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 							/*glm::vec3 point = ray->GetRayStart() + ray->GetRayDirection() *  i;
 							std::cout << "INTERSECTION AT: (" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
 							std::cout << "I: " << i << std::endl;*/
+							objectsInScene[obj]->ChangeColor();
 							objectPicked = true;
 							break;
 						}

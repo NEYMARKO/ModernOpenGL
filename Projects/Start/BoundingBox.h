@@ -15,10 +15,10 @@ struct Plane
 class BoundingBox
 {
 	private:
-		Mesh& parentMesh;
 		VBO boxVBO;
 		EBO boxEBO;
 		VAO boxVAO;
+		Mesh& parentMesh;
 		glm::vec3 minExtremes;
 		glm::vec3 maxExtremes;
 	public:
@@ -27,7 +27,6 @@ class BoundingBox
 		//After filling VBO with info, vertices are converted to world space because they are no longer needed in object space
 		std::vector<glm::vec3> vertices;
 		std::vector<unsigned int> indices;
-		std::vector<unsigned int> trisIndices;
 		//Constructor for BoundingBox 
 		//Uses extremes of Mesh to create box which contains all vertices of Mesh object
 		BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& parentMesh);
@@ -37,7 +36,7 @@ class BoundingBox
 		void Initialize();
 		//Sets up VAO, VBO and EBO buffers
 		void SetupBuffers();
-
+		//Translates box bounds (extremes) to world space and checks intersection with ray in world space
 		void VerticesToWorld();
 		//Checks if ray intersects with bounding box in world space
 		bool Intersects(Camera& camera, float step);

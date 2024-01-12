@@ -13,7 +13,6 @@ struct Vertex
 {
 	glm::vec3 position;
 	glm::vec3 normal;
-	glm::vec3 color = glm::vec3(1.0f, 0.5f, 0.31f);
 };
 
 class Mesh
@@ -28,6 +27,8 @@ class Mesh
 	public:
 		float id;
 		std::string name;
+		glm::vec3 color = glm::vec3(1.0f, 0.5f, 0.31f);
+
 		VAO mVAO;
 		BoundingBox* boundingBox;
 		glm::vec3 objectPos;
@@ -40,7 +41,7 @@ class Mesh
 		//Deletes VAO, VBO and EBO associated with mesh
 		~Mesh();
 		//Binds VAO, calculates MVP matrices, assigns uniforms and draws object using EBO info
+		void ChangeColor();
 		void Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting);
-
 		void PrintIndices();
 };

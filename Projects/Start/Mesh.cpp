@@ -38,12 +38,21 @@ void Mesh::setupMesh()
 
 	this->mVAO.LinkVBO(mVBO, 0, 3, sizeof(Vertex), 0);
 	this->mVAO.LinkVBO(mVBO, 1, 3, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-	this->mVAO.LinkVBO(mVBO, 2, 3, sizeof(Vertex), (void*)offsetof(Vertex, color));
+	//this->mVAO.LinkVBO(mVBO, 2, 3, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
 	this->mVAO.Unbind();
 	this->mVBO.Unbind();
 	this->mEBO.Unbind();
 
+}
+
+void Mesh::ChangeColor()
+{
+	/*this->mVAO.Bind();
+	glm::vec3 newColor(0.0f, 1.0f, 0.0f);
+	glBufferSubData(GL_ARRAY_BUFFER, offsetof(Vertex, color), sizeof(glm::vec3), &newColor);
+	this->mVAO.Unbind();*/
+	this->color = glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
 void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting)
@@ -56,7 +65,7 @@ void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera&
 	shaderProgram.SetMat4("model", model);
 	camera.ViewProjectionMatrix(shaderProgram);
 
-	//shaderProgram.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+	shaderProgram.SetVec3("objectColor", this->color);
 	shaderProgram.SetVec3("lightColor", lighting.lightColor);
 	shaderProgram.SetVec3("lightPos", lighting.position);
 
