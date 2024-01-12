@@ -16,6 +16,8 @@ double globalMouseXPos = globalWidth / 2;
 double globalMouseYPos = globalHeight / 2;
 bool canRotate = false;
 bool canDrawRay = false;
+std::vector<Mesh*> objectsInScene;
+
 GLFWcursor* cursor = nullptr;
 Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, -1.0f), 5.5f, 2.5f, globalWidth, globalHeight);
 Shader boundingBoxShaderProgram;
@@ -51,21 +53,20 @@ int main()
 
 	float id = 0;
 	Mesh lightBulb("lightBulb.txt", glm::vec3(-10.0f, 0.0f, 0.0f), id);
-	Mesh cube("cubeFlat.txt", glm::vec3(0.0f, 0.0f, 0.0f), id);
-	//Mesh dragon("dragonSmooth.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
-	////Mesh dragonRotated("dragonSmoothRotated.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
-	/*Mesh temple("templeFlat.txt", glm::vec3(-3.0f, 1.0f, 0.0f), ++id);
+	Mesh cube("cubeFlat.txt", glm::vec3(0.0f, 0.0f, 0.0f), ++id);
+	Mesh dragon("dragonSmooth.txt", glm::vec3(3.0f, 4.0f, 0.0f), ++id);
+	Mesh temple("templeFlat.txt", glm::vec3(-3.0f, 1.0f, 0.0f), ++id);
 	Mesh frog("frogSmooth.txt", glm::vec3(0.0f, -2.0f, 2.0f), ++id);
-	Mesh teddy("teddyFlat.txt", glm::vec3(0.0f, -2.0f, 5.0f), ++id);*/
+	Mesh teddy("teddyFlat.txt", glm::vec3(0.0f, -2.0f, 5.0f), ++id);
 
-	/*Mesh cube("cubeFlat.txt", glm::vec3(0.0f, -1.0f, 0.0f));
 
-	cube.Print();*/
+	objectsInScene.push_back(&cube);
+	objectsInScene.push_back(&dragon);
+	objectsInScene.push_back(&temple);
+	objectsInScene.push_back(&lightBulb);
+	objectsInScene.push_back(&teddy);
+
 	Lighting light(lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
-
-	/*glm::mat4 lightModelMatrix;
-
-	lightModelMatrix = glm::translate(lightModelMatrix, light.position);*/
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -80,20 +81,23 @@ int main()
 
 		lightingShaderProgram.Activate();
 
-		light.Draw(lightingShaderProgram, globalCamera);
+		light.Draw(lightingShaderProgram, boundingBoxShaderProgram, globalCamera);
 
-		//dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-		////dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		//dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 
-		/*temple.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		temple.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		
 		frog.Draw(shaderProgram, boundingBoxShaderProgram,  globalCamera, light);
 		
-		teddy.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
+		teddy.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 
 		cube.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		
-		if (canDrawRay) globalCamera.ray->Draw(boundingBoxShaderProgram, globalCamera);
+		if (canDrawRay)
+		{
+			globalCamera.ray->Draw(boundingBoxShaderProgram, globalCamera);
+		}
 
 		globalCamera.Move(window, deltaTime);
 
@@ -166,6 +170,22 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 				double xpos, ypos;
 				glfwGetCursorPos(window, &xpos, &ypos);
 				globalCamera.Raycast(window, boundingBoxShaderProgram, xpos, ypos);
+				Ray* ray = globalCamera.ray;
+
+				for (int obj = 0; obj < objectsInScene.size(); obj++)
+				{
+					objectsInScene[obj]->boundingBox->UpdatePlanes();
+					for (float i = 0; i < ray->GetRayLength(); i += 0.5)
+					{
+						if (objectsInScene[obj]->boundingBox->Intersects(globalCamera, i))
+						{
+							/*glm::vec3 point = ray->GetRayStart() + ray->GetRayDirection() *  i;
+							std::cout << "INTERSECTION AT: (" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
+							std::cout << "I: " << i << std::endl;*/
+							break;
+						}
+					}
+				}
 				canDrawRay = true;
 			}
 			break;

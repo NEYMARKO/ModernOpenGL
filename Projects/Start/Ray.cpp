@@ -15,11 +15,7 @@ Ray::Ray(glm::vec3 rayStart, glm::vec3 rayDirection, float rayLength)
 	this->indices = { 0, 1 };
 	SetupBuffers();
 
-	glm::vec3 end = this->start + this->direction * this->length;
-	std::cout << "Ray start: (" << this->start.x << ", " << this->start.y << ", " << this->start.z << ")" << std::endl;
-	std::cout << "Ray end: (" << end.x << ", " << end.y << ", " << end.z << ")" << std::endl;
-	std::cout << "Ray direction: (" << this->direction.x << ", " << this->direction.y << ", " << this->direction.z << ")" << std::endl;
-	//std::cout << "Ray direction: (" << this->direction.x << ", " << this->direction.y << ", " << this->direction.z << ")" << std::endl;
+	std::cout << "Ray start: (" << start.x << ", " << start.y << ", " << start.z << ")" << std::endl;
 }
 
 Ray::~Ray()
@@ -27,8 +23,6 @@ Ray::~Ray()
 	rayVAO.Delete();
 	rayVBO.Delete();
 	rayEBO.Delete();
-
-	//std::cout << "Ray deleted" << std::endl;
 }
 
 void Ray::SetupBuffers()
@@ -37,10 +31,6 @@ void Ray::SetupBuffers()
 	this->rayVBO = VBO(this->vertices);
 	this->rayEBO = EBO(this->indices);
 
-	/*this->rayVBO.Bind();
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, sizeof(glm::vec3), 0);
-	glEnableVertexAttribArray(0);
-	this->rayVBO.Unbind();*/
 	this->rayVAO.LinkVBO(rayVBO, 0, 3, sizeof(glm::vec3), 0);
 
 	this->rayVAO.Unbind();
@@ -48,22 +38,32 @@ void Ray::SetupBuffers()
 	this->rayEBO.Unbind();
 }
 
-void Ray::UpdatePosition(glm::vec3 start)
+void Ray::UpdateData(glm::vec3& start, glm::vec3& direction)
 {
-	this->start = this->start - start;
+	this->start = start;
+	this->direction = direction;
 }
 
-void Ray::UpdateDirection(glm::vec3 direction)
+glm::vec3 Ray::GetRayStart()
 {
-	this->direction = direction;
+	return this->start;
+}
+
+glm::vec3 Ray::GetRayDirection()
+{
+	return this->direction;
+}
+
+float Ray::GetRayLength()
+{
+	return this->length;
 }
 
 void Ray::Draw(Shader& shaderProgram, Camera& camera)
 {
-	//std::cout << "Drawing ray" << std::endl;
 	shaderProgram.Activate();
+	//Coordinates are already converted to world space in Raycast function
 	glm::mat4 model = glm::mat4(1.0f);
-	//model = glm::translate(model, this->start);
 
 	shaderProgram.SetMat4("model", model);
 	camera.ViewProjectionMatrix(shaderProgram);

@@ -17,5 +17,5 @@ public:
 	~Lighting();
 	//Calculates MVP matrices, assigns uniforms and draws mesh that represents source of light
 	//Uses light shader program
-	void Draw(Shader& shader, Camera& camera);
+	void Draw(Shader& shader, Shader& boundingBoxShaderProgram, Camera& camera);
 };

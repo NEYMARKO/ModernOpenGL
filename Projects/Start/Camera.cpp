@@ -43,7 +43,6 @@ void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 	glm::mat4 projection = glm::mat4(1.0f);
 
 	view = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
-	//width/height instead of harcoded values (800/800)
 	projection = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
 
 	shaderProgram.SetMat4("view", view);
@@ -126,13 +125,12 @@ void Camera::UpdateViewportDimensions(const int& width, const int& height)
 	this->width = (float)width;
 	this->height = (float)height;
 }
-void Camera::Raycast(GLFWwindow* window, Shader& shaderProgram, double mouseX, double mouseY)
+void Camera::Raycast(GLFWwindow* window, Shader& shaderProgram, const double& mouseX, const double& mouseY)
 {
 	float xNDC = (2.0f * mouseX) / this->width - 1.0f;
 	float yNDC = 1.0f - (2.0f * mouseY) / this->height;
 
 	glm::vec4 rayStartNDC = glm::vec4(xNDC, yNDC, 0.0, 1.0);
-
 	glm::vec4 rayEndNDC = glm::vec4(xNDC, yNDC, 1.0, 1.0);
 
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
@@ -153,11 +151,11 @@ void Camera::Raycast(GLFWwindow* window, Shader& shaderProgram, double mouseX, d
 
 	if (this->ray == nullptr)
 	{
-		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 1000);
+		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 50);
 	}
 	else
 	{
 		delete this->ray;
-		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 1000);
+		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 50);
 	}
 }

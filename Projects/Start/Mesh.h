@@ -13,6 +13,7 @@ struct Vertex
 {
 	glm::vec3 position;
 	glm::vec3 normal;
+	glm::vec3 color = glm::vec3(1.0f, 0.5f, 0.31f);
 };
 
 class Mesh
@@ -24,8 +25,9 @@ class Mesh
 		//Links VBO attributes 
 		//Unbinds VAO, VBO, EBO
 		void setupMesh();
-		float id;
 	public:
+		float id;
+		std::string name;
 		VAO mVAO;
 		BoundingBox* boundingBox;
 		glm::vec3 objectPos;
@@ -39,4 +41,6 @@ class Mesh
 		~Mesh();
 		//Binds VAO, calculates MVP matrices, assigns uniforms and draws object using EBO info
 		void Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting);
+
+		void PrintIndices();
 };

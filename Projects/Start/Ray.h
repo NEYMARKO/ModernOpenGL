@@ -27,8 +27,11 @@ class Ray
 
 		void SetupBuffers();
 
-		void UpdatePosition(glm::vec3 start);
-		void UpdateDirection(glm::vec3 direction);
+		void UpdateData(glm::vec3& start, glm::vec3& direction);
+
+		glm::vec3 GetRayStart();
+		glm::vec3 GetRayDirection();
+		float GetRayLength();
 
 		void Draw(Shader& shaderProgram, Camera& camera);
 };

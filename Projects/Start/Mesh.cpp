@@ -8,8 +8,10 @@ Mesh::Mesh(const char* filePath, glm::vec3 objectPos, float id)
 	this->scalingFactor = meshLoader.scalingFactor;
 	this->objectPos = objectPos;
 	setupMesh();
-	this->boundingBox = new BoundingBox(meshLoader.minExtremes, meshLoader.maxExtremes, *this);
+	this->name = filePath;
 	this->id = id;
+	this->boundingBox = new BoundingBox(meshLoader.minExtremes, meshLoader.maxExtremes, *this);
+	//PrintIndices();
 }
 
 Mesh::~Mesh()
@@ -36,6 +38,7 @@ void Mesh::setupMesh()
 
 	this->mVAO.LinkVBO(mVBO, 0, 3, sizeof(Vertex), 0);
 	this->mVAO.LinkVBO(mVBO, 1, 3, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+	this->mVAO.LinkVBO(mVBO, 2, 3, sizeof(Vertex), (void*)offsetof(Vertex, color));
 
 	this->mVAO.Unbind();
 	this->mVBO.Unbind();
@@ -53,7 +56,7 @@ void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera&
 	shaderProgram.SetMat4("model", model);
 	camera.ViewProjectionMatrix(shaderProgram);
 
-	shaderProgram.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+	//shaderProgram.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 	shaderProgram.SetVec3("lightColor", lighting.lightColor);
 	shaderProgram.SetVec3("lightPos", lighting.position);
 
@@ -62,6 +65,13 @@ void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera&
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	mVAO.Unbind();
 
-	boundingBoxShaderProgram.Activate();
 	this->boundingBox->Draw(boundingBoxShaderProgram, camera);
+}
+
+void Mesh::PrintIndices()
+{
+	for (int i = 0; i < indices.size() - 2; i += 3)
+	{
+		std::cout << "Indices: " << indices[i] << " " << indices[i + 1] << " " << indices[i + 2] << std::endl;
+	}
 }

@@ -11,7 +11,7 @@ Lighting::~Lighting()
 {
 	std::cout << "DELETED LIGHTING" << std::endl;
 }
-void Lighting::Draw(Shader& shaderProgram, Camera& camera)
+void Lighting::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera)
 {
 	glm::mat4 model;
 	model = glm::translate(model, this->position);
@@ -24,4 +24,6 @@ void Lighting::Draw(Shader& shaderProgram, Camera& camera)
 	lightVAO.Bind();
 	glDrawElements(GL_TRIANGLES, this->meshContainer.indices.size(), GL_UNSIGNED_INT, 0);
 	lightVAO.Unbind();
+
+	this->meshContainer.boundingBox->Draw(boundingBoxShaderProgram, camera);
 }

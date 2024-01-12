@@ -133,5 +133,5 @@ void MeshLoader::NormalizeObject(Mesh* mesh)
 
 MeshLoader::~MeshLoader()
 {
-    std::cout << "Deleted loader" << std::endl;
+    //std::cout << "Deleted loader" << std::endl;
 }
