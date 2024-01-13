@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include "Lighting.h"
-
+#include "StateMachine.h"
 #define GLFW_HAND_CURSOR 0x00036004
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -12,11 +12,13 @@ void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset);
 int globalWidth = 800, globalHeight= 800;
 float deltaTime = 0.0f, lastFrame = 0.0f;
 double globalMouseXPos = globalWidth / 2, globalMouseYPos = globalHeight / 2;
-bool canRotate = false;
-bool canDrawRay = false;
-bool canAdd = false;
+//bool canRotate = false;
+//bool canDrawRay = false;
+//bool canAdd = false;
+
 float id = 0;
 
+StateMachine stateMachine(nullptr);
 std::vector<Mesh*> objectsInScene;
 MeshLoader cubeLoader("cubeFlat.txt");
 
@@ -72,6 +74,7 @@ int main()
 	Mesh frog(&frogLoader, glm::vec3(0.0f, -4.0f, 0.0f), id++);
 	Mesh teddy(&teddyLoader, glm::vec3(-2.0f, 4.0f, 0.0f), id++);*/
 
+	objectsInScene.push_back(&cube);
 	/*objectsInScene.push_back(&cube);
 	objectsInScene.push_back(&dragon);
 	objectsInScene.push_back(&dragon2);
@@ -106,8 +109,10 @@ int main()
 		dragon5.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		dragon6.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
 
+		//std::cout << "OBJECTS IN SCENE SIZE: " << objectsInScene.size() << std::endl;
 		for (int i = 0; i < objectsInScene.size(); i++)
 		{
+			//std::cout << "OBJECT IN SCENE ID: " << objectsInScene[i]->id << std::endl;
 			objectsInScene[i]->Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		}
 		//dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
@@ -118,9 +123,9 @@ int main()
 		
 		teddy.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
 
-		cube.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		//cube.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		
-		if (canDrawRay)
+		if (globalCamera.ray != nullptr)
 		{
 			globalCamera.ray->Draw(boundingBoxShaderProgram, globalCamera);
 		}
@@ -131,12 +136,11 @@ int main()
 		glfwPollEvents();
 	}
 
-	for (int i = 0; i < objectsInScene.size(); i++)
-	{
-		if (objectsInScene[i] != nullptr) delete objectsInScene[i];
-	}
+	objectsInScene.clear();
+
 	shaderProgram.Delete();
 	lightingShaderProgram.Delete();
+	boundingBoxShaderProgram.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program
@@ -148,9 +152,9 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
 	switch (key)
 	{
-	case GLFW_KEY_ESCAPE:
-		glfwSetWindowShouldClose(window, GL_TRUE);
-		break;
+	//case GLFW_KEY_ESCAPE:
+	//	glfwSetWindowShouldClose(window, GL_TRUE);
+	//	break;
 	case GLFW_KEY_F:
 		if (action == GLFW_PRESS)
 		{
@@ -163,92 +167,95 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			globalCamera.lookAtPosition = globalCamera.focus ? globalCamera.targetPos : (globalCamera.cameraPos + globalCamera.cameraDirection);
 		}
 		break;
-	case GLFW_KEY_A:
-		if (action == GLFW_PRESS)
-		{
-			canAdd = !canAdd;
-		}
-	default:
-		break;
+	//case GLFW_KEY_A:
+	//	if (action == GLFW_PRESS)
+	//	{
+	//		canAdd = !canAdd;
+	//	}
+	//	break;
+	//default:
+	//	break;
 	}
+	stateMachine.ChangeState(window, key, action);
 }
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	if (canRotate)
+	/*if (canRotate)
 	{
 		globalCamera.Rotate(window, globalMouseXPos, globalMouseYPos, xpos, ypos);
-	}
+	}*/
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	switch (button)
-	{
-		case GLFW_MOUSE_BUTTON_RIGHT:
-			if (action == GLFW_PRESS)
-			{
-				canRotate = true;
-				glfwGetCursorPos(window, &globalMouseXPos, &globalMouseYPos);
-				GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
-				glfwSetCursor(window, cursor);
-			}
-			else
-			{
-				glfwSetCursor(window, NULL);
-				canRotate = false;
-			}
-			break;
-		case GLFW_MOUSE_BUTTON_LEFT:
-			if (action == GLFW_PRESS)
-			{
-				double xpos, ypos;
-				glfwGetCursorPos(window, &xpos, &ypos);
-				globalCamera.Raycast(window, boundingBoxShaderProgram, xpos, ypos);
-				Ray* ray = globalCamera.ray;
+	//switch (button)
+	//{
+	//	case GLFW_MOUSE_BUTTON_RIGHT:
+	//		if (action == GLFW_PRESS)
+	//		{
+	//			canRotate = true;
+	//			glfwGetCursorPos(window, &globalMouseXPos, &globalMouseYPos);
+	//			GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+	//			glfwSetCursor(window, cursor);
+	//		}
+	//		else
+	//		{
+	//			glfwSetCursor(window, NULL);
+	//			canRotate = false;
+	//		}
+	//		break;
+	//	case GLFW_MOUSE_BUTTON_LEFT:
+	//		if (action == GLFW_PRESS)
+	//		{
+	//			double xpos, ypos;
+	//			glfwGetCursorPos(window, &xpos, &ypos);
+	//			globalCamera.Raycast(window, xpos, ypos);
+	//			Ray* ray = globalCamera.ray;
 
-				std::cout << "CAN ADD: " << (canAdd == false ? "false" : "true") << std::endl;
-				if (canAdd)
-				{
-					std::cout << "IN HERE" << std::endl;
-					Mesh* obj = new Mesh(&cubeLoader, (ray->GetRayStart() + ray->GetRayDirection() * 5.0f), id++);
-					objectsInScene.push_back(obj);
-				}
-				else
-				{
-					bool objectPicked = false;
-					int pickedId = -1;
-					for (int obj = 0; obj < objectsInScene.size(); obj++)
-					{
-						if (objectPicked) break;
-						for (float i = 0; i < ray->GetRayLength(); i += 0.5)
-						{
-							if (objectsInScene[obj]->boundingBox->Intersects(globalCamera, i))
-							{
-								objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
-								pickedId = objectsInScene[obj]->id;
-								objectPicked = true;
-								break;
-							}
-						}
-					}
-					//removing selective color if current click doesn't intersect with any of the objects
-					for (int i = 0; i < objectsInScene.size(); i++)
-					{
-						if (objectsInScene[i]->id != pickedId) objectsInScene[i]->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
-					}
-					canDrawRay = true;
-				}
-			}
-			break;
-		default:
-			break;
-	}
+	//			//std::cout << "CAN ADD: " << (canAdd == false ? "false" : "true") << std::endl;
+	//			if (canAdd)
+	//			{
+	//				//std::cout << "IN HERE" << std::endl;
+	//				Mesh* obj = new Mesh(&cubeLoader, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), id++);
+	//				objectsInScene.push_back(obj);
+	//			}
+	//			else
+	//			{
+	//				bool objectPicked = false;
+	//				int pickedId = -1;
+	//				for (int obj = 0; obj < objectsInScene.size(); obj++)
+	//				{
+	//					if (objectPicked) break;
+	//					for (float i = 0; i < ray->GetRayLength(); i += 0.5)
+	//					{
+	//						if (objectsInScene[obj]->boundingBox->Intersects(globalCamera, i))
+	//						{
+	//							objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
+	//							pickedId = objectsInScene[obj]->id;
+	//							objectPicked = true;
+	//							break;
+	//						}
+	//					}
+	//				}
+	//				//removing selective color if current click doesn't intersect with any of the objects
+	//				for (int i = 0; i < objectsInScene.size(); i++)
+	//				{
+	//					if (objectsInScene[i]->id != pickedId) objectsInScene[i]->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
+	//				}
+	//				canDrawRay = true;
+	//			}
+	//		}
+	//		break;
+	//	default:
+	//		break;
+	//}
+	stateMachine.Click(window, globalCamera, objectsInScene, &cubeLoader, button, action);
 }
 
 void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset)
 {
-	std::cout << "ZOOM: " << yoffset << std::endl;
+	//std::cout << "ZOOM: " << yoffset << std::endl;
 	globalCamera.Zoom(yoffset);
 }
 

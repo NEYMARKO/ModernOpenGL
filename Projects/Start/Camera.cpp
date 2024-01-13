@@ -38,6 +38,11 @@ void Camera::calculateCameraUp(glm::vec3 upVector)
 
 void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 {
+	//If window gets minimized, it's width and height become 0 => when calculating projection matrix, 0 division happens
+	if (this->width <= 0 || this->height <= 0)
+	{
+		return;
+	}
 	//glm::mat4 view = glm::lookAt(this->cameraPos, this->cameraPos + this->cameraForward, this->cameraUp);
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
@@ -99,7 +104,7 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 
 void Camera::Zoom(double amount)
 {
-	this->fov += amount * 2;
+	this->fov += amount * - 2;
 }
 
 void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
@@ -125,7 +130,7 @@ void Camera::UpdateViewportDimensions(const int& width, const int& height)
 	this->width = (float)width;
 	this->height = (float)height;
 }
-void Camera::Raycast(GLFWwindow* window, Shader& shaderProgram, const double& mouseX, const double& mouseY)
+void Camera::Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY)
 {
 	float xNDC = (2.0f * mouseX) / this->width - 1.0f;
 	float yNDC = 1.0f - (2.0f * mouseY) / this->height;

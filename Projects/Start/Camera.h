@@ -46,5 +46,5 @@ class Camera
 
 		//Turns x and y coordinate of a pixel into world position and casts a ray starting from that position
 		//and going into direction of a camera
-		void Raycast(GLFWwindow* window, Shader& shaderProgram, const double& mouseX, const double& mouseY);
+		void Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY);
 };
