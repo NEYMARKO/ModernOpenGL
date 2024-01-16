@@ -41,6 +41,7 @@ class Camera
 		//By hovering mouse across screen (while right mouse is pressed), camera gets rotated
 		void Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY);
 
+		void ScreenToWorldCoordinates(const double mouseX, const double mouseY, glm::vec4& start, glm::vec4& end);
 		//Updates width and height parameters of camera to match width and height of viewport
 		void UpdateViewportDimensions(const int& width, const int& height);
 

@@ -132,10 +132,11 @@ void Camera::UpdateViewportDimensions(const int& width, const int& height)
 }
 void Camera::Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY)
 {
-	float xNDC = (2.0f * mouseX) / this->width - 1.0f;
-	float yNDC = 1.0f - (2.0f * mouseY) / this->height;
 
-	glm::vec4 rayStartNDC = glm::vec4(xNDC, yNDC, 0.0, 1.0);
+	glm::vec4 rayStartWorld = glm::vec4(1.0, 1.0, 1.0, 1.0);
+	glm::vec4 rayEndWorld = glm::vec4(1.0, 1.0, 1.0, 1.0);
+	ScreenToWorldCoordinates(mouseX, mouseY, rayStartWorld, rayEndWorld);
+	/*glm::vec4 rayStartNDC = glm::vec4(xNDC, yNDC, 0.0, 1.0);
 	glm::vec4 rayEndNDC = glm::vec4(xNDC, yNDC, 1.0, 1.0);
 
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
@@ -152,15 +153,38 @@ void Camera::Raycast(GLFWwindow* window, const double& mouseX, const double& mou
 	rayEndWorld /= rayEndWorld.w;
 
 	glm::vec3 rayDirectionWorld = glm::vec3(rayEndWorld - rayStartWorld);
-	rayDirectionWorld = glm::normalize(rayDirectionWorld);
+	rayDirectionWorld = glm::normalize(rayDirectionWorld);*/
 
 	if (this->ray == nullptr)
 	{
-		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 50);
+		this->ray = new Ray(rayStartWorld, glm::normalize(rayEndWorld - rayStartWorld), 50);
 	}
 	else
 	{
 		delete this->ray;
-		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 50);
+		this->ray = new Ray(rayStartWorld, glm::normalize(rayEndWorld - rayStartWorld), 50);
 	}
+}
+
+void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, glm::vec4& rayStart, glm::vec4&rayEnd)
+{
+
+	float xNDC = (2.0f * mouseX) / this->width - 1.0f;
+	float yNDC = 1.0f - (2.0f * mouseY) / this->height;
+
+	rayStart = glm::vec4(xNDC, yNDC, 0.0, 1.0);
+	rayEnd = glm::vec4(xNDC, yNDC, 1.0, 1.0);
+
+	glm::mat4 projectionMatrix = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
+	glm::mat4 viewMatrix = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
+
+	glm::mat4 invProjection = glm::inverse(projectionMatrix);
+	rayStart = invProjection * rayStart;
+	rayEnd = invProjection * rayEnd;
+
+	glm::mat4 invView = glm::inverse(viewMatrix);
+	rayStart = invView * rayStart;
+	rayEnd = invView * rayEnd;
+	rayStart /= rayStart.w;
+	rayEnd /= rayEnd.w;
 }

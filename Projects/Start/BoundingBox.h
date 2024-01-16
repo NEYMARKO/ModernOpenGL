@@ -15,9 +15,13 @@ class BoundingBox
 		Mesh& parentMesh;
 		glm::vec3 minExtremes;
 		glm::vec3 maxExtremes;
+		//needed to be able to calculate world min and max extremes
+		glm::vec3 localMinExtremes;
+		glm::vec3 localMaxExtremes;
 		std::vector<glm::vec3> vertices;
 		std::vector<unsigned int> indices;
 	public:
+		glm::vec3 boxCenter;
 		BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& parentMesh);
 		~BoundingBox();
 		//Initializes borders, fills vertices and indices with data 

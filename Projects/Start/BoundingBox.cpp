@@ -2,8 +2,8 @@
 #include "BoundingBox.h"
 BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& parentMesh) : parentMesh(parentMesh)
 {
-	this->minExtremes = minExtremes;
-	this->maxExtremes = maxExtremes;
+	this->localMinExtremes = minExtremes;
+	this->localMaxExtremes = maxExtremes;
 	Initialize();
 	SetupBuffers();
 	VerticesToWorld();
@@ -17,12 +17,12 @@ BoundingBox::~BoundingBox()
 }
 void BoundingBox::Initialize()
 {
-	float xmin = this->minExtremes[0];
-	float ymin = this->minExtremes[1];
-	float zmin = this->minExtremes[2];
-	float xmax = this->maxExtremes[0];
-	float ymax = this->maxExtremes[1];
-	float zmax = this->maxExtremes[2];
+	float xmin = this->localMinExtremes[0];
+	float ymin = this->localMinExtremes[1];
+	float zmin = this->localMinExtremes[2];
+	float xmax = this->localMaxExtremes[0];
+	float ymax = this->localMaxExtremes[1];
+	float zmax = this->localMaxExtremes[2];
 	this->vertices = {
 		glm::vec3(xmin, ymin, zmin), // 0
 		glm::vec3(xmax, ymin, zmin), // 1
@@ -61,13 +61,21 @@ void BoundingBox::SetupBuffers()
 
 void BoundingBox::VerticesToWorld()
 {
-	glm::mat4 model = glm::mat4(1.0f);
+	glm::mat4 model = this->parentMesh.GetFinalMatrix();
+	/*glm::mat4 model = glm::mat4(1.0);
 	model = glm::translate(model, this->parentMesh.objectPos);
-	model = glm::scale(model, glm::vec3(this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor));
+	model = glm::scale(model, glm::vec3(this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor));*/
 
-	this->minExtremes = glm::vec3(model * glm::vec4(this->minExtremes, 1.0));
-	this->maxExtremes = glm::vec3(model * glm::vec4(this->maxExtremes, 1.0));
+	this->minExtremes = glm::vec3(model * glm::vec4(this->localMinExtremes, 1.0));
+	this->maxExtremes = glm::vec3(model * glm::vec4(this->localMaxExtremes, 1.0));
 
+	/*std::cout << "MINIMUMS: " << this->minExtremes.x << ", "
+		<< this->minExtremes.y << ", " << this->minExtremes.z << std::endl;
+	std::cout << "MAXIMUMS: " << this->maxExtremes.x << ", "
+		<< this->maxExtremes.y << ", " << this->maxExtremes.z << std::endl << std::endl;*/
+	this->boxCenter = 0.5f * (this->maxExtremes + this->minExtremes);
+	/*std::cout << "BOX center: " << this->boxCenter.x << ", "
+		<< this->boxCenter.y << ", " << this->boxCenter.z << std::endl;*/
 }
 
 bool BoundingBox::Intersects(Camera& camera, float step)
@@ -77,7 +85,7 @@ bool BoundingBox::Intersects(Camera& camera, float step)
 	glm::vec3 rayPoint = ray->GetRayStart() + ray->GetRayDirection() * step;
 	for (int i = 0; i < 3; i++)
 	{
-		if (rayPoint[i] > maxExtremes[i] || rayPoint[i] < minExtremes[i]) return false;
+		if (rayPoint[i] > this->maxExtremes[i] || rayPoint[i] < this->minExtremes[i]) return false;
 	}
 	
 	return true;
@@ -86,10 +94,11 @@ bool BoundingBox::Intersects(Camera& camera, float step)
 void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 {
 	shaderProgram.Activate();
-	glm::mat4 model = glm::mat4(1.0f);
+	/*glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, this->parentMesh.objectPos);
-	model = glm::scale(model, glm::vec3(this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor));
+	model = glm::scale(model, glm::vec3(this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor));*/
 
+	glm::mat4 model = this->parentMesh.GetFinalMatrix();
 	shaderProgram.SetMat4("model", model);
 	shaderProgram.SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));
 

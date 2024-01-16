@@ -18,14 +18,16 @@ double globalMouseXPos = globalWidth / 2, globalMouseYPos = globalHeight / 2;
 
 float id = 0;
 
-StateMachine stateMachine(nullptr);
-std::vector<Mesh*> objectsInScene;
-MeshLoader cubeLoader("cubeFlat.txt");
-
 
 GLFWcursor* cursor = nullptr;
 Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, -1.0f), 5.5f, 2.5f, globalWidth, globalHeight);
 Shader boundingBoxShaderProgram;
+
+std::vector<Mesh*> objectsInScene;
+MeshLoader cubeLoader("cubeFlat.txt");
+//MeshLoader dragonLoader("dragonSmooth.txt");
+StateMachine stateMachine(nullptr, &globalCamera);
+
 
 int main()
 {
@@ -63,6 +65,7 @@ int main()
 	MeshLoader teddyLoader("teddyFlat.txt");*/
 
 	Mesh lightBulb(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
+	//Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	Mesh cube(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 	/*Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	Mesh dragon2(&dragonLoader, glm::vec3(5.0f + 2.0f, 4.0f - 3.0f, 0.0f - 3.0f), id++);
@@ -74,7 +77,10 @@ int main()
 	Mesh frog(&frogLoader, glm::vec3(0.0f, -4.0f, 0.0f), id++);
 	Mesh teddy(&teddyLoader, glm::vec3(-2.0f, 4.0f, 0.0f), id++);*/
 
+
+	
 	objectsInScene.push_back(&cube);
+	//objectsInScene.push_back(&dragon);
 	/*objectsInScene.push_back(&cube);
 	objectsInScene.push_back(&dragon);
 	objectsInScene.push_back(&dragon2);
@@ -176,11 +182,17 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	//default:
 	//	break;
 	}
-	stateMachine.ChangeState(window, key, action);
+	stateMachine.ChangeState(window, key, action, globalCamera);
 }
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	//std::cout << "SHOULD FOLLOW MOUSE: " << (stateMachine.ShouldFollowMouse() ? "true" : "false") << std::endl;
+	if (stateMachine.ShouldFollowMouse())
+	{
+		//std::cout << "MOUSE POSITION CALLBACK " << std::endl;
+		stateMachine.MouseMove(window, globalCamera, xpos, ypos);
+	}
 	/*if (canRotate)
 	{
 		globalCamera.Rotate(window, globalMouseXPos, globalMouseYPos, xpos, ypos);

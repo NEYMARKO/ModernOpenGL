@@ -1,13 +1,15 @@
 #include "StateMachine.h"
 
-StateMachine::StateMachine(Mesh* mesh)
+StateMachine::StateMachine(Mesh* mesh, Camera* camera)
 {
 	this->state = NOTHING;
 	this->target = mesh;
+	this->camera = camera;
+	
 	std::cout << "State machine created" << std::endl;
 }
 
-void StateMachine::ChangeState(GLFWwindow* window, const int key, const int action)
+void StateMachine::ChangeState(GLFWwindow* window, const int key, const int action, Camera& camera)
 {
 	if (action == GLFW_PRESS)
 	{
@@ -35,12 +37,21 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 		case GLFW_KEY_ESCAPE:
 			this->state = CLOSE_WINDOW;
 			break;
+		//while moving camera perserve same state
+		case GLFW_KEY_DOWN:
+			break;
+		case GLFW_KEY_UP:
+			break;
+		case GLFW_KEY_RIGHT:
+			break;
+		case GLFW_KEY_LEFT:
+			break;
 		default:
 			this->state = NOTHING;
 			break;
 		}
 	}
-	std::cout << "STATE: " << this->state << std::endl;
+	//std::cout << "STATE: " << this->state << std::endl;
 	CheckTarget();
 	ControlState(window);
 }
@@ -98,6 +109,62 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 	default:
 		break;
 	}
+	if (!this->target && this->state != ADD)
+	{
+		this->state = NOTHING;
+	}
+}
+
+void StateMachine::CalculateObjectPlane()
+{
+
+	this->objectPlane.A = this->camera->cameraDirection.x;
+	this->objectPlane.B = this->camera->cameraDirection.y;
+	this->objectPlane.C = this->camera->cameraDirection.z;
+	this->objectPlane.D = - glm::dot(this->camera->cameraDirection, this->target->objectPos);
+	std::cout << "CAMERA DIRECTION: " << this->camera->cameraDirection.x << ", " << this->camera->cameraDirection.y
+		<< ", " << this->camera->cameraDirection.z << std::endl;
+	std::cout << "TARGET POSITION: " << this->target->objectPos.x << ", " << this->target->objectPos.y
+		<< ", " << this->target->objectPos.z << std::endl;
+	std::cout << "D: " << this->objectPlane.D << std::endl;
+}
+void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY)
+{
+	//glm::vec4 mousePositionWorld = glm::vec4(1.0);
+	//std::cout << "MOUSE MOVE IN STATE MACHINE " << std::endl;
+	CalculateObjectPlane();
+	camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, mouseEndWorld);
+	//this->mousePositionWorld.z = this->mousePositionWorld.z / this->target->boundingBox->boxCenter.z;
+	//this->mouseEndWorld.z = this->target->objectPos.z;
+	/*std::cout << "Mouse position in world " << this->mousePositionWorld.x << ", " 
+		<< this->mousePositionWorld.y << ", " << this->mousePositionWorld.z << std::endl;*/
+	switch (this->state)
+	{
+	case GRAB:
+		this->followMouse = true;
+		Grab();
+		break;
+	case ROTATE:
+		this->followMouse = true;
+		Rotate();
+		break;
+	case SCALE:
+		this->followMouse = true;
+		Scale();
+		break;
+	case ADD:
+		Add();
+		break;
+	case DELETE:
+		Delete();
+		break;
+	case CLOSE_WINDOW:
+		CloseWindow(window);
+		break;
+	default:
+		this->followMouse = false;
+		break;
+	}
 }
 void StateMachine::CheckTarget()
 {
@@ -111,52 +178,75 @@ void StateMachine::CheckTarget()
 	return;
 }
 
+bool StateMachine::ShouldFollowMouse()
+{
+	return this->followMouse;
+}
+
 void StateMachine::ControlState(GLFWwindow* window)
 {
 	switch (this->state)
 	{
 	case GRAB:
-		Grab();
+		this->followMouse = true;
 		break;
 	case ROTATE:
-		Rotate();
+		this->followMouse = true;
 		break;
 	case SCALE:
-		Scale();
+		this->followMouse = true;
 		break;
 	case ADD:
-		Add();
 		break;
 	case DELETE:
-		Delete();
 		break;
 	case CLOSE_WINDOW:
 		CloseWindow(window);
 		break;
 	default:
+		this->followMouse = false;
 		break;
 	}
 }
 
 void StateMachine::Grab()
 {
-	std::cout << "IN GRAB " << std::endl;
+	//std::cout << "IN GRAB " << std::endl;
+	//glm::vec3 translationVector = glm::vec3(this->mousePositionWorld) - this->target->objectPos;
+	glm::vec3 translationVector = glm::vec3(this->mouseStartWorld) + 
+		glm::normalize(glm::vec3(this->mouseEndWorld) - glm::vec3(this->mouseStartWorld)) * this->objectPlane.D;
+	/*std::cout << "Translation vector " << translationVector.x << ", "
+		<< translationVector.y << ", " << translationVector.z << std::endl;*/
+	//translationVector *= 5;
+	//this->target->Translate();
+	
+
+	/*std::cout << "Mouse position in world: " << this->mouseEndWorld.x << ", "
+		<< this->mouseEndWorld.y << ", " << this->mouseEndWorld.z << std::endl;*/
+	/*std::cout << "Translate position in world " << translationVector.x << ", "
+		<< translationVector.y << ", " << translationVector.z << std::endl;*/
+	/*std::cout << "Translation vector: " << translationVector.x << ", "
+		<< translationVector.y << ", " << translationVector.z << std::endl;*/
+	this->target->Translate(translationVector);
+	//this->target->Translate(glm::vec3(0.0, 0.0, 0.0));
+
 }
 void StateMachine::Rotate()
 {
-	std::cout << "IN ROTATE " << std::endl;
+	//std::cout << "IN ROTATE " << std::endl;
 }
 void StateMachine::Scale()
 {
-	std::cout << "IN SCALE " << std::endl;
+	//glm::vec3 scalingAmount = glm::length(mousePositionVector - this->target->boundingBox.center)
+	//std::cout << "IN SCALE " << std::endl;
 }
 void StateMachine::Add()
 {
-	std::cout << "IN ADD " << std::endl;
+	//std::cout << "IN ADD " << std::endl;
 }
 void StateMachine::Delete()
 {
-	std::cout << "IN DELETE " << std::endl;
+	//std::cout << "IN DELETE " << std::endl;
 }
 void StateMachine::CloseWindow(GLFWwindow* window)
 {
