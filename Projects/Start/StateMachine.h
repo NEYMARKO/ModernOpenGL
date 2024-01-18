@@ -25,7 +25,7 @@ class StateMachine
 	private:
 		State state;
 		Mesh* target;
-		std::vector<Mesh*> objectsInScene;
+		std::vector<Mesh*>* _objectsInScene;
 		bool followMouse = false;
 
 		glm::vec4 mouseStartWorld;

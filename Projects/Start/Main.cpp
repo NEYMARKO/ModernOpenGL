@@ -81,10 +81,10 @@ int main()
 
 
 	
+	objectsInScene.push_back(&lightBulb);
+	objectsInScene.push_back(&dragon);
 	objectsInScene.push_back(&cube);
 	//objectsInScene.push_back(&plane);
-	//objectsInScene.push_back(&lightBulb);
-	objectsInScene.push_back(&dragon);
 	/*objectsInScene.push_back(&cube);
 	objectsInScene.push_back(&dragon);
 	objectsInScene.push_back(&dragon2);

@@ -50,14 +50,15 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 			this->state = NOTHING;
 			break;
 		}
-	}
-	std::cout << "STATE: " << this->state << std::endl;
 	CheckTarget();
 	ControlState(window);
+	}
+	//std::cout << "STATE: " << this->state << std::endl;
 }
 
 void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>& objectsInScene, MeshLoader* meshLoaderObj, int button, int action)
 {
+	this->_objectsInScene = &objectsInScene;
 	switch (button)
 	{
 	case GLFW_MOUSE_BUTTON_LEFT:
@@ -73,7 +74,7 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 			{
 				//std::cout << "IN IF" << std::endl;
 				//std::cout << "SIZE BEFORE ADD: " << objectsInScene.size() << std::endl;
-				Mesh* obj = new Mesh(meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), objectsInScene.size() + 1);
+				Mesh* obj = new Mesh(meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), objectsInScene.size());
 				objectsInScene.push_back(obj);
 				//std::cout << "SIZE AFTER ADD: " << objectsInScene.size() << std::endl;
 			}
@@ -89,12 +90,12 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 				int pickedId = -1;
 				for (int obj = 0; obj < objectsInScene.size() && !objectPicked; obj++)
 				{
-					std::cout << "CHECKING FOR ID: " << objectsInScene[obj]->id << std::endl;
+					//std::cout << "CHECKING FOR ID: " << objectsInScene[obj]->id << std::endl;
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
 						if (objectsInScene[obj]->boundingBox->Intersects(camera, i))
 						{
-							std::cout << "HIT WITH: " << objectsInScene[obj]->id << std::endl;
+							//std::cout << "HIT WITH: " << objectsInScene[obj]->id << std::endl;
 							objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
 							pickedId = objectsInScene[obj]->id;
 							objectPicked = true;
@@ -178,7 +179,7 @@ void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mo
 		Add();
 		break;
 	case DELETE:
-		Delete();
+		//Delete();
 		break;
 	case CLOSE_WINDOW:
 		CloseWindow(window);
@@ -221,6 +222,7 @@ void StateMachine::ControlState(GLFWwindow* window)
 	case ADD:
 		break;
 	case DELETE:
+		Delete();
 		break;
 	case CLOSE_WINDOW:
 		CloseWindow(window);
@@ -287,6 +289,21 @@ void StateMachine::Add()
 }
 void StateMachine::Delete()
 {
+	//std::cout << "IN DELETE " << std::endl;
+	/*for (int i = 0; i < this->_objectsInScene->size(); i++)
+	{
+		std::cout << "CURRENT IDS: " << (*this->_objectsInScene)[i]->id << std::endl;
+	}*/
+	short targetPos = this->target->id;
+	/*std::cout << "ID OF OBJECT TO DELETE: " << targetPos << std::endl;
+	std::cout << "VECTOR SIZE: " << (*this->_objectsInScene).size() << std::endl;*/
+	(*this->_objectsInScene).erase((*this->_objectsInScene).begin() + targetPos);
+	
+	for (int i = targetPos; i < (*this->_objectsInScene).size(); i++)
+	{
+		(*this->_objectsInScene)[i]->id--;
+	}
+	this->state = NOTHING;
 	//std::cout << "IN DELETE " << std::endl;
 }
 void StateMachine::CloseWindow(GLFWwindow* window)

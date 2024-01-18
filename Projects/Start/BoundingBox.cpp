@@ -73,8 +73,8 @@ void BoundingBox::VerticesToWorld()
 	/*std::cout << "MINIMUMS: " << this->minExtremes.x << ", "
 		<< this->minExtremes.y << ", " << this->minExtremes.z << std::endl;
 	std::cout << "MAXIMUMS: " << this->maxExtremes.x << ", "
-		<< this->maxExtremes.y << ", " << this->maxExtremes.z << std::endl << std::endl;*/
-	this->boxCenter = 0.5f * (this->maxExtremes + this->minExtremes);
+		<< this->maxExtremes.y << ", " << this->maxExtremes.z << std::endl << std::endl;
+	this->boxCenter = 0.5f * (this->maxExtremes + this->minExtremes);*/
 	/*std::cout << "BOX center: " << this->boxCenter.x << ", "
 		<< this->boxCenter.y << ", " << this->boxCenter.z << std::endl;*/
 }

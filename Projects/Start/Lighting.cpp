@@ -13,9 +13,11 @@ Lighting::~Lighting()
 }
 void Lighting::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera)
 {
-	glm::mat4 model;
-	model = glm::translate(model, this->position);
+	//glm::mat4 model;
+	//model = glm::translate(model, this->position);
 	
+	glm::mat4 model = this->meshContainer.GetFinalMatrix();
+	this->position = glm::vec3(model[3]);
 	shaderProgram.SetMat4("model", model);
 	camera.ViewProjectionMatrix(shaderProgram);
 
