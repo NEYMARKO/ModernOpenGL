@@ -16,9 +16,7 @@ enum State
 
 struct Plane
 {
-	float A;
-	float B;
-	float C;
+	glm::vec3 normal;
 	float D;
 };
 
@@ -31,7 +29,7 @@ class StateMachine
 		bool followMouse = false;
 
 		glm::vec4 mouseStartWorld;
-		glm::vec4 mouseEndWorld;
+		glm::vec3 mouseDirectionWorld;
 
 		Plane objectPlane;
 		Camera* camera;
@@ -41,6 +39,7 @@ class StateMachine
 		void ControlState(GLFWwindow* window);
 		
 		void CalculateObjectPlane();
+		glm::vec3 CalculateIntersectionPoint();
 		void Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>& objectsInScene, MeshLoader* meshLoaderObj, int button, int action);
 		void MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY);
 		//Checks if any object has been clicked on, sets object as target, returns target pointer for storage

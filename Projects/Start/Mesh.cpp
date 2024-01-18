@@ -64,7 +64,7 @@ void Mesh::Translate(const glm::vec3& newPosition)
 	/*std::cout << "Translation vector after multyplication: " << newPosition.x << ", "
 		<< newPosition.y << ", " << newPosition.z << std::endl << std::endl;*/
 	this->translationMatrix = glm::translate(glm::mat4(1.0), newPosition);
-	glm::vec3 matrixPos = glm::vec3(this->translationMatrix[3]);
+	//glm::vec3 matrixPos = glm::vec3(this->translationMatrix[3]);
 	//std::cout << "POSITION FROM MATRIX: " << matrixPos.x << ", " << matrixPos.y << ", " << matrixPos.z << std::endl << std::endl;
 	CalculateFinalMatrix();
 	this->boundingBox->VerticesToWorld();

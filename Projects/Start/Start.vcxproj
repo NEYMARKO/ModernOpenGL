@@ -199,6 +199,7 @@
     <Text Include="frogSmooth.txt" />
     <Text Include="kocka.txt" />
     <Text Include="lightBulb.txt" />
+    <Text Include="planeFlat.txt" />
     <Text Include="teddy.txt" />
     <Text Include="teddyFlat.txt" />
     <Text Include="templeFlat.txt" />

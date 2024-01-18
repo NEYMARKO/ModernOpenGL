@@ -6,7 +6,7 @@ StateMachine::StateMachine(Mesh* mesh, Camera* camera)
 	this->target = mesh;
 	this->camera = camera;
 	
-	std::cout << "State machine created" << std::endl;
+	//std::cout << "State machine created" << std::endl;
 }
 
 void StateMachine::ChangeState(GLFWwindow* window, const int key, const int action, Camera& camera)
@@ -76,13 +76,19 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 				Mesh* obj = new Mesh(meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), objectsInScene.size() + 1);
 				objectsInScene.push_back(obj);
 			}
+			else if (this->state == GRAB || this->state == SCALE || this->state == ROTATE)
+			{
+				this->target->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
+				this->target = nullptr;
+				this->state = NOTHING;
+			}
 			else
 			{
 				bool objectPicked = false;
 				int pickedId = -1;
 				for (int obj = 0; obj < objectsInScene.size() && !objectPicked; obj++)
 				{
-					for (float i = 0; i < ray->GetRayLength(); i += 0.5)
+					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
 						if (objectsInScene[obj]->boundingBox->Intersects(camera, i))
 						{
@@ -90,6 +96,7 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 							pickedId = objectsInScene[obj]->id;
 							objectPicked = true;
 							this->target = objectsInScene[obj];
+							CalculateObjectPlane();
 							break;
 						}
 					}
@@ -118,22 +125,34 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 void StateMachine::CalculateObjectPlane()
 {
 
-	this->objectPlane.A = this->camera->cameraDirection.x;
-	this->objectPlane.B = this->camera->cameraDirection.y;
-	this->objectPlane.C = this->camera->cameraDirection.z;
-	this->objectPlane.D = - glm::dot(this->camera->cameraDirection, this->target->objectPos);
+	this->objectPlane.normal = -camera->cameraDirection;
+	this->objectPlane.D = - glm::dot(this->objectPlane.normal, this->target->objectPos);
+	
 	std::cout << "CAMERA DIRECTION: " << this->camera->cameraDirection.x << ", " << this->camera->cameraDirection.y
 		<< ", " << this->camera->cameraDirection.z << std::endl;
-	std::cout << "TARGET POSITION: " << this->target->objectPos.x << ", " << this->target->objectPos.y
-		<< ", " << this->target->objectPos.z << std::endl;
+	std::cout << "PLANE NORMAL: " << this->objectPlane.normal.x << ", " << this->objectPlane.normal.y
+		<< ", " << this->objectPlane.normal.z << std::endl;
+	/*std::cout << "CAMERA POSITION: " << this->camera->cameraPos.x << ", " << this->camera->cameraPos.y
+		<< ", " << this->camera->cameraPos.z << std::endl;*/
 	std::cout << "D: " << this->objectPlane.D << std::endl;
+}
+
+glm::vec3 StateMachine::CalculateIntersectionPoint()
+{
+	float t;
+
+	t = -glm::dot(this->objectPlane.normal, glm::vec3(this->mouseStartWorld) - this->objectPlane.D) / glm::dot(this->objectPlane.normal, this->mouseDirectionWorld);
+	std::cout << "T: " << t << std::endl;
+	return glm::vec3(this->mouseStartWorld) + this->mouseDirectionWorld * t;
 }
 void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY)
 {
 	//glm::vec4 mousePositionWorld = glm::vec4(1.0);
 	//std::cout << "MOUSE MOVE IN STATE MACHINE " << std::endl;
-	CalculateObjectPlane();
-	camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, mouseEndWorld);
+	if (!this->target) return;
+	//CalculateObjectPlane();
+
+	camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);
 	//this->mousePositionWorld.z = this->mousePositionWorld.z / this->target->boundingBox->boxCenter.z;
 	//this->mouseEndWorld.z = this->target->objectPos.z;
 	/*std::cout << "Mouse position in world " << this->mousePositionWorld.x << ", " 
@@ -213,10 +232,26 @@ void StateMachine::Grab()
 {
 	//std::cout << "IN GRAB " << std::endl;
 	//glm::vec3 translationVector = glm::vec3(this->mousePositionWorld) - this->target->objectPos;
-	glm::vec3 translationVector = glm::vec3(this->mouseStartWorld) + 
-		glm::normalize(glm::vec3(this->mouseEndWorld) - glm::vec3(this->mouseStartWorld)) * this->objectPlane.D;
-	/*std::cout << "Translation vector " << translationVector.x << ", "
-		<< translationVector.y << ", " << translationVector.z << std::endl;*/
+
+	//std::cout << std::endl << "STARTING VECTOR: " << this->mouseStartWorld.x << ", " << this->mouseStartWorld.y << ", " << this->mouseStartWorld.z << std::endl;
+	/*std::cout << "CAMERA DIRECTION: " << this->camera->cameraDirection.x << ", " << this->camera->cameraDirection.y
+		<< ", " << this->camera->cameraDirection.z << std::endl;*/
+	
+	//float turnFactor = this->objectPlane.D > this->camera->cameraPos.z ? 1.0f : -1.0f;
+	
+	/*std::cout << "CAMERA POSITION: " << this->camera->cameraPos.x << ", " << this->camera->cameraPos.y
+		<< ", " << this->camera->cameraPos.z << std::endl;
+	std::cout << "D: " << this->objectPlane.D << std::endl;*/
+	/*glm::vec3 translationVector = glm::vec3(this->mouseStartWorld) +
+		this->mouseDirectionWorld * glm::distance(this->objectPlane.normal, this->camera->cameraPos) * this->camera->cameraDirection.z;*/
+	glm::vec3 translationVector = CalculateIntersectionPoint();
+
+	
+	/*glm::vec3 translationVector = glm::vec3(this->mouseStartWorld) +
+		glm::normalize(glm::vec3(this->mouseEndWorld) - glm::vec3(this->mouseStartWorld)) * (this->camera->cameraPos.z - this->objectPlane.D) * this->camera->cameraDirection.z;*/
+
+	/*std::cout << "Camera position" << this->camera->cameraPos.x << ", "
+		<< this->camera->cameraPos.y << ", " << this->camera->cameraPos.z << std::endl;*/
 	//translationVector *= 5;
 	//this->target->Translate();
 	
@@ -225,8 +260,8 @@ void StateMachine::Grab()
 		<< this->mouseEndWorld.y << ", " << this->mouseEndWorld.z << std::endl;*/
 	/*std::cout << "Translate position in world " << translationVector.x << ", "
 		<< translationVector.y << ", " << translationVector.z << std::endl;*/
-	/*std::cout << "Translation vector: " << translationVector.x << ", "
-		<< translationVector.y << ", " << translationVector.z << std::endl;*/
+	std::cout << "Translation vector: " << translationVector.x << ", "
+		<< translationVector.y << ", " << translationVector.z << std::endl;
 	this->target->Translate(translationVector);
 	//this->target->Translate(glm::vec3(0.0, 0.0, 0.0));
 

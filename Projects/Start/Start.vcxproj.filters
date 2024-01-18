@@ -174,6 +174,9 @@
     <Text Include="dragonSmoothRotated.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
+    <Text Include="planeFlat.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">

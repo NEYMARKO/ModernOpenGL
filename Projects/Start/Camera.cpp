@@ -119,10 +119,18 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 	float pitch = (float)(startingY - currentY) / windowHeight * this->sensitivity;
 
 	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(yaw), this->cameraUp);
-	glm::vec3 cameraRight = glm::normalize(glm::cross(this->cameraUp, this->cameraDirection));
+	//glm::vec3 cameraRight = glm::normalize(glm::cross(this->cameraUp, this->cameraDirection));
+	glm::vec3 cameraRight = glm::rotate(cameraRight, glm::radians(yaw), this->cameraUp);
+
+	glm::normalize(this->cameraDirection);
+	glm::normalize(cameraRight);
+
 	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(pitch), cameraRight);
 	//after applying pitch rotation, cameraUp vector gets changed
-	this->cameraUp = glm::cross(this->cameraDirection, cameraRight);
+	//this->cameraUp = glm::cross(this->cameraDirection, cameraRight);
+	this->cameraUp = glm::rotate(this->cameraUp, glm::radians(pitch), cameraRight);
+	glm::normalize(this->cameraDirection);
+	glm::normalize(this->cameraUp);
 }
 
 void Camera::UpdateViewportDimensions(const int& width, const int& height)
@@ -134,8 +142,8 @@ void Camera::Raycast(GLFWwindow* window, const double& mouseX, const double& mou
 {
 
 	glm::vec4 rayStartWorld = glm::vec4(1.0, 1.0, 1.0, 1.0);
-	glm::vec4 rayEndWorld = glm::vec4(1.0, 1.0, 1.0, 1.0);
-	ScreenToWorldCoordinates(mouseX, mouseY, rayStartWorld, rayEndWorld);
+	glm::vec3 rayDirectionWorld = glm::vec3(1.0, 1.0, 1.0);
+	ScreenToWorldCoordinates(mouseX, mouseY, rayStartWorld, rayDirectionWorld);
 	/*glm::vec4 rayStartNDC = glm::vec4(xNDC, yNDC, 0.0, 1.0);
 	glm::vec4 rayEndNDC = glm::vec4(xNDC, yNDC, 1.0, 1.0);
 
@@ -157,23 +165,23 @@ void Camera::Raycast(GLFWwindow* window, const double& mouseX, const double& mou
 
 	if (this->ray == nullptr)
 	{
-		this->ray = new Ray(rayStartWorld, glm::normalize(rayEndWorld - rayStartWorld), 50);
+		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 50);
 	}
 	else
 	{
 		delete this->ray;
-		this->ray = new Ray(rayStartWorld, glm::normalize(rayEndWorld - rayStartWorld), 50);
+		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 50);
 	}
 }
 
-void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, glm::vec4& rayStart, glm::vec4&rayEnd)
+void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, glm::vec4& rayStart, glm::vec3& rayDirection)
 {
 
 	float xNDC = (2.0f * mouseX) / this->width - 1.0f;
 	float yNDC = 1.0f - (2.0f * mouseY) / this->height;
 
 	rayStart = glm::vec4(xNDC, yNDC, 0.0, 1.0);
-	rayEnd = glm::vec4(xNDC, yNDC, 1.0, 1.0);
+	glm::vec4 rayEnd = glm::vec4(xNDC, yNDC, 1.0, 1.0);
 
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
 	glm::mat4 viewMatrix = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
@@ -187,4 +195,7 @@ void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, 
 	rayEnd = invView * rayEnd;
 	rayStart /= rayStart.w;
 	rayEnd /= rayEnd.w;
+
+	rayDirection = glm::vec3(rayEnd - rayStart);
+	rayDirection = glm::normalize(rayDirection);
 }
