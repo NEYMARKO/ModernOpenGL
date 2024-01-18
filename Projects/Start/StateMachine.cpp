@@ -275,6 +275,9 @@ void StateMachine::Rotate()
 }
 void StateMachine::Scale()
 {
+	glm::vec3 translationVector = CalculateIntersectionPoint();
+	float scalingFactor = glm::distance(translationVector, this->target->objectPos);
+	this->target->Scale(scalingFactor);
 	//glm::vec3 scalingAmount = glm::length(mousePositionVector - this->target->boundingBox.center)
 	//std::cout << "IN SCALE " << std::endl;
 }

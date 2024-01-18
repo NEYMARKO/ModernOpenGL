@@ -78,7 +78,7 @@ void Mesh::Rotate(const glm::vec3& rotationVector, float angle)
 }
 void Mesh::Scale(float scale)
 {
-	this->scalingMatrix = glm::scale(this->scalingMatrix, glm::vec3(scale, scale, scale));
+	this->scalingMatrix = glm::scale(glm::mat4(1.0), glm::vec3(scale, scale, scale));
 	CalculateFinalMatrix();
 	this->boundingBox->VerticesToWorld();
 
