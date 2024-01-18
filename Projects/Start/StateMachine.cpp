@@ -51,7 +51,7 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 			break;
 		}
 	}
-	//std::cout << "STATE: " << this->state << std::endl;
+	std::cout << "STATE: " << this->state << std::endl;
 	CheckTarget();
 	ControlState(window);
 }
@@ -72,9 +72,10 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 			if (this->state == ADD)
 			{
 				//std::cout << "IN IF" << std::endl;
-				//std::cout << "IN HERE" << std::endl;
+				//std::cout << "SIZE BEFORE ADD: " << objectsInScene.size() << std::endl;
 				Mesh* obj = new Mesh(meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), objectsInScene.size() + 1);
 				objectsInScene.push_back(obj);
+				//std::cout << "SIZE AFTER ADD: " << objectsInScene.size() << std::endl;
 			}
 			else if (this->state == GRAB || this->state == SCALE || this->state == ROTATE)
 			{
@@ -88,10 +89,12 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 				int pickedId = -1;
 				for (int obj = 0; obj < objectsInScene.size() && !objectPicked; obj++)
 				{
+					std::cout << "CHECKING FOR ID: " << objectsInScene[obj]->id << std::endl;
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
 						if (objectsInScene[obj]->boundingBox->Intersects(camera, i))
 						{
+							std::cout << "HIT WITH: " << objectsInScene[obj]->id << std::endl;
 							objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
 							pickedId = objectsInScene[obj]->id;
 							objectPicked = true;
@@ -128,20 +131,20 @@ void StateMachine::CalculateObjectPlane()
 	this->objectPlane.normal = -camera->cameraDirection;
 	this->objectPlane.D = - glm::dot(this->objectPlane.normal, this->target->objectPos);
 	
-	std::cout << "CAMERA DIRECTION: " << this->camera->cameraDirection.x << ", " << this->camera->cameraDirection.y
+	/*std::cout << "CAMERA DIRECTION: " << this->camera->cameraDirection.x << ", " << this->camera->cameraDirection.y
 		<< ", " << this->camera->cameraDirection.z << std::endl;
 	std::cout << "PLANE NORMAL: " << this->objectPlane.normal.x << ", " << this->objectPlane.normal.y
-		<< ", " << this->objectPlane.normal.z << std::endl;
+		<< ", " << this->objectPlane.normal.z << std::endl;*/
 	/*std::cout << "CAMERA POSITION: " << this->camera->cameraPos.x << ", " << this->camera->cameraPos.y
 		<< ", " << this->camera->cameraPos.z << std::endl;*/
-	std::cout << "D: " << this->objectPlane.D << std::endl;
+	//std::cout << "D: " << this->objectPlane.D << std::endl;
 }
 
 glm::vec3 StateMachine::CalculateIntersectionPoint()
 {
 	float t;
 
-	t = -glm::dot(this->objectPlane.normal, glm::vec3(this->mouseStartWorld) - this->objectPlane.D) / glm::dot(this->objectPlane.normal, this->mouseDirectionWorld);
+	t = (-glm::dot(this->objectPlane.normal, glm::vec3(this->mouseStartWorld)) - this->objectPlane.D) / glm::dot(this->objectPlane.normal, this->mouseDirectionWorld);
 	std::cout << "T: " << t << std::endl;
 	return glm::vec3(this->mouseStartWorld) + this->mouseDirectionWorld * t;
 }
@@ -260,8 +263,8 @@ void StateMachine::Grab()
 		<< this->mouseEndWorld.y << ", " << this->mouseEndWorld.z << std::endl;*/
 	/*std::cout << "Translate position in world " << translationVector.x << ", "
 		<< translationVector.y << ", " << translationVector.z << std::endl;*/
-	std::cout << "Translation vector: " << translationVector.x << ", "
-		<< translationVector.y << ", " << translationVector.z << std::endl;
+	/*std::cout << "Translation vector: " << translationVector.x << ", "
+		<< translationVector.y << ", " << translationVector.z << std::endl;*/
 	this->target->Translate(translationVector);
 	//this->target->Translate(glm::vec3(0.0, 0.0, 0.0));
 

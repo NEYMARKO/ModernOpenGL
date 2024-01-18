@@ -7,13 +7,14 @@ BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& par
 	Initialize();
 	SetupBuffers();
 	VerticesToWorld();
+	//std::cout << "CREATED BOUNDING BOX FOR ID: " << this->parentMesh.id << std::endl;
 }
 BoundingBox::~BoundingBox()
 {
 	boxVAO.Delete();
 	boxVBO.Delete();
 	boxEBO.Delete();
-	std::cout << "Deleted bounding box of mesh with id: " << this->parentMesh.id << std::endl;
+	//std::cout << "Deleted bounding box of mesh with id: " << this->parentMesh.id << std::endl;
 }
 void BoundingBox::Initialize()
 {

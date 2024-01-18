@@ -25,7 +25,7 @@ Shader boundingBoxShaderProgram;
 
 std::vector<Mesh*> objectsInScene;
 MeshLoader cubeLoader("cubeFlat.txt");
-//MeshLoader dragonLoader("dragonSmooth.txt");
+MeshLoader dragonLoader("dragonSmooth.txt");
 StateMachine stateMachine(nullptr, &globalCamera);
 
 
@@ -66,9 +66,9 @@ int main()
 	MeshLoader teddyLoader("teddyFlat.txt");*/
 
 	Mesh lightBulb(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
-	//Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
+	Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	Mesh cube(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	Mesh plane(&planeLoader, glm::vec3(0.0f, -4.0f, 0.0f), id++);
+	//Mesh plane(&planeLoader, glm::vec3(0.0f, -4.0f, 0.0f), id++);
 	/*Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	Mesh dragon2(&dragonLoader, glm::vec3(5.0f + 2.0f, 4.0f - 3.0f, 0.0f - 3.0f), id++);
 	Mesh dragon3(&dragonLoader, glm::vec3(5.0f - 3.0f, 4.0f + 2.0f, 0.0f), id++);
@@ -82,9 +82,9 @@ int main()
 
 	
 	objectsInScene.push_back(&cube);
-	objectsInScene.push_back(&plane);
-	objectsInScene.push_back(&lightBulb);
-	//objectsInScene.push_back(&dragon);
+	//objectsInScene.push_back(&plane);
+	//objectsInScene.push_back(&lightBulb);
+	objectsInScene.push_back(&dragon);
 	/*objectsInScene.push_back(&cube);
 	objectsInScene.push_back(&dragon);
 	objectsInScene.push_back(&dragon2);
