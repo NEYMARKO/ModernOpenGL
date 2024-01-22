@@ -1,11 +1,12 @@
 #include "StateMachine.h"
 
-StateMachine::StateMachine(Mesh* mesh, Camera* camera)
+StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<Mesh*>& objectsInScene) : objectsInScene(objectsInScene)
 {
 	this->state = NOTHING;
+	this->subState = EMPTY;
 	this->target = mesh;
 	this->camera = camera;
-	
+	//this->objectsInScene = objectsInScene;
 	//std::cout << "State machine created" << std::endl;
 }
 
@@ -27,6 +28,8 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 			//if A has been pressed, state has to be changed: if ADD has been active, it has to change to NOTHING
 		case GLFW_KEY_A:
 			this->state == ADD ? this->state = NOTHING : this->state = ADD;
+			//if adding is done, state for adding meshloaders should be empty
+			if (this->state == NOTHING) this->subState = EMPTY;
 			break;
 		case GLFW_KEY_DELETE:
 			this->state = DELETE;
@@ -36,6 +39,39 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 			break;
 		case GLFW_KEY_ESCAPE:
 			this->state = CLOSE_WINDOW;
+			break;
+		case GLFW_KEY_X:
+			this->subState = X;
+			break;
+		case GLFW_KEY_Y:
+			this->subState = Y;
+			break;
+		case GLFW_KEY_Z:
+			this->subState = Z;
+			break;
+		case GLFW_KEY_1:
+			this->subState = NO_1;
+			break;
+		case GLFW_KEY_2:
+			this->subState = NO_2;
+			break;
+		case GLFW_KEY_3:
+			this->subState = NO_3;
+			break;
+		case GLFW_KEY_4:
+			this->subState = NO_4;
+			break;
+		case GLFW_KEY_5:
+			this->subState = NO_5;
+			break;
+		case GLFW_KEY_6:
+			this->subState = NO_6;
+			break;
+		case GLFW_KEY_7:
+			this->subState = NO_7;
+			break;
+		case GLFW_KEY_8:
+			this->subState = NO_8;
 			break;
 		//while moving camera perserve same state
 		case GLFW_KEY_DOWN:
@@ -48,6 +84,7 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 			break;
 		default:
 			this->state = NOTHING;
+			this->subState = EMPTY;
 			break;
 		}
 	CheckTarget();
@@ -56,9 +93,8 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 	//std::cout << "STATE: " << this->state << std::endl;
 }
 
-void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>& objectsInScene, MeshLoader* meshLoaderObj, int button, int action)
+void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<MeshLoader*>& meshLoaders, int button, int action)
 {
-	this->_objectsInScene = &objectsInScene;
 	switch (button)
 	{
 	case GLFW_MOUSE_BUTTON_LEFT:
@@ -74,32 +110,43 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 			{
 				//std::cout << "IN IF" << std::endl;
 				//std::cout << "SIZE BEFORE ADD: " << objectsInScene.size() << std::endl;
-				Mesh* obj = new Mesh(meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), objectsInScene.size());
-				objectsInScene.push_back(obj);
+				MeshLoader* meshLoaderObj;
+				if (this->subState != EMPTY && this->subState < meshLoaders.size())
+				{
+					meshLoaderObj = meshLoaders[this->subState];
+				}
+				else
+				{
+					meshLoaderObj = meshLoaders[0];
+				}
+				Mesh* obj = new Mesh(meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->objectsInScene.size());
+				this->objectsInScene.push_back(obj);
 				//std::cout << "SIZE AFTER ADD: " << objectsInScene.size() << std::endl;
 			}
+			//object transformation has been completed
 			else if (this->state == GRAB || this->state == SCALE || this->state == ROTATE)
 			{
 				this->target->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
 				this->target = nullptr;
 				this->state = NOTHING;
+				this->subState = EMPTY;
 			}
 			else
 			{
 				bool objectPicked = false;
 				int pickedId = -1;
-				for (int obj = 0; obj < objectsInScene.size() && !objectPicked; obj++)
+				for (int obj = 0; obj < this->objectsInScene.size() && !objectPicked; obj++)
 				{
 					//std::cout << "CHECKING FOR ID: " << objectsInScene[obj]->id << std::endl;
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
-						if (objectsInScene[obj]->boundingBox->Intersects(camera, i))
+						if (this->objectsInScene[obj]->boundingBox->Intersects(camera, i))
 						{
 							//std::cout << "HIT WITH: " << objectsInScene[obj]->id << std::endl;
-							objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
-							pickedId = objectsInScene[obj]->id;
+							this->objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
+							pickedId = this->objectsInScene[obj]->id;
 							objectPicked = true;
-							this->target = objectsInScene[obj];
+							this->target = this->objectsInScene[obj];
 							CalculateObjectPlane();
 							break;
 						}
@@ -110,9 +157,9 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<Mesh*>&
 				//if not a single object was clicked on, reset target to nullpointer
 				if (pickedId == -1) this->target = nullptr;
 				//removing selective color if current click doesn't intersect with any of the objects
-				for (int i = 0; i < objectsInScene.size(); i++)
+				for (int i = 0; i < this->objectsInScene.size(); i++)
 				{
-					if (objectsInScene[i]->id != pickedId) objectsInScene[i]->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
+					if (this->objectsInScene[i]->id != pickedId) this->objectsInScene[i]->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
 				}
 			}
 		}
@@ -146,7 +193,7 @@ glm::vec3 StateMachine::CalculateIntersectionPoint()
 	float t;
 
 	t = (-glm::dot(this->objectPlane.normal, glm::vec3(this->mouseStartWorld)) - this->objectPlane.D) / glm::dot(this->objectPlane.normal, this->mouseDirectionWorld);
-	std::cout << "T: " << t << std::endl;
+	//std::cout << "T: " << t << std::endl;
 	return glm::vec3(this->mouseStartWorld) + this->mouseDirectionWorld * t;
 }
 void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY)
@@ -260,6 +307,19 @@ void StateMachine::Grab()
 	//translationVector *= 5;
 	//this->target->Translate();
 	
+	/*switch (this->subState)
+	{
+		case X:
+			translationVector = glm::vec3(1.0f, 0.0f, 0.0f) *
+				glm::length(translationVector) * glm::normalize(translationVector).x;
+			break;
+		case Y:
+			glm::vec3(0.0f, 1.0f, 0.0f)*
+				glm::length(translationVector) * glm::normalize(translationVector).y;
+			break;
+		default:
+			break;
+	}*/
 
 	/*std::cout << "Mouse position in world: " << this->mouseEndWorld.x << ", "
 		<< this->mouseEndWorld.y << ", " << this->mouseEndWorld.z << std::endl;*/
@@ -290,19 +350,22 @@ void StateMachine::Add()
 void StateMachine::Delete()
 {
 	//std::cout << "IN DELETE " << std::endl;
-	/*for (int i = 0; i < this->_objectsInScene->size(); i++)
-	{
-		std::cout << "CURRENT IDS: " << (*this->_objectsInScene)[i]->id << std::endl;
-	}*/
+	//for (int i = 0; i < this->objectsInScene.size(); i++)
+	//{
+	//	std::cout << "CURRENT IDS: " << this->objectsInScene[i]->id << std::endl;
+	//}
 	short targetPos = this->target->id;
 	/*std::cout << "ID OF OBJECT TO DELETE: " << targetPos << std::endl;
-	std::cout << "VECTOR SIZE: " << (*this->_objectsInScene).size() << std::endl;*/
-	(*this->_objectsInScene).erase((*this->_objectsInScene).begin() + targetPos);
+	std::cout << "VECTOR SIZE: " << this->objectsInScene.size() << std::endl;*/
+	this->objectsInScene.erase(this->objectsInScene.begin() + targetPos);
 	
-	for (int i = targetPos; i < (*this->_objectsInScene).size(); i++)
+	for (int i = targetPos; i < this->objectsInScene.size(); i++)
 	{
-		(*this->_objectsInScene)[i]->id--;
+		this->objectsInScene[i]->id--;
 	}
+
+	//this->target = nullptr;
+	delete this->target;
 	this->state = NOTHING;
 	//std::cout << "IN DELETE " << std::endl;
 }
@@ -312,5 +375,9 @@ void StateMachine::CloseWindow(GLFWwindow* window)
 }
 StateMachine::~StateMachine()
 {
+	for (int i = this->objectsInScene.size() - 1; i >=0; i--)
+	{
+		delete this->objectsInScene[i];
+	}
 	std::cout << "Deleted state machine" << std::endl;
 }

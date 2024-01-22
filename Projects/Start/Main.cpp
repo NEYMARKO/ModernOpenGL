@@ -24,9 +24,10 @@ Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, -1.0f),
 Shader boundingBoxShaderProgram;
 
 std::vector<Mesh*> objectsInScene;
+std::vector<MeshLoader*> meshLoaders;
 MeshLoader cubeLoader("cubeFlat.txt");
 MeshLoader dragonLoader("dragonSmooth.txt");
-StateMachine stateMachine(nullptr, &globalCamera);
+StateMachine stateMachine(nullptr, &globalCamera, objectsInScene);
 
 
 int main()
@@ -61,13 +62,19 @@ int main()
 	MeshLoader lightBulbLoader("lightBulb.txt");
 	MeshLoader dragonLoader("dragonSmooth.txt");
 	MeshLoader planeLoader("planeFlat.txt");
-	/*MeshLoader templeLoader("templeFlat.txt");
+	MeshLoader templeLoader("templeFlat.txt");
 	MeshLoader frogLoader("frogSmooth.txt");
-	MeshLoader teddyLoader("teddyFlat.txt");*/
+	MeshLoader teddyLoader("teddyFlat.txt");
 
-	Mesh lightBulb(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
-	Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
-	Mesh cube(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+	meshLoaders.push_back(&cubeLoader);
+	meshLoaders.push_back(&dragonLoader);
+	meshLoaders.push_back(&templeLoader);
+	meshLoaders.push_back(&frogLoader);
+	meshLoaders.push_back(&teddyLoader);
+
+	Mesh* lightBulb = new Mesh(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
+	Mesh* dragon = new Mesh(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
+	Mesh* cube = new Mesh(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 	//Mesh plane(&planeLoader, glm::vec3(0.0f, -4.0f, 0.0f), id++);
 	/*Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	Mesh dragon2(&dragonLoader, glm::vec3(5.0f + 2.0f, 4.0f - 3.0f, 0.0f - 3.0f), id++);
@@ -76,14 +83,13 @@ int main()
 	Mesh dragon5(&dragonLoader, glm::vec3(5.0f - 3.0f, 4.0f, 0.0f + 2.0f), id++);
 	Mesh dragon6(&dragonLoader, glm::vec3(5.0f, 4.0f - 3.0f, 0.0f), id++);*/
 	/*Mesh temple(&templeLoader, glm::vec3(-3.0f, 2.0f, 0.0f), id++);
-	Mesh frog(&frogLoader, glm::vec3(0.0f, -4.0f, 0.0f), id++);
 	Mesh teddy(&teddyLoader, glm::vec3(-2.0f, 4.0f, 0.0f), id++);*/
 
 
 	
-	objectsInScene.push_back(&lightBulb);
-	objectsInScene.push_back(&dragon);
-	objectsInScene.push_back(&cube);
+	objectsInScene.push_back(lightBulb);
+	objectsInScene.push_back(dragon);
+	objectsInScene.push_back(cube);
 	//objectsInScene.push_back(&plane);
 	/*objectsInScene.push_back(&cube);
 	objectsInScene.push_back(&dragon);
@@ -96,7 +102,7 @@ int main()
 	objectsInScene.push_back(&temple);
 	objectsInScene.push_back(&frog);*/
 
-	Lighting light(lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
+	Lighting light(*lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -119,10 +125,10 @@ int main()
 		dragon6.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
 
 		//std::cout << "OBJECTS IN SCENE SIZE: " << objectsInScene.size() << std::endl;
-		for (int i = 0; i < objectsInScene.size(); i++)
+		for (int i = 0; i < stateMachine.objectsInScene.size(); i++)
 		{
 			//std::cout << "OBJECT IN SCENE ID: " << objectsInScene[i]->id << std::endl;
-			objectsInScene[i]->Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+			stateMachine.objectsInScene[i]->Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		}
 		//dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 
@@ -145,7 +151,8 @@ int main()
 		glfwPollEvents();
 	}
 
-	objectsInScene.clear();
+
+	//stateMachine.objectsInScene.clear();
 
 	shaderProgram.Delete();
 	lightingShaderProgram.Delete();
@@ -225,7 +232,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		default:
 			break;
 	}
-	stateMachine.Click(window, globalCamera, objectsInScene, &cubeLoader, button, action);
+	stateMachine.Click(window, globalCamera, meshLoaders, button, action);
 }
 
 void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset)
