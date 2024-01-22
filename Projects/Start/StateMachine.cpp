@@ -307,19 +307,31 @@ void StateMachine::Grab()
 	//translationVector *= 5;
 	//this->target->Translate();
 	
-	/*switch (this->subState)
+	float xValue, yValue, zValue;
+
+	switch (this->subState)
 	{
-		case X:
-			translationVector = glm::vec3(1.0f, 0.0f, 0.0f) *
-				glm::length(translationVector) * glm::normalize(translationVector).x;
-			break;
-		case Y:
-			glm::vec3(0.0f, 1.0f, 0.0f)*
-				glm::length(translationVector) * glm::normalize(translationVector).y;
-			break;
-		default:
-			break;
-	}*/
+	case X:
+		xValue = (glm::vec3(1.0f, 0.0f, 0.0f) *
+			glm::length(translationVector) * glm::normalize(translationVector)).x;
+		translationVector = glm::vec3(xValue, this->target->objectPos.y, this->target->objectPos.z);
+		break;
+	case Y:
+		yValue = (glm::vec3(0.0f, 1.0f, 0.0f) *
+			glm::length(translationVector) * glm::normalize(translationVector)).y;
+		translationVector = glm::vec3(this->target->objectPos.x, yValue, this->target->objectPos.z);
+		break;
+	case Z:
+		zValue = (glm::vec3(0.0f, 0.0f, 1.0f) *
+			glm::length(translationVector) * (translationVector.y < this->target->objectPos.y ? -1.0f : 1.0f)).z;
+		translationVector = glm::vec3(this->target->objectPos.x, this->target->objectPos.y, zValue);
+		break;
+
+	default:
+		break;
+	}
+
+
 
 	/*std::cout << "Mouse position in world: " << this->mouseEndWorld.x << ", "
 		<< this->mouseEndWorld.y << ", " << this->mouseEndWorld.z << std::endl;*/
