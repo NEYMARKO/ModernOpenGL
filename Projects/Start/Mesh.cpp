@@ -59,13 +59,7 @@ void Mesh::InitialTransform(glm::vec3 translation, float scale)
 void Mesh::Translate(const glm::vec3& newPosition)
 {
 	this->objectPos = newPosition;
-	/*std::cout << "Object pos in the world: " << this->objectPos.x << ", "
-		<< this->objectPos.y << ", " << this->objectPos.z << std::endl << std::endl;*/
-	/*std::cout << "Translation vector after multyplication: " << newPosition.x << ", "
-		<< newPosition.y << ", " << newPosition.z << std::endl << std::endl;*/
 	this->translationMatrix = glm::translate(glm::mat4(1.0), newPosition);
-	//glm::vec3 matrixPos = glm::vec3(this->translationMatrix[3]);
-	//std::cout << "POSITION FROM MATRIX: " << matrixPos.x << ", " << matrixPos.y << ", " << matrixPos.z << std::endl << std::endl;
 	CalculateFinalMatrix();
 	this->boundingBox->VerticesToWorld();
 }
@@ -86,7 +80,6 @@ void Mesh::Scale(float scale)
 void Mesh::CalculateFinalMatrix()
 {
 	this->finalMatrix = this->translationMatrix * this->rotationMatrix * this->scalingMatrix;
-	//this->finalMatrix = this->scalingMatrix * this->rotationMatrix * this->translationMatrix;
 }
 
 glm::mat4 Mesh::GetFinalMatrix()
@@ -96,9 +89,6 @@ glm::mat4 Mesh::GetFinalMatrix()
 void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting)
 {
 	shaderProgram.Activate();
-	/*glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, this->objectPos);
-	model = glm::scale(model, glm::vec3(this->meshLoader->scalingFactor, this->meshLoader->scalingFactor, this->meshLoader->scalingFactor));*/
 
 	shaderProgram.SetMat4("model", this->finalMatrix);
 	camera.ViewProjectionMatrix(shaderProgram);

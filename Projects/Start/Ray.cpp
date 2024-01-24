@@ -14,10 +14,6 @@ Ray::Ray(glm::vec3 rayStart, glm::vec3 rayDirection, float rayLength)
 
 	this->indices = { 0, 1 };
 	SetupBuffers();
-
-	glm::vec3 end = this->start + this->direction * this->length;
-	/*std::cout << "Ray start: (" << start.x << ", " << start.y << ", " << start.z << ")" << std::endl;
-	std::cout << "Ray end: (" << end.x << ", " << end.y << ", " << end.z << ")" << std::endl;*/
 }
 
 Ray::~Ray()

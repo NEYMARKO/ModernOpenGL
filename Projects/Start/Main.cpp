@@ -13,20 +13,12 @@ int globalWidth = 800, globalHeight= 800;
 float deltaTime = 0.0f, lastFrame = 0.0f;
 double globalMouseXPos = globalWidth / 2, globalMouseYPos = globalHeight / 2;
 bool canRotate = false;
-//bool canDrawRay = false;
-//bool canAdd = false;
-
-float id = 0;
-
 
 GLFWcursor* cursor = nullptr;
 Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, -1.0f), 5.5f, 50.0f, globalWidth, globalHeight);
-Shader boundingBoxShaderProgram;
 
 std::vector<Mesh*> objectsInScene;
 std::vector<MeshLoader*> meshLoaders;
-MeshLoader cubeLoader("cubeFlat.txt");
-MeshLoader dragonLoader("dragonSmooth.txt");
 StateMachine stateMachine(nullptr, &globalCamera, objectsInScene);
 
 
@@ -57,11 +49,11 @@ int main()
 
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
-	boundingBoxShaderProgram = Shader("borderBox.vert", "borderBox.frag");
+	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
+	MeshLoader cubeLoader("cubeFlat.txt");
 	MeshLoader dragonLoader("dragonSmooth.txt");
-	MeshLoader planeLoader("planeFlat.txt");
 	MeshLoader templeLoader("templeFlat.txt");
 	MeshLoader frogLoader("frogSmooth.txt");
 	MeshLoader teddyLoader("teddyFlat.txt");
@@ -72,35 +64,15 @@ int main()
 	meshLoaders.push_back(&frogLoader);
 	meshLoaders.push_back(&teddyLoader);
 
+	float id = 0;
+
 	Mesh* lightBulb = new Mesh(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	Mesh* dragon = new Mesh(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	Mesh* cube = new Mesh(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	//Mesh plane(&planeLoader, glm::vec3(0.0f, -4.0f, 0.0f), id++);
-	/*Mesh dragon(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
-	Mesh dragon2(&dragonLoader, glm::vec3(5.0f + 2.0f, 4.0f - 3.0f, 0.0f - 3.0f), id++);
-	Mesh dragon3(&dragonLoader, glm::vec3(5.0f - 3.0f, 4.0f + 2.0f, 0.0f), id++);
-	Mesh dragon4(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
-	Mesh dragon5(&dragonLoader, glm::vec3(5.0f - 3.0f, 4.0f, 0.0f + 2.0f), id++);
-	Mesh dragon6(&dragonLoader, glm::vec3(5.0f, 4.0f - 3.0f, 0.0f), id++);*/
-	/*Mesh temple(&templeLoader, glm::vec3(-3.0f, 2.0f, 0.0f), id++);
-	Mesh teddy(&teddyLoader, glm::vec3(-2.0f, 4.0f, 0.0f), id++);*/
-
-
 	
 	objectsInScene.push_back(lightBulb);
 	objectsInScene.push_back(dragon);
 	objectsInScene.push_back(cube);
-	//objectsInScene.push_back(&plane);
-	/*objectsInScene.push_back(&cube);
-	objectsInScene.push_back(&dragon);
-	objectsInScene.push_back(&dragon2);
-	objectsInScene.push_back(&dragon3);
-	objectsInScene.push_back(&dragon4);
-	objectsInScene.push_back(&dragon5);
-	objectsInScene.push_back(&dragon6);*/
-	/*objectsInScene.push_back(&teddy);
-	objectsInScene.push_back(&temple);
-	objectsInScene.push_back(&frog);*/
 
 	Lighting light(*lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
 
@@ -117,28 +89,10 @@ int main()
 
 		light.Draw(lightingShaderProgram, boundingBoxShaderProgram, globalCamera);
 
-		/*dragon.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-		dragon2.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-		dragon3.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-		dragon4.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-		dragon5.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-		dragon6.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
-
-		//std::cout << "OBJECTS IN SCENE SIZE: " << objectsInScene.size() << std::endl;
 		for (int i = 0; i < stateMachine.objectsInScene.size(); i++)
 		{
-			//std::cout << "OBJECT IN SCENE ID: " << objectsInScene[i]->id << std::endl;
 			stateMachine.objectsInScene[i]->Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		}
-		//dragonRotated.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-
-		/*temple.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-		
-		frog.Draw(shaderProgram, boundingBoxShaderProgram,  globalCamera, light);
-		
-		teddy.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);*/
-
-		//cube.Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 		
 		if (globalCamera.ray != nullptr)
 		{
@@ -150,9 +104,6 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-
-	//stateMachine.objectsInScene.clear();
 
 	shaderProgram.Delete();
 	lightingShaderProgram.Delete();
@@ -168,9 +119,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
 	switch (key)
 	{
-	//case GLFW_KEY_ESCAPE:
-	//	glfwSetWindowShouldClose(window, GL_TRUE);
-	//	break;
 	case GLFW_KEY_F:
 		if (action == GLFW_PRESS)
 		{
@@ -183,24 +131,14 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 			globalCamera.lookAtPosition = globalCamera.focus ? globalCamera.targetPos : (globalCamera.cameraPos + globalCamera.cameraDirection);
 		}
 		break;
-	//case GLFW_KEY_A:
-	//	if (action == GLFW_PRESS)
-	//	{
-	//		canAdd = !canAdd;
-	//	}
-	//	break;
-	//default:
-	//	break;
 	}
 	stateMachine.ChangeState(window, key, action, globalCamera);
 }
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	//std::cout << "SHOULD FOLLOW MOUSE: " << (stateMachine.ShouldFollowMouse() ? "true" : "false") << std::endl;
 	if (stateMachine.ShouldFollowMouse())
 	{
-		//std::cout << "MOUSE POSITION CALLBACK " << std::endl;
 		stateMachine.MouseMove(window, globalCamera, xpos, ypos);
 	}
 	if (canRotate)
@@ -237,7 +175,6 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset)
 {
-	//std::cout << "ZOOM: " << yoffset << std::endl;
 	globalCamera.Zoom(yoffset);
 }
 

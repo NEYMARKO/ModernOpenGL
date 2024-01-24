@@ -7,14 +7,12 @@ BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& par
 	Initialize();
 	SetupBuffers();
 	VerticesToWorld();
-	//std::cout << "CREATED BOUNDING BOX FOR ID: " << this->parentMesh.id << std::endl;
 }
 BoundingBox::~BoundingBox()
 {
 	boxVAO.Delete();
 	boxVBO.Delete();
 	boxEBO.Delete();
-	//std::cout << "Deleted bounding box of mesh with id: " << this->parentMesh.id << std::endl;
 }
 void BoundingBox::Initialize()
 {
@@ -63,20 +61,8 @@ void BoundingBox::SetupBuffers()
 void BoundingBox::VerticesToWorld()
 {
 	glm::mat4 model = this->parentMesh.GetFinalMatrix();
-	/*glm::mat4 model = glm::mat4(1.0);
-	model = glm::translate(model, this->parentMesh.objectPos);
-	model = glm::scale(model, glm::vec3(this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor));*/
-
 	this->minExtremes = glm::vec3(model * glm::vec4(this->localMinExtremes, 1.0));
 	this->maxExtremes = glm::vec3(model * glm::vec4(this->localMaxExtremes, 1.0));
-
-	/*std::cout << "MINIMUMS: " << this->minExtremes.x << ", "
-		<< this->minExtremes.y << ", " << this->minExtremes.z << std::endl;
-	std::cout << "MAXIMUMS: " << this->maxExtremes.x << ", "
-		<< this->maxExtremes.y << ", " << this->maxExtremes.z << std::endl << std::endl;
-	this->boxCenter = 0.5f * (this->maxExtremes + this->minExtremes);*/
-	/*std::cout << "BOX center: " << this->boxCenter.x << ", "
-		<< this->boxCenter.y << ", " << this->boxCenter.z << std::endl;*/
 }
 
 bool BoundingBox::Intersects(Camera& camera, float step)
@@ -95,10 +81,7 @@ bool BoundingBox::Intersects(Camera& camera, float step)
 void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 {
 	shaderProgram.Activate();
-	/*glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, this->parentMesh.objectPos);
-	model = glm::scale(model, glm::vec3(this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor, this->parentMesh.meshLoader->scalingFactor));*/
-
+	
 	glm::mat4 model = this->parentMesh.GetFinalMatrix();
 	shaderProgram.SetMat4("model", model);
 	shaderProgram.SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));
