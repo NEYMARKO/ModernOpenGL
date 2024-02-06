@@ -13,6 +13,9 @@ Lighting::~Lighting()
 }
 void Lighting::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera)
 {
+	//std::cout << "Drawing light" << std::endl;
+	shaderProgram.Activate();
+
 	glm::mat4 model = this->meshContainer.GetFinalMatrix();
 	this->position = glm::vec3(model[3]);
 	shaderProgram.SetMat4("model", model);
@@ -24,5 +27,5 @@ void Lighting::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Cam
 	glDrawElements(GL_TRIANGLES, this->meshContainer.meshLoader->indices.size(), GL_UNSIGNED_INT, 0);
 	lightVAO.Unbind();
 
-	this->meshContainer.boundingBox->Draw(boundingBoxShaderProgram, camera);
+	//this->meshContainer.boundingBox->Draw(boundingBoxShaderProgram, camera);
 }

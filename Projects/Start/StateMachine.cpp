@@ -1,11 +1,15 @@
 #include "StateMachine.h"
+#define GLFW_HAND_CURSOR 0x00036004
 
-StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<Mesh*>& objectsInScene) : objectsInScene(objectsInScene)
+StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, std::vector<Mesh*>& objectsInScene) 
+	: objectsInScene(objectsInScene), meshLoaders(meshLoaders)
 {
 	this->state = NOTHING;
 	this->subState = EMPTY;
 	this->target = mesh;
 	this->camera = camera;
+	this->mousePosX = this->camera->width / 2;
+	this->mousePosY = this->camera->height / 2;
 }
 
 void StateMachine::ChangeState(GLFWwindow* window, const int key, const int action, Camera& camera)
@@ -26,17 +30,19 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 			//if A has been pressed, state has to be changed: if ADD has been active, it has to change to NOTHING
 		case GLFW_KEY_A:
 			this->state == ADD ? this->state = NOTHING : this->state = ADD;
-			//if adding is done, state for adding meshloaders should be empty
+			//if adding is done, state for adding meshLoaders should be empty
 			if (this->state == NOTHING) this->subState = EMPTY;
 			break;
 		case GLFW_KEY_DELETE:
 			this->state = DELETE;
+			if (this->target) DeleteObject();
 			break;
 		case GLFW_KEY_F:
 			this->state = FOCUS;
 			break;
 		case GLFW_KEY_ESCAPE:
 			this->state = CLOSE_WINDOW;
+			CloseWindow(window);
 			break;
 		case GLFW_KEY_X:
 			this->subState = X;
@@ -85,12 +91,12 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 			this->subState = EMPTY;
 			break;
 		}
-	CheckTarget();
-	ControlState(window);
+		this->followMouse = false;
+		CheckTarget();
 	}
 }
 
-void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<MeshLoader*>& meshLoaders, int button, int action)
+void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, int action)
 {
 	switch (button)
 	{
@@ -104,17 +110,7 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<MeshLoa
 
 			if (this->state == ADD)
 			{
-				MeshLoader* meshLoaderObj;
-				if (this->subState != EMPTY && this->subState < meshLoaders.size())
-				{
-					meshLoaderObj = meshLoaders[this->subState];
-				}
-				else
-				{
-					meshLoaderObj = meshLoaders[0];
-				}
-				Mesh* obj = new Mesh(meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->objectsInScene.size());
-				this->objectsInScene.push_back(obj);
+				AddObject(ray);
 			}
 			//object transformation has been completed
 			else if (this->state == GRAB || this->state == SCALE || this->state == ROTATE)
@@ -145,7 +141,7 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<MeshLoa
 				}
 
 
-				//if not a single object was clicked on, reset target to nullpointer
+				//if not a single object was clicked on, reset target to nullptr
 				if (pickedId == -1) this->target = nullptr;
 				//removing selective color if current click doesn't intersect with any of the objects
 				for (int i = 0; i < this->objectsInScene.size(); i++)
@@ -153,6 +149,21 @@ void StateMachine::Click(GLFWwindow* window, Camera& camera, std::vector<MeshLoa
 					if (this->objectsInScene[i]->id != pickedId) this->objectsInScene[i]->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
 				}
 			}
+		}
+		break;
+
+	case GLFW_MOUSE_BUTTON_RIGHT:
+		if (action == GLFW_PRESS)
+		{
+			this->canRotateCamera = true;
+			glfwGetCursorPos(window, &this->mousePosX, &this->mousePosY);
+			GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+			glfwSetCursor(window, cursor);
+		}
+		else
+		{
+			glfwSetCursor(window, NULL);
+			this->canRotateCamera = false;
 		}
 		break;
 	default:
@@ -176,38 +187,33 @@ glm::vec3 StateMachine::CalculateIntersectionPoint()
 
 	t = (-glm::dot(this->objectPlane.normal, glm::vec3(this->mouseStartWorld)) - this->objectPlane.D) / glm::dot(this->objectPlane.normal, this->mouseDirectionWorld);
 	return glm::vec3(this->mouseStartWorld) + this->mouseDirectionWorld * t;
+
 }
 void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY)
 {
-	if (!this->target) return;
+	if (!this->target && !this->canRotateCamera) return;
 
-	camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);
+	else if (this->target) camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);
+
+	else if (this->canRotateCamera)
+	{
+		this->camera->Rotate(window, this->mousePosX, this->mousePosY, mouseX, mouseY);
+		this->mousePosX = mouseX;
+		this->mousePosY = mouseY;
+	}
 
 	switch (this->state)
 	{
 	case GRAB:
-		this->followMouse = true;
 		Grab();
 		break;
 	case ROTATE:
-		this->followMouse = true;
 		Rotate();
 		break;
 	case SCALE:
-		this->followMouse = true;
 		Scale();
 		break;
-	case ADD:
-		Add();
-		break;
-	case DELETE:
-		//Delete();
-		break;
-	case CLOSE_WINDOW:
-		CloseWindow(window);
-		break;
 	default:
-		this->followMouse = false;
 		break;
 	}
 }
@@ -219,40 +225,13 @@ void StateMachine::CheckTarget()
 		this->state == SCALE || this->state == DELETE))
 	{
 		this->state = NOTHING;
+		this->followMouse = false;
+	}
+	else
+	{
+		this->followMouse = true;
 	}
 	return;
-}
-
-bool StateMachine::ShouldFollowMouse()
-{
-	return this->followMouse;
-}
-
-void StateMachine::ControlState(GLFWwindow* window)
-{
-	switch (this->state)
-	{
-	case GRAB:
-		this->followMouse = true;
-		break;
-	case ROTATE:
-		this->followMouse = true;
-		break;
-	case SCALE:
-		this->followMouse = true;
-		break;
-	case ADD:
-		break;
-	case DELETE:
-		Delete();
-		break;
-	case CLOSE_WINDOW:
-		CloseWindow(window);
-		break;
-	default:
-		this->followMouse = false;
-		break;
-	}
 }
 
 void StateMachine::Grab()
@@ -290,17 +269,29 @@ void StateMachine::Rotate()
 {
 	//std::cout << "IN ROTATE " << std::endl;
 }
+
 void StateMachine::Scale()
 {
 	glm::vec3 translationVector = CalculateIntersectionPoint();
 	float scalingFactor = glm::distance(translationVector, this->target->objectPos);
 	this->target->Scale(scalingFactor);
 }
-void StateMachine::Add()
+
+void StateMachine::AddObject(Ray* ray)
 {
-	//std::cout << "IN ADD " << std::endl;
+	MeshLoader* meshLoaderObj;
+	if (this->subState != EMPTY && this->subState < this->meshLoaders.size())
+	{
+		meshLoaderObj = this->meshLoaders[this->subState];
+	}
+	else
+	{
+		meshLoaderObj = this->meshLoaders[0];
+	}
+	Mesh* obj = new Mesh(meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->objectsInScene.size());
+	this->objectsInScene.push_back(obj);
 }
-void StateMachine::Delete()
+void StateMachine::DeleteObject()
 {
 	short targetPos = this->target->id;
 
@@ -318,9 +309,21 @@ void StateMachine::CloseWindow(GLFWwindow* window)
 {
 	glfwSetWindowShouldClose(window, GL_TRUE);
 }
+
+std::vector<Mesh*>* StateMachine::GetObjectsInScene()
+{
+	return &this->objectsInScene;
+}
+
+bool StateMachine::ShouldFollowMouse()
+{
+	return this->followMouse;
+}
+
 StateMachine::~StateMachine()
 {
 	//deleting objects, it isn't enough to just clear the vector - objects have to be removed from heap
+	//objects should be deleted from the back of the vector, because vector is getting smaller with each delete operation
 	for (int i = this->objectsInScene.size() - 1; i >=0; i--)
 	{
 		delete this->objectsInScene[i];

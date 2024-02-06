@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "Lighting.h"
 #include "StateMachine.h"
-#define GLFW_HAND_CURSOR 0x00036004
+#include "Grid.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -11,15 +11,12 @@ void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset);
 
 int globalWidth = 800, globalHeight= 800;
 float deltaTime = 0.0f, lastFrame = 0.0f;
-double globalMouseXPos = globalWidth / 2, globalMouseYPos = globalHeight / 2;
-bool canRotate = false;
 
-GLFWcursor* cursor = nullptr;
-Camera globalCamera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, -1.0f), 5.5f, 50.0f, globalWidth, globalHeight);
+Camera globalCamera(glm::vec3(2.0f, 2.0f, -7.5f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 50.0f, globalWidth, globalHeight);
 
 std::vector<Mesh*> objectsInScene;
 std::vector<MeshLoader*> meshLoaders;
-StateMachine stateMachine(nullptr, &globalCamera, objectsInScene);
+StateMachine stateMachine(nullptr, &globalCamera, meshLoaders ,objectsInScene);
 
 
 int main()
@@ -76,7 +73,11 @@ int main()
 
 	Lighting light(*lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
 
+	Grid grid(100);
+
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -84,14 +85,16 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		//grid: 0.329412, 0.329412, 0.329412, 0.501961
+		glClearColor(0.247059f, 0.247059f, 0.247059f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		light.Draw(lightingShaderProgram, boundingBoxShaderProgram, globalCamera);
 
-		for (int i = 0; i < stateMachine.objectsInScene.size(); i++)
+		grid.Draw(boundingBoxShaderProgram, globalCamera);
+		for (int i = 0; i < (*stateMachine.GetObjectsInScene()).size(); i++)
 		{
-			stateMachine.objectsInScene[i]->Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+			(*stateMachine.GetObjectsInScene())[i]->Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+			//(*stateMachine.GetObjectsInScene())[i]->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
 		
 		if (globalCamera.ray != nullptr)
@@ -117,60 +120,17 @@ int main()
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	switch (key)
-	{
-	case GLFW_KEY_F:
-		if (action == GLFW_PRESS)
-		{
-			globalCamera.focus = !globalCamera.focus;
-			if (!globalCamera.focus)
-			{
-				//reset camera direction to face target (it wasn't getting updated while focus was on)
-				globalCamera.cameraDirection = glm::normalize(globalCamera.targetPos - globalCamera.cameraPos);
-			}
-			globalCamera.lookAtPosition = globalCamera.focus ? globalCamera.targetPos : (globalCamera.cameraPos + globalCamera.cameraDirection);
-		}
-		break;
-	}
 	stateMachine.ChangeState(window, key, action, globalCamera);
 }
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	if (stateMachine.ShouldFollowMouse())
-	{
-		stateMachine.MouseMove(window, globalCamera, xpos, ypos);
-	}
-	if (canRotate)
-	{
-		globalCamera.Rotate(window, globalMouseXPos, globalMouseYPos, xpos, ypos);
-		globalMouseXPos = xpos;
-		globalMouseYPos = ypos;
-	}
+	stateMachine.MouseMove(window, globalCamera, xpos, ypos);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	switch (button)
-	{
-		case GLFW_MOUSE_BUTTON_RIGHT:
-			if (action == GLFW_PRESS)
-			{
-				canRotate = true;
-				glfwGetCursorPos(window, &globalMouseXPos, &globalMouseYPos);
-				GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
-				glfwSetCursor(window, cursor);
-			}
-			else
-			{
-				glfwSetCursor(window, NULL);
-				canRotate = false;
-			}
-			break;
-		default:
-			break;
-	}
-	stateMachine.Click(window, globalCamera, meshLoaders, button, action);
+	stateMachine.MouseClick(window, globalCamera, button, action);
 }
 
 void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset)

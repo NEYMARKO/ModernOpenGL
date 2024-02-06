@@ -9,8 +9,6 @@ Mesh::Mesh(MeshLoader* meshLoader, glm::vec3 objectPosition, float id)
 	setupMesh();
 	InitialTransform(objectPosition, this->meshLoader->scalingFactor);
 	this->boundingBox = new BoundingBox(meshLoader->minExtremes, meshLoader->maxExtremes, *this);
-	//this->translationMatrix = glm::translate(this->translationMatrix, this->objectPos);
-	//std::cout << "MESH WITH ID: " << id << " CREATED" << std::endl;
 }
 
 Mesh::~Mesh()
@@ -50,7 +48,7 @@ void Mesh::ChangeColor(const glm::vec3& color)
 
 void Mesh::InitialTransform(glm::vec3 translation, float scale)
 {
-	this->objectPos += translation;
+	this->objectPos = translation;
 	this->translationMatrix = glm::translate(this->translationMatrix, translation);
 	this->scalingMatrix = glm::scale(this->scalingMatrix, glm::vec3(scale, scale, scale));
 	CalculateFinalMatrix();
@@ -100,6 +98,4 @@ void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera&
 	mVAO.Bind();
 	glDrawElements(GL_TRIANGLES, this->meshLoader->indices.size(), GL_UNSIGNED_INT, 0);
 	mVAO.Unbind();
-
-	this->boundingBox->Draw(boundingBoxShaderProgram, camera);
 }

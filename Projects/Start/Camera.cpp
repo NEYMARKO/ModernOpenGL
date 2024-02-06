@@ -144,24 +144,6 @@ void Camera::Raycast(GLFWwindow* window, const double& mouseX, const double& mou
 	glm::vec4 rayStartWorld = glm::vec4(1.0, 1.0, 1.0, 1.0);
 	glm::vec3 rayDirectionWorld = glm::vec3(1.0, 1.0, 1.0);
 	ScreenToWorldCoordinates(mouseX, mouseY, rayStartWorld, rayDirectionWorld);
-	/*glm::vec4 rayStartNDC = glm::vec4(xNDC, yNDC, 0.0, 1.0);
-	glm::vec4 rayEndNDC = glm::vec4(xNDC, yNDC, 1.0, 1.0);
-
-	glm::mat4 projectionMatrix = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
-	glm::mat4 viewMatrix = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
-
-	glm::mat4 invProjection = glm::inverse(projectionMatrix);
-	glm::vec4 rayStartView = invProjection * rayStartNDC;
-	glm::vec4 rayEndView = invProjection * rayEndNDC;
-
-	glm::mat4 invView = glm::inverse(viewMatrix);
-	glm::vec4 rayStartWorld = invView * rayStartView;
-	glm::vec4 rayEndWorld = invView * rayEndView;
-	rayStartWorld /= rayStartWorld.w;
-	rayEndWorld /= rayEndWorld.w;
-
-	glm::vec3 rayDirectionWorld = glm::vec3(rayEndWorld - rayStartWorld);
-	rayDirectionWorld = glm::normalize(rayDirectionWorld);*/
 
 	if (this->ray == nullptr)
 	{
@@ -198,4 +180,9 @@ void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, 
 
 	rayDirection = glm::vec3(rayEnd - rayStart);
 	rayDirection = glm::normalize(rayDirection);
+}
+
+Camera::~Camera()
+{
+	std::cout << "Deleted camera" << std::endl;
 }

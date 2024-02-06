@@ -39,34 +39,49 @@ struct Plane
 class StateMachine
 {
 	private:
+		Camera* camera;
+		Mesh* target;
 		State state;
 		SubState subState;
-		Mesh* target;
-		bool followMouse = false;
+		Plane objectPlane;
 
+		std::vector<Mesh*>& objectsInScene;
+		std::vector<MeshLoader*>& meshLoaders;
+		bool followMouse = false;
+		bool canRotateCamera = false;
+		double mousePosX;
+		double mousePosY;
 		glm::vec4 mouseStartWorld;
 		glm::vec3 mouseDirectionWorld;
 
-		Plane objectPlane;
-		Camera* camera;
 	public:
-		std::vector<Mesh*>& objectsInScene;
-		StateMachine(Mesh* mesh, Camera* camera, std::vector<Mesh*>& objectsInScene);
-		void ChangeState(GLFWwindow* window, const int key, const int action, Camera& camera);
-		void ControlState(GLFWwindow* window);
+		StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, std::vector<Mesh*>& objectsInScene);
 		
+		//Controls state that StateMachine is currently in. State changes on the press of a button
+		void ChangeState(GLFWwindow* window, const int key, const int action, Camera& camera);
+		//Calculates coefficients of a plane in which target object lies, normal of a plane is opposite to the camera direction
 		void CalculateObjectPlane();
+		//Calculates intersection between plane and a point
+		//Used for finding intersection of plane (in which target object lies) and click ray projected from camera
 		glm::vec3 CalculateIntersectionPoint();
-		void Click(GLFWwindow* window, Camera& camera, std::vector<MeshLoader*>& meshLoaders, int button, int action);
+		//Callback function for mouse click
+		void MouseClick(GLFWwindow* window, Camera& camera, int button, int action);
+		//Callback function for mouse movement
 		void MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY);
-		//Checks if any object has been clicked on, sets object as target, returns target pointer for storage
+		
+		//Returns vector containing pointers to all objects in the scene
+		std::vector<Mesh*>* GetObjectsInScene();
+		//Checks if any object has been clicked on
 		void CheckTarget();
 		bool ShouldFollowMouse();
 		void Grab();
 		void Rotate();
 		void Scale();
-		void Add();
-		void Delete();
+		//Adds object to scene at the position of the click
+		//Different objects can be added by pressing numbers 1-8 while in ADD mode
+		void AddObject(Ray* ray);
+		//Deletes selected object from the scene and vector containing all objects in the scene
+		void DeleteObject();
 		void CloseWindow(GLFWwindow* window);
 		~StateMachine();
 };

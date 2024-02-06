@@ -20,7 +20,7 @@ void main()
     float diff = max(dot(Normal, lightDir), 0.0);
     vec3 diffuse = diff * objectColor;
 
-    vec3 result = (ambientStrength + diffuse) * objectColor;
+    vec3 result = (ambientStrength + diffuse) * objectColor  * 2.5 / (distance(FragPos, lightPos));
     FragColor = vec4(result, 1.0);
     //FragColor = vec4(NormalColor, 1.0);
 
