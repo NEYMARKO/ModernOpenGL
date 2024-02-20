@@ -23,9 +23,12 @@ void Lighting::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Cam
 
 	shaderProgram.SetVec3("lightColor", this->lightColor);
 
-	lightVAO.Bind();
+
+	//there is no point in drawing same mesh again
+	
+	/*lightVAO.Bind();
 	glDrawElements(GL_TRIANGLES, this->meshContainer.meshLoader->indices.size(), GL_UNSIGNED_INT, 0);
-	lightVAO.Unbind();
+	lightVAO.Unbind();*/
 
 	//this->meshContainer.boundingBox->Draw(boundingBoxShaderProgram, camera);
 }

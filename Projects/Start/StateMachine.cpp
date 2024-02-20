@@ -115,7 +115,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 			//object transformation has been completed
 			else if (this->state == GRAB || this->state == SCALE || this->state == ROTATE)
 			{
-				this->target->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
+				this->target->ChangeColor(glm::vec3(0.862745f, 0.862745f, 0.862745f));
 				this->target = nullptr;
 				this->state = NOTHING;
 				this->subState = EMPTY;
@@ -146,7 +146,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 				//removing selective color if current click doesn't intersect with any of the objects
 				for (int i = 0; i < this->objectsInScene.size(); i++)
 				{
-					if (this->objectsInScene[i]->id != pickedId) this->objectsInScene[i]->ChangeColor(glm::vec3(1.0f, 0.5f, 0.31f));
+					if (this->objectsInScene[i]->id != pickedId) this->objectsInScene[i]->ChangeColor(glm::vec3(0.862745f, 0.862745f, 0.862745f));
 				}
 			}
 		}
@@ -177,7 +177,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 
 void StateMachine::CalculateObjectPlane()
 {
-	this->objectPlane.normal = -camera->cameraDirection;
+	this->objectPlane.normal = -camera->GetCameraForward();
 	this->objectPlane.D = - glm::dot(this->objectPlane.normal, this->target->objectPos);
 }
 
@@ -293,7 +293,7 @@ void StateMachine::AddObject(Ray* ray)
 }
 void StateMachine::DeleteObject()
 {
-	short targetPos = this->target->id;
+	int targetPos = this->target->id;
 
 	this->objectsInScene.erase(this->objectsInScene.begin() + targetPos);
 	

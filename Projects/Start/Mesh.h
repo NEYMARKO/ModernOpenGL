@@ -14,7 +14,7 @@ class Mesh
 		VBO mVBO;
 		EBO mEBO;
 		
-		glm::vec3 color = glm::vec3(1.0f, 0.5f, 0.31f);
+		glm::vec3 color = glm::vec3(0.862745f, 0.862745f, 0.862745f);
 
 		glm::mat4 translationMatrix = glm::mat4(1.0f);
 		glm::mat4 rotationMatrix = glm::mat4(1.0f);
@@ -28,7 +28,7 @@ class Mesh
 
 		glm::vec3 objectPos = glm::vec3(0.0, 0.0, 0.0);
 		float scalingFactor;
-		float id;
+		int id;
 		VAO mVAO;
 		
 		Mesh(MeshLoader* meshLoader, glm::vec3 objectPos, float id);

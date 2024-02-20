@@ -3,8 +3,7 @@
 Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, int width, int height)
 {
 	this->cameraPos = cameraPos;
-	this->targetPos = targetPos;
-	this->cameraDirection = glm::normalize(targetPos - cameraPos);
+	this->forward = glm::normalize(targetPos - cameraPos);
 	this->speed = speed;
 	this->sensitivity = sensitivity;
 	this->lookAtPosition = targetPos;
@@ -18,8 +17,7 @@ Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sens
 Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 upVector, int width, int height)
 {
 	this->cameraPos = cameraPos;
-	this->targetPos = targetPos;
-	this->cameraDirection = glm::normalize(targetPos - cameraPos);
+	this->forward = glm::normalize(targetPos - cameraPos);
 	this->speed = speed;
 	this->sensitivity = sensitivity;
 	this->lookAtPosition = targetPos;
@@ -32,8 +30,8 @@ Camera::Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sens
 void Camera::calculateCameraUp(glm::vec3 upVector)
 {
 	glm::vec3 upVectorNorm = glm::normalize(upVector);
-	glm::vec3 cameraRightNorm = glm::cross(this->cameraDirection, upVectorNorm);
-	this->cameraUp = glm::cross(cameraRightNorm, this->cameraDirection);
+	this->right = glm::cross(this->forward, upVectorNorm);
+	this->up = glm::cross(this->right, this->forward);
 }
 
 void Camera::ViewProjectionMatrix(Shader& shaderProgram)
@@ -43,11 +41,11 @@ void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 	{
 		return;
 	}
-	//glm::mat4 view = glm::lookAt(this->cameraPos, this->cameraPos + this->cameraForward, this->cameraUp);
+	//glm::mat4 view = glm::lookAt(this->cameraPos, this->cameraPos + this->cameraForward, this->up);
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
-	view = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
+	view = glm::lookAt(this->cameraPos, this->lookAtPosition, this->up);
 	projection = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
 
 	shaderProgram.SetMat4("view", view);
@@ -56,49 +54,49 @@ void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 
 //Good orientation 
 //Camera is converging to negative x when Right key is pressed because camera is positioned behind the origin of the world
-//Draw (0, 0, 0) and your camera at (0, 0, 5) and (0, 0, -5) and check cameraUp and cameraRight for those cases - everything works fine and makes sense
+//Draw (0, 0, 0) and your camera at (0, 0, 5) and (0, 0, -5) and check up and right for those cases - everything works fine and makes sense
 
 void Camera::Move(GLFWwindow* window, float deltaTime)
 {
 	float cameraSpeed = this->speed * deltaTime;
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		this->cameraPos += cameraSpeed * this->cameraDirection;
+		this->cameraPos += cameraSpeed * this->forward;
 		//std::cout << this->cameraPos.x << " " << this->cameraPos.y << " " << this->cameraPos.z << std::endl;
 
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		this->cameraPos -= cameraSpeed * this->cameraDirection;
+		this->cameraPos -= cameraSpeed * this->forward;
 		//std::cout << this->cameraPos.x << " " << this->cameraPos.y << " " << this->cameraPos.z << std::endl;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		this->cameraPos += cameraSpeed * glm::cross(this->cameraDirection, this->cameraUp);
+		this->cameraPos += cameraSpeed * this->right;
 		//std::cout << this->cameraPos.x << " " << this->cameraPos.y << " " << this->cameraPos.z << std::endl;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		this->cameraPos -= cameraSpeed * glm::cross(this->cameraDirection, this->cameraUp);
+		this->cameraPos -= cameraSpeed * this->right;
 		//std::cout << this->cameraPos.x << " " << this->cameraPos.y << " " << this->cameraPos.z << std::endl;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		this->cameraPos += cameraSpeed * this->cameraUp;
+		this->cameraPos += cameraSpeed * this->up;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
-		this->cameraPos -= cameraSpeed * this->cameraUp;
+		this->cameraPos -= cameraSpeed * this->up;
 	}
 
 
 	//glm::vec3 direction = this->cameraPos - this->targetPos;
 	if (!this->focus)
 	{
-		this->lookAtPosition = this->cameraDirection + this->cameraPos;
+		this->lookAtPosition = this->forward + this->cameraPos;
 	}
 }
 
@@ -118,19 +116,19 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 	float yaw = (float)(currentX - startingX) / windowWidth * this->sensitivity;
 	float pitch = (float)(startingY - currentY) / windowHeight * this->sensitivity;
 
-	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(yaw), this->cameraUp);
-	//glm::vec3 cameraRight = glm::normalize(glm::cross(this->cameraUp, this->cameraDirection));
-	glm::vec3 cameraRight = glm::rotate(cameraRight, glm::radians(yaw), this->cameraUp);
+	this->forward = glm::rotate(this->forward, glm::radians(yaw), this->up);
+	//glm::vec3 right = glm::normalize(glm::cross(this->up, this->forward));
+	this->right = glm::rotate(this->right, glm::radians(yaw), this->up);
 
-	glm::normalize(this->cameraDirection);
-	glm::normalize(cameraRight);
+	glm::normalize(this->forward);
+	glm::normalize(this->right);
 
-	this->cameraDirection = glm::rotate(this->cameraDirection, glm::radians(pitch), cameraRight);
-	//after applying pitch rotation, cameraUp vector gets changed
-	//this->cameraUp = glm::cross(this->cameraDirection, cameraRight);
-	this->cameraUp = glm::rotate(this->cameraUp, glm::radians(pitch), cameraRight);
-	glm::normalize(this->cameraDirection);
-	glm::normalize(this->cameraUp);
+	this->forward = glm::rotate(this->forward, glm::radians(-pitch), this->right);
+	//after applying pitch rotation, up vector gets changed
+	//this->up = glm::cross(this->forward, right);
+	this->up = glm::rotate(this->up, glm::radians(-pitch), this->right);
+	glm::normalize(this->forward);
+	glm::normalize(this->up);
 }
 
 void Camera::UpdateViewportDimensions(const int& width, const int& height)
@@ -166,7 +164,7 @@ void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, 
 	glm::vec4 rayEnd = glm::vec4(xNDC, yNDC, 1.0, 1.0);
 
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
-	glm::mat4 viewMatrix = glm::lookAt(this->cameraPos, this->lookAtPosition, this->cameraUp);
+	glm::mat4 viewMatrix = glm::lookAt(this->cameraPos, this->lookAtPosition, this->up);
 
 	glm::mat4 invProjection = glm::inverse(projectionMatrix);
 	rayStart = invProjection * rayStart;
@@ -182,6 +180,10 @@ void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, 
 	rayDirection = glm::normalize(rayDirection);
 }
 
+glm::vec3 Camera::GetCameraForward()
+{
+	return this->forward;
+}
 Camera::~Camera()
 {
 	std::cout << "Deleted camera" << std::endl;

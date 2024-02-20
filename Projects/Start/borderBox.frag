@@ -13,7 +13,7 @@ void main()
     float distanceToCamera = distance(FragPos, cameraPos);
 
     // Use smoothstep for a smoother transition
-    float alpha = smoothstep(0.025, 0.1, 1/distanceToCamera);
+    float alpha = smoothstep(1/200.0, 1/5.0, 1/distanceToCamera);
 
     // Blend the line color with the background
     FragColor = vec4(lineColor, alpha);

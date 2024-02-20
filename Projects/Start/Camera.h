@@ -10,11 +10,13 @@ class Camera
 {
 	private:
 		float fov = 45.0f;
+
+		glm::vec3 forward;
+		glm::vec3 up;
+		glm::vec3 right;
+
 	public:
-		glm::vec3 targetPos;
 		glm::vec3 cameraPos;
-		glm::vec3 cameraDirection;
-		glm::vec3 cameraUp;
 		glm::vec3 lookAtPosition;
 		float width;
 		float height;
@@ -50,5 +52,6 @@ class Camera
 		//and going into direction of a camera
 		void Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY);
 
+		glm::vec3 GetCameraForward();
 		~Camera();
 };

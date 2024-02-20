@@ -12,7 +12,7 @@ void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset);
 int globalWidth = 800, globalHeight= 800;
 float deltaTime = 0.0f, lastFrame = 0.0f;
 
-Camera globalCamera(glm::vec3(2.0f, 2.0f, -7.5f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 50.0f, globalWidth, globalHeight);
+Camera globalCamera(glm::vec3(0.0f, 2.0f, -7.5f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 50.0f, globalWidth, globalHeight);
 
 std::vector<Mesh*> objectsInScene;
 std::vector<MeshLoader*> meshLoaders;
@@ -76,6 +76,7 @@ int main()
 	Grid grid(100);
 
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -85,12 +86,13 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		//grid: 0.329412, 0.329412, 0.329412, 0.501961
 		glClearColor(0.247059f, 0.247059f, 0.247059f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		light.Draw(lightingShaderProgram, boundingBoxShaderProgram, globalCamera);
 
 		grid.Draw(boundingBoxShaderProgram, globalCamera);
+		
 		for (int i = 0; i < (*stateMachine.GetObjectsInScene()).size(); i++)
 		{
 			(*stateMachine.GetObjectsInScene())[i]->Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);

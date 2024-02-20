@@ -84,7 +84,7 @@ void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 	
 	glm::mat4 model = this->parentMesh.GetFinalMatrix();
 	shaderProgram.SetMat4("model", model);
-	shaderProgram.SetVec3("lineColor", camera.cameraPos);
+	shaderProgram.SetVec3("cameraPos", camera.cameraPos);
 	shaderProgram.SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));
 
 	camera.ViewProjectionMatrix(shaderProgram);
