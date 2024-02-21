@@ -12,7 +12,7 @@ void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset);
 int globalWidth = 800, globalHeight= 800;
 float deltaTime = 0.0f, lastFrame = 0.0f;
 
-Camera globalCamera(glm::vec3(0.0f, 2.0f, -7.5f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 50.0f, globalWidth, globalHeight);
+Camera globalCamera(glm::vec3(0.0f, 0.0f, -7.5f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, globalWidth, globalHeight);
 
 std::vector<Mesh*> objectsInScene;
 std::vector<MeshLoader*> meshLoaders;

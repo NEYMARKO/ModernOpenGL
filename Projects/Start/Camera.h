@@ -4,6 +4,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include "Ray.h"
 
 class Camera
@@ -11,12 +13,19 @@ class Camera
 	private:
 		float fov = 45.0f;
 
+		glm::vec3 position;
+		glm::quat rotation;
+
 		glm::vec3 forward;
 		glm::vec3 up;
 		glm::vec3 right;
 
+		glm::vec3 worldForward = glm::vec3(0.0f, 0.0f, 1.0f);
+		glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		//direction doesn't matter, only thing that matters is that it is indeed x-axis (both vec3(1.0f, 0.0f, 0.0f) and vec3(-1.0f, 0.0f, 0.0f) lie in x axis)
+		glm::vec3 worldRight = glm::vec3(1.0f, 0.0f, 0.0f);
+
 	public:
-		glm::vec3 cameraPos;
 		glm::vec3 lookAtPosition;
 		float width;
 		float height;
@@ -53,5 +62,10 @@ class Camera
 		void Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY);
 
 		glm::vec3 GetCameraForward();
+		glm::vec3 GetCameraUp();
+		glm::vec3 GetCameraRight();
+		glm::quat GetCameraRotation();
+
+		glm::vec3 GetCameraPosition();
 		~Camera();
 };

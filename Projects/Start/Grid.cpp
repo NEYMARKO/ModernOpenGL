@@ -55,7 +55,7 @@ void Grid::Draw(Shader& shaderProgram, Camera& camera)
 	glLineWidth(2.0f);
 
 	shaderProgram.SetMat4("model", this->modelMatrix);
-	shaderProgram.SetVec3("cameraPos", camera.cameraPos);
+	shaderProgram.SetVec3("cameraPos", camera.GetCameraPosition());
 	shaderProgram.SetVec3("lineColor", glm::vec3(0.329412f, 0.329412f, 0.329412f));
 
 	camera.ViewProjectionMatrix(shaderProgram);
