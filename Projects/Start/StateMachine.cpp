@@ -40,6 +40,10 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 		case GLFW_KEY_F:
 			this->state = FOCUS;
 			break;
+		case GLFW_KEY_Q:
+			this->state = RESTART_SCENE;
+			this->camera->RestartCameraParameters();
+			break;
 		case GLFW_KEY_ESCAPE:
 			this->state = CLOSE_WINDOW;
 			CloseWindow(window);

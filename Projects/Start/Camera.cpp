@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-#define ANGLE_LOWER_BOUND 10
+#define ANGLE_LOWER_BOUND 5
 
 Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed, float sensitivity, int width, int height)
 {
@@ -49,6 +49,8 @@ void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
+	this->forward = this->worldForward * rotation;
+	this->up = this->worldUp * rotation;
 	view = glm::lookAt(this->position, this->position + this->forward, this->up);
 	projection = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
 
@@ -135,23 +137,25 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 	///CAMERA SHOULD BE ROTATED ALONG WORLD AXIS
 	if (yAngle != 0)
 	{
-		glm::quat rotationY = glm::angleAxis(yAngle * this->sensitivity, this->up);
-		this->forward = rotationY * this->forward;
-		this->right = rotationY * this->right;
+		glm::quat rotationY = glm::angleAxis(-yAngle * this->sensitivity, this->worldUp);
+		this->rotation = this->rotation * rotationY;
+		/*this->forward = rotationY * this->forward;
+		this->right = rotationY * this->right;*/
 	}
 
 	// Rotate around the local x-axis using quaternions
 	if (xAngle != 0)
 	{
-		glm::quat rotationX = glm::angleAxis(-xAngle * this->sensitivity, this->right);
-		this->forward = this->forward * rotationX;
-		this->up = this->up * rotationX;
+		glm::quat rotationX = glm::angleAxis(-xAngle * this->sensitivity, glm::normalize(glm::cross(this->forward, this->up)));
+		this->rotation = this->rotation * rotationX;
+		/*this->forward = rotationX * this->forward;
+		this->up = rotationX * this->up;*/
 	}
 
 	// Normalize vectors
-	this->right = glm::normalize(this->right);
+	/*this->right = glm::normalize(this->right);
 	this->up = glm::normalize(this->up);
-	this->forward = glm::normalize(glm::cross(this->up, this->right));
+	this->forward = glm::normalize(glm::cross(this->up, this->right));*/
 }
 
 void Camera::UpdateViewportDimensions(const int& width, const int& height)
@@ -203,6 +207,13 @@ void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, 
 	rayDirection = glm::normalize(rayDirection);
 }
 
+void Camera::RestartCameraParameters()
+{
+	this->position = glm::vec3(0.0f, 0.0f, -7.5f);
+	this->forward = glm::vec3(0.0f, 0.0f, 1.0f);
+	this->up = glm::vec3(0.0f, 1.0f, 0.0f);
+	this->right = glm::cross(this->forward, this->up);
+}
 glm::vec3 Camera::GetCameraForward()
 {
 	return this->forward;

@@ -22,7 +22,8 @@ class Camera
 
 		glm::vec3 worldForward = glm::vec3(0.0f, 0.0f, 1.0f);
 		glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-		//direction doesn't matter, only thing that matters is that it is indeed x-axis (both vec3(1.0f, 0.0f, 0.0f) and vec3(-1.0f, 0.0f, 0.0f) lie in x axis)
+		//direction doesn't matter, only thing that matters is that it is indeed x-axis (both vec3(1.0f, 0.0f, 0.0f) and vec3(-1.0f, 0.0f, 0.0f) lie in x axis) - it actually does
+		//matter because it will rotate differently when we rotate 180 around y axis => up becomes down and down becomes up
 		glm::vec3 worldRight = glm::vec3(1.0f, 0.0f, 0.0f);
 
 	public:
@@ -61,6 +62,7 @@ class Camera
 		//and going into direction of a camera
 		void Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY);
 
+		void RestartCameraParameters();
 		glm::vec3 GetCameraForward();
 		glm::vec3 GetCameraUp();
 		glm::vec3 GetCameraRight();

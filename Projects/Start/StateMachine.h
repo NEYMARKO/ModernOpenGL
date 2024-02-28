@@ -11,6 +11,7 @@ enum State
 	ADD,
 	DELETE,
 	FOCUS,
+	RESTART_SCENE,
 	CLOSE_WINDOW
 };
 
