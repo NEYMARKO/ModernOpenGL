@@ -78,10 +78,16 @@ class StateMachine
 		void Grab();
 		void Rotate();
 		void Scale();
+
+		void SortObjectsInScene();
+		void QuickSort(const int& low, const int& high);
+		int Partition(const int& low, const int& high);
+		void Swap(const int& firstPos, const int& secondPos);
+
 		//Adds object to scene at the position of the click
 		//Different objects can be added by pressing numbers 1-8 while in ADD mode
 		void AddObject(Ray* ray);
-		//Deletes selected object from the scene and vector containing all objects in the scene
+		//Deletes selected object from both the scene and the vector containing all objects in the scene
 		void DeleteObject();
 		void CloseWindow(GLFWwindow* window);
 		~StateMachine();

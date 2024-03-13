@@ -21,6 +21,9 @@ class Mesh
 		glm::mat4 scalingMatrix = glm::mat4(1.0f);
 		glm::mat4 finalMatrix = glm::mat4(1.0f);
 		//Binds buffers, fills VAO & EBO with data, in the end unbinds buffers
+
+		float distanceFromCamera;
+
 		void setupMesh();
 	public:
 		BoundingBox* boundingBox;
@@ -31,6 +34,7 @@ class Mesh
 		int id;
 		VAO mVAO;
 		
+		Mesh();
 		Mesh(MeshLoader* meshLoader, glm::vec3 objectPos, float id);
 		~Mesh();
 		void ChangeColor(const glm::vec3& color);
@@ -39,6 +43,8 @@ class Mesh
 		void Rotate(const glm::vec3& rotationVector, float angle);
 		void Scale(float scale);
 		void CalculateFinalMatrix();
+		void CalculateDistanceFromCamera(Camera* camera);
+		float GetDistanceFromCamera();
 		glm::mat4 GetFinalMatrix();
 		//Binds VAO, calculates MVP matrices, assigns uniforms and draws object using EBO info
 		void Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting);

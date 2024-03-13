@@ -39,7 +39,7 @@ class Camera
 		Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 upVector, int width, int height);
 
 		//Calculates cameraUp vector
-		void calculateCameraUp(glm::vec3 upVector);
+		void CalculateCameraUp(glm::vec3 upVector);
 		
 		//Initializes view and projection matrices and sends them to shader as uniforms
 		void ViewProjectionMatrix(Shader& shaderProgram);

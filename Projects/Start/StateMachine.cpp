@@ -1,5 +1,7 @@
 #include "StateMachine.h"
 #define GLFW_HAND_CURSOR 0x00036004
+#define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
+#define PICKED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
 StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, std::vector<Mesh*>& objectsInScene) 
 	: objectsInScene(objectsInScene), meshLoaders(meshLoaders)
@@ -119,7 +121,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 			//object transformation has been completed
 			else if (this->state == GRAB || this->state == SCALE || this->state == ROTATE)
 			{
-				this->target->ChangeColor(glm::vec3(0.862745f, 0.862745f, 0.862745f));
+				this->target->ChangeColor(DEFAULT_OBJECT_COLOR);
 				this->target = nullptr;
 				this->state = NOTHING;
 				this->subState = EMPTY;
@@ -128,13 +130,14 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 			{
 				bool objectPicked = false;
 				int pickedId = -1;
+				SortObjectsInScene();
 				for (int obj = 0; obj < this->objectsInScene.size() && !objectPicked; obj++)
 				{
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
 						if (this->objectsInScene[obj]->boundingBox->Intersects(camera, i))
 						{
-							this->objectsInScene[obj]->ChangeColor(glm::vec3(0.0f, 1.0f, 0.0f));
+							this->objectsInScene[obj]->ChangeColor(PICKED_OBJECT_COLOR);
 							pickedId = this->objectsInScene[obj]->id;
 							objectPicked = true;
 							this->target = this->objectsInScene[obj];
@@ -150,7 +153,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 				//removing selective color if current click doesn't intersect with any of the objects
 				for (int i = 0; i < this->objectsInScene.size(); i++)
 				{
-					if (this->objectsInScene[i]->id != pickedId) this->objectsInScene[i]->ChangeColor(glm::vec3(0.862745f, 0.862745f, 0.862745f));
+					if (this->objectsInScene[i]->id != pickedId) this->objectsInScene[i]->ChangeColor(DEFAULT_OBJECT_COLOR);
 				}
 			}
 		}
@@ -297,14 +300,19 @@ void StateMachine::AddObject(Ray* ray)
 }
 void StateMachine::DeleteObject()
 {
-	int targetPos = this->target->id;
+	int position = 0;
 
-	this->objectsInScene.erase(this->objectsInScene.begin() + targetPos);
+	for (position; position < this->objectsInScene.size() && 
+		this->target->id != this->objectsInScene[position]->id; position++)
+	{
+	}
+
+	this->objectsInScene.erase(this->objectsInScene.begin() + position);
 	
-	for (int i = targetPos; i < this->objectsInScene.size(); i++)
+	/*for (int i = targetPos; i < this->objectsInScene.size(); i++)
 	{
 		this->objectsInScene[i]->id--;
-	}
+	}*/
 
 	delete this->target;
 	this->state = NOTHING;
@@ -324,6 +332,44 @@ bool StateMachine::ShouldFollowMouse()
 	return this->followMouse;
 }
 
+void StateMachine::SortObjectsInScene()
+{
+	for (Mesh* mesh : this->objectsInScene)
+	{
+		mesh->CalculateDistanceFromCamera(this->camera);
+	}
+	QuickSort(0, this->objectsInScene.size() - 1);
+}
+
+void StateMachine::QuickSort(const int& low, const int& high)
+{
+	if (low < high) {
+		int pi = Partition(low, high);
+		QuickSort(low, pi - 1);
+		QuickSort(pi + 1, high);
+	}
+}
+
+int StateMachine::Partition(const int& low, const int& high)
+{
+	float pivot = this->objectsInScene[high]->GetDistanceFromCamera();
+	int i = low - 1;
+	for (int j = low; j < high; j++) {
+		if (this->objectsInScene[j]->GetDistanceFromCamera() < pivot) {
+			i++;
+			Swap(i, j);
+		}
+	}
+	Swap(i + 1, high);
+	return i + 1;
+}
+
+void StateMachine::Swap(const int& firstPos, const int& secondPos)
+{
+	Mesh* temp = this->objectsInScene[firstPos];
+	this->objectsInScene[firstPos] = this->objectsInScene[secondPos];
+	this->objectsInScene[secondPos] = temp;
+}
 StateMachine::~StateMachine()
 {
 	//deleting objects, it isn't enough to just clear the vector - objects have to be removed from heap

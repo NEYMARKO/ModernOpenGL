@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-#define ANGLE_LOWER_BOUND 5
+#define ANGLE_LOWER_BOUND 0
 
 Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed, float sensitivity, int width, int height)
 {
@@ -14,7 +14,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed, float sensi
 	this->ray = nullptr;
 	glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	this->rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-	calculateCameraUp(worldUp);
+	CalculateCameraUp(worldUp);
 }
 
 Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 worldUp, int width, int height)
@@ -28,10 +28,10 @@ Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed, float sensi
 	this->height = (float)height;
 	this->ray = nullptr;
 	this->rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
-	calculateCameraUp(worldUp);
+	CalculateCameraUp(worldUp);
 }
 
-void Camera::calculateCameraUp(glm::vec3 worldUp)
+void Camera::CalculateCameraUp(glm::vec3 worldUp)
 {
 	glm::vec3 worldUpNorm = glm::normalize(worldUp);
 	this->right = glm::cross(this->forward, worldUpNorm);
@@ -51,6 +51,7 @@ void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 
 	this->forward = this->worldForward * rotation;
 	this->up = this->worldUp * rotation;
+	this->right = glm::normalize(glm::cross(this->forward, this->up));
 	view = glm::lookAt(this->position, this->position + this->forward, this->up);
 	projection = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
 
@@ -113,49 +114,28 @@ void Camera::Zoom(double amount)
 
 void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
 {
-
 	///https://gamedev.stackexchange.com/questions/30644/how-to-keep-my-quaternion-using-fps-camera-from-tilting-and-messing-up/30669#30669
 	double xOffset = currentX - startingX;
 	double yOffset = currentY - startingY;
 
-	/*std::cout << "Y offset: " << yOffset << std::endl;
-	std::cout << "X offset: " << xOffset << std::endl << std::endl;*/
 	float yAngle = fabs(xOffset) <= ANGLE_LOWER_BOUND ? 0 : xOffset / (2 * this->width) * glm::radians(360.0f);
 	float xAngle = fabs(yOffset) <= ANGLE_LOWER_BOUND ? 0 : yOffset / (2 * this->height) * glm::radians(360.0f);
 
-	//yAngle = xOffset / (2 * this->width) * glm::radians(360.0f);
-	/*std::cout << "Y angle (radians): " << yAngle << std::endl;
-	yAngle = (2 * xOffset) / (this->width) * 360.0f;
-	std::cout << "Y angle (degrees): " << yAngle << std::endl;*/
+	///CAMERA SHOULD BE ROTATED ALONG WORLD Y AXIS, AND LOCAL X AXIS
 
-
-	//std::cout << "Y angle: " << yAngle << std::endl;
-	//std::cout << "X angle: " << xAngle << std::endl << std::endl;
-
-	// Rotate around the local y-axis using quaternions
-
-	///CAMERA SHOULD BE ROTATED ALONG WORLD AXIS
 	if (yAngle != 0)
 	{
 		glm::quat rotationY = glm::angleAxis(-yAngle * this->sensitivity, this->worldUp);
 		this->rotation = this->rotation * rotationY;
-		/*this->forward = rotationY * this->forward;
-		this->right = rotationY * this->right;*/
+
 	}
 
-	// Rotate around the local x-axis using quaternions
 	if (xAngle != 0)
 	{
 		glm::quat rotationX = glm::angleAxis(-xAngle * this->sensitivity, glm::normalize(glm::cross(this->forward, this->up)));
 		this->rotation = this->rotation * rotationX;
-		/*this->forward = rotationX * this->forward;
-		this->up = rotationX * this->up;*/
-	}
 
-	// Normalize vectors
-	/*this->right = glm::normalize(this->right);
-	this->up = glm::normalize(this->up);
-	this->forward = glm::normalize(glm::cross(this->up, this->right));*/
+	}
 }
 
 void Camera::UpdateViewportDimensions(const int& width, const int& height)

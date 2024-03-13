@@ -2,6 +2,10 @@
 #include "Lighting.h"
 
 
+Mesh::Mesh()
+{
+
+}
 Mesh::Mesh(MeshLoader* meshLoader, glm::vec3 objectPosition, float id)
 {
 	this->meshLoader = meshLoader;
@@ -84,6 +88,17 @@ glm::mat4 Mesh::GetFinalMatrix()
 {
 	return this->finalMatrix;
 }
+
+void Mesh::CalculateDistanceFromCamera(Camera* camera)
+{
+	this->distanceFromCamera = glm::distance(this->objectPos, camera->GetCameraPosition());
+}
+
+float Mesh::GetDistanceFromCamera()
+{
+	return this->distanceFromCamera;
+}
+
 void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting)
 {
 	shaderProgram.Activate();
