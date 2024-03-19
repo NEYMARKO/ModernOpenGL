@@ -7,6 +7,7 @@ class Joint
 	private:
 		Mesh* meshContainer;
 		Joint* parent = nullptr;
+		Joint* child = nullptr;
 		glm::quat orientation;
 		glm::vec3 position;
 		glm::vec3 tempPosition;
@@ -28,14 +29,17 @@ class Joint
 		void Render();
 
 		void SetParent(Joint* parent);
+		void SetChild(Joint* child);
 		void SetPosition(const glm::vec3& position);
 		void SetTempPosition(const glm::vec3& tempPosition);
+
 		glm::vec3 GetPosition();
+		glm::vec3 GetTempPosition();
 		glm::vec3 GetForwardVector();
 		glm::vec3 GetUpVector();
 		float GetSegmentLength();
 		Mesh* GetMeshContainer();
-
 		Joint* GetParent();
+		Joint* GetChild();
 		~Joint();
 };

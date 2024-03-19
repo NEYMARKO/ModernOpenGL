@@ -20,6 +20,8 @@ class KinematicChain
 
 		glm::vec3 CalculateNewJointPosition(Joint* joint, const float direction);
 
+		bool ErrorTooSmall();
+
 		std::vector<Joint*>* GetAllJoints();
 
 		~KinematicChain();

@@ -33,6 +33,11 @@ void Joint::SetParent(Joint* parent)
 	this->parent = parent;
 }
 
+void Joint::SetChild(Joint* child)
+{
+	this->child = child;
+}
+
 void Joint::SetTempPosition(const glm::vec3& tempPosition)
 {
 	this->tempPosition = tempPosition;
@@ -48,6 +53,11 @@ glm::vec3 Joint::GetPosition()
 	return this->position;
 }
 
+glm::vec3 Joint::GetTempPosition()
+{
+	return this->tempPosition;
+}
+
 glm::vec3 Joint::GetForwardVector()
 {
 	return this->forward;
@@ -61,6 +71,11 @@ glm::vec3 Joint::GetUpVector()
 Joint* Joint::GetParent()
 {
 	return this->parent;
+}
+
+Joint* Joint::GetChild()
+{
+	return this->child;
 }
 
 float Joint::GetSegmentLength()
