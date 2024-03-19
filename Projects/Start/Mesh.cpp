@@ -99,7 +99,7 @@ float Mesh::GetDistanceFromCamera()
 	return this->distanceFromCamera;
 }
 
-void Mesh::Draw(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting)
+void Mesh::Render(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting)
 {
 	shaderProgram.Activate();
 

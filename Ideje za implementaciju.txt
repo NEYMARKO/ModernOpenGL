@@ -1,0 +1,23 @@
+Ideje za implementirati u game engine:
+	- dokumentiranje koda
+	- orijentacija objekta prema kameri prilikom dodavanja u scenu
+	- podjela scene u kvadrante - efikasnija provjera kod raycast-a (za intersection)
+	- implementacija kolozije
+	- implementacija LOD-a
+	- hijerarhija omedujucih volumena (bounding volume) - jednostavniji u pocetku (kada se otkrije u kojem kvadrantu se nalazi te nalazi li se unutar jednostavnog
+	omedujuceg volumena, onda preci na kalkulacije nad kompleksnijim omedujucim volumenom)
+	- ne renderanje onog sto se nalazi iza kamere
+	- hierarchy tree (sluzi za skelet)
+	- sva stabla spomenuta na RACANI
+	- procedural animation
+	- inverse kinematics
+	- raymarching
+	- dismemberment
+
+Stvari za popraviti u game engine:
+	- bolja organizacija koda
+	- ispravna implementacija state machine-a
+	- bolja rotacija kamere
+	
+
+2Rq,8+x72_Jk_2G - epic games

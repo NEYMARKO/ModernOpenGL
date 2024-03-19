@@ -95,7 +95,7 @@ int main()
 		
 		for (int i = 0; i < (*stateMachine.GetObjectsInScene()).size(); i++)
 		{
-			(*stateMachine.GetObjectsInScene())[i]->Draw(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+			(*stateMachine.GetObjectsInScene())[i]->Render(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 			//(*stateMachine.GetObjectsInScene())[i]->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
 		
@@ -113,9 +113,7 @@ int main()
 	shaderProgram.Delete();
 	lightingShaderProgram.Delete();
 	boundingBoxShaderProgram.Delete();
-	// Delete window before ending the program
 	glfwDestroyWindow(window);
-	// Terminate GLFW before ending the program
 	glfwTerminate();
 	return 0;
 }
@@ -142,8 +140,6 @@ void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	// make sure the viewport matches the new window dimensions; note that width and 
-	// height will be significantly larger than specified on retina displays.
 	glfwGetWindowSize(window, &globalWidth, &globalHeight);
 	globalCamera.UpdateViewportDimensions(globalWidth, globalHeight);
 	glViewport(0, 0, globalWidth, globalHeight);

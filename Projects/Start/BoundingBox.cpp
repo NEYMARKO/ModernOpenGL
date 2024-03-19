@@ -95,3 +95,13 @@ void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 
 	boxVAO.Unbind();
 }
+
+glm::vec3 BoundingBox::GetMinExtremes()
+{
+	return this->minExtremes;
+}
+
+glm::vec3 BoundingBox::GetMaxExtremes()
+{
+	return this->maxExtremes;
+}

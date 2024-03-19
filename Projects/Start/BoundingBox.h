@@ -36,4 +36,7 @@ class BoundingBox
 		void UpdateBounds(const glm::mat4& transformationMatrix);
 		//Draws BoundingBox around Mesh
 		void Draw(Shader& shaderProgram, Camera& camera);
+
+		glm::vec3 GetMinExtremes();
+		glm::vec3 GetMaxExtremes();
 };
