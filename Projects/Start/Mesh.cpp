@@ -13,6 +13,8 @@ Mesh::Mesh(MeshLoader* meshLoader, glm::vec3 objectPosition, float id)
 	setupMesh();
 	InitialTransform(objectPosition, this->meshLoader->scalingFactor);
 	this->boundingBox = new BoundingBox(meshLoader->minExtremes, meshLoader->maxExtremes, *this);
+
+	//std::cout << "Spawned mesh with id: " << id << std::endl;
 }
 
 Mesh::~Mesh()

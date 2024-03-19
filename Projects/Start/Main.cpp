@@ -55,28 +55,32 @@ int main()
 	MeshLoader templeLoader("templeFlat.txt");
 	MeshLoader frogLoader("frogSmooth.txt");
 	MeshLoader teddyLoader("teddyFlat.txt");
+	MeshLoader sphereLoader("sphere.txt");
 
 	meshLoaders.push_back(&cubeLoader);
 	meshLoaders.push_back(&dragonLoader);
 	meshLoaders.push_back(&templeLoader);
 	meshLoaders.push_back(&frogLoader);
 	meshLoaders.push_back(&teddyLoader);
+	meshLoaders.push_back(&sphereLoader);
 
 	float id = 0;
 
 	Mesh* lightBulb = new Mesh(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	Mesh* dragon = new Mesh(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	Mesh* cube = new Mesh(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	
+	Mesh* sphere = new Mesh(&sphereLoader, glm::vec3(-15.0f, 0.0f, 0.0f), id++);
+
 	objectsInScene.push_back(lightBulb);
 	objectsInScene.push_back(dragon);
 	objectsInScene.push_back(cube);
+	objectsInScene.push_back(sphere);
 
 	Lighting light(*lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	Grid grid(100);
 
-	KinematicChain ikChain(10, 90.0f, glm::vec3(0.0f, 0.0f, 0.0f), cube, dragon);
+	KinematicChain ikChain(10, 90.0f, glm::vec3(0.0f, 0.0f, 0.0f), cube, sphere);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -107,7 +111,7 @@ int main()
 			globalCamera.ray->Draw(boundingBoxShaderProgram, globalCamera);
 		}
 
-		//ikChain.FabrikAlgorithm(10);
+		ikChain.FabrikAlgorithm(10);
 
 		//Move joint to it's new position and render it
 		for (Joint* joint : (*ikChain.GetAllJoints()))

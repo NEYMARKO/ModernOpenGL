@@ -1,5 +1,6 @@
 #include "KinematicChain.h"
 
+#define DISTANCE_BETWEEN_JOINTS 1.2f
 KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, const glm::vec3& chainStartPos, Mesh* meshContainer, Mesh* target)
 {
 	//first element doesn't have parent
@@ -12,12 +13,12 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, const 
 	{
 		this->chain.push_back(new Joint(angleConstraint, meshContainer));
 		//creating offset between joints
-		this->chain[i]->SetPosition(this->chainStartPos + glm::vec3(1.2f, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength() * (float) i);
+		this->chain[i]->SetPosition(this->chainStartPos + glm::vec3(DISTANCE_BETWEEN_JOINTS, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength() * (float) i);
 		this->chain[i]->SetParent(this->chain[i - 1]);
 		
 		glm::vec3 pos = this->chain[i]->GetPosition();
 
-		std::cout << "Created joint " << i << " at position " << pos.x << ", " << pos.y << " " << pos.z << std::endl;
+		//std::cout << "Created joint " << i << " at position " << pos.x << ", " << pos.y << " " << pos.z << std::endl;
 	}
 
 	this->target = target;
@@ -25,6 +26,18 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, const 
 
 void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 {
+	//check if target is out of reach
+
+	if (glm::distance(this->chainStartPos, this->target->objectPos) > (this->chain.size() * this->chain[0]->GetSegmentLength()))
+	{
+		float segmentLength = this->chain[0]->GetSegmentLength();
+		for (int i = 0; i < this->chain.size(); i++)
+		{
+			this->chain[i]->SetPosition(glm::normalize(this->target->objectPos - this->chainStartPos) * segmentLength * DISTANCE_BETWEEN_JOINTS * (float) i);
+		}
+		return;
+	}
+
 	for (int i = 0; i < numberOfIterations; i++)
 	{
 		//Calculate new position of every joint
@@ -60,7 +73,7 @@ void KinematicChain::BackwardsPass()
 }
 glm::vec3 KinematicChain::CalculateNewJointPosition(Joint* joint, const float direction)
 {
-	return glm::normalize(joint->GetPosition() - this->target->objectPos) * direction * joint->GetSegmentLength();
+	return glm::normalize(joint->GetPosition() - this->target->objectPos) * direction * joint->GetSegmentLength() + joint->GetPosition();
 }
 
 std::vector<Joint*>* KinematicChain::GetAllJoints()
