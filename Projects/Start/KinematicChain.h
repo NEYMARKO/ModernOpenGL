@@ -5,10 +5,12 @@
 class KinematicChain
 {
 	private:
-		std::vector<Joint*> chain;
 		Mesh* target;
+		Mesh* meshContainer;
+		std::vector<Joint*> chain;
+		glm::vec3 chainStartPos;
 	public:
-		KinematicChain(int numberOfJoints, float angleConstraint, Mesh* meshContainer, Mesh* target);
+		KinematicChain(int numberOfJoints, float angleConstraint, const glm::vec3& chainStartPos, Mesh* meshContainer, Mesh* target);
 
 		void FabrikAlgorithm(const int numberOfIterations);
 
@@ -18,7 +20,7 @@ class KinematicChain
 
 		glm::vec3 CalculateNewJointPosition(Joint* joint, const float direction);
 
-		glm::vec3 NewBackwardJointPosition(Joint* joint);
+		std::vector<Joint*>* GetAllJoints();
 
 		~KinematicChain();
 };

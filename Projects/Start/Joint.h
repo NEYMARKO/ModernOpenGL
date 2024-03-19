@@ -34,6 +34,7 @@ class Joint
 		glm::vec3 GetForwardVector();
 		glm::vec3 GetUpVector();
 		float GetSegmentLength();
+		Mesh* GetMeshContainer();
 
 		Joint* GetParent();
 		~Joint();

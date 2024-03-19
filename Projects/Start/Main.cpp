@@ -2,6 +2,7 @@
 #include "Lighting.h"
 #include "StateMachine.h"
 #include "Grid.h"
+#include "KinematicChain.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -75,6 +76,8 @@ int main()
 
 	Grid grid(100);
 
+	KinematicChain ikChain(10, 90.0f, glm::vec3(0.0f, 0.0f, 0.0f), cube, dragon);
+
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -104,6 +107,14 @@ int main()
 			globalCamera.ray->Draw(boundingBoxShaderProgram, globalCamera);
 		}
 
+		//ikChain.FabrikAlgorithm(10);
+
+		//Move joint to it's new position and render it
+		for (Joint* joint : (*ikChain.GetAllJoints()))
+		{
+			joint->GetMeshContainer()->Translate(joint->GetPosition());
+			joint->GetMeshContainer()->Render(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+		}
 		globalCamera.Move(window, deltaTime);
 
 		glfwSwapBuffers(window);

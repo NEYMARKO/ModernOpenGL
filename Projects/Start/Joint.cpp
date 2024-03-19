@@ -67,3 +67,8 @@ float Joint::GetSegmentLength()
 {
 	return this->length;
 }
+
+Mesh* Joint::GetMeshContainer()
+{
+	return this->meshContainer;
+}
