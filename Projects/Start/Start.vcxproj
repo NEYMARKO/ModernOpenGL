@@ -199,10 +199,15 @@
     <Text Include="arena.txt" />
     <Text Include="bird.txt" />
     <Text Include="bull.txt" />
+    <Text Include="cone.txt" />
     <Text Include="cubeFlat.txt" />
     <Text Include="dragonSmooth.txt" />
     <Text Include="dragonSmoothRotated.txt" />
     <Text Include="frogSmooth.txt" />
+    <Text Include="joint.txt" />
+    <Text Include="joint2.txt" />
+    <Text Include="joint3.txt" />
+    <Text Include="joint4.txt" />
     <Text Include="kocka.txt" />
     <Text Include="lightBulb.txt" />
     <Text Include="planeFlat.txt" />

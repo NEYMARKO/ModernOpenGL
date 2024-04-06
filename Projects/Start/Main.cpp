@@ -56,6 +56,9 @@ int main()
 	MeshLoader frogLoader("frogSmooth.txt");
 	MeshLoader teddyLoader("teddyFlat.txt");
 	MeshLoader sphereLoader("sphere.txt");
+	//BLENDER: rotate around X for 270 (-90) degrees,	EXPORT: forward: -X, up: Z
+	MeshLoader coneLoader("cone.txt");
+	MeshLoader jointLoader("joint3.txt");
 
 	meshLoaders.push_back(&cubeLoader);
 	meshLoaders.push_back(&dragonLoader);
@@ -63,24 +66,30 @@ int main()
 	meshLoaders.push_back(&frogLoader);
 	meshLoaders.push_back(&teddyLoader);
 	meshLoaders.push_back(&sphereLoader);
+	meshLoaders.push_back(&coneLoader);
+	meshLoaders.push_back(&jointLoader);
 
 	float id = 0;
 
 	Mesh* lightBulb = new Mesh(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	Mesh* dragon = new Mesh(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
-	Mesh* cube = new Mesh(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+	//Mesh* cube = new Mesh(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 	Mesh* sphere = new Mesh(&sphereLoader, glm::vec3(-15.0f, 0.0f, 0.0f), id++);
+	//Mesh* cone = new Mesh(&coneLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+	Mesh* joint = new Mesh(&jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 
 	objectsInScene.push_back(lightBulb);
 	objectsInScene.push_back(dragon);
-	objectsInScene.push_back(cube);
+	//objectsInScene.push_back(cube);
 	objectsInScene.push_back(sphere);
+	//objectsInScene.push_back(cone);
+	objectsInScene.push_back(joint);
 
 	Lighting light(*lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
 
 	Grid grid(100);
 
-	KinematicChain ikChain(10, 90.0f, glm::vec3(0.0f, 0.0f, 0.0f), cube, sphere);
+	KinematicChain ikChain(5, 90.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, sphere);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

@@ -7,9 +7,8 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, const 
 	//first element doesn't have parent
 	this->chainStartPos = chainStartPos;
 	this->target = target;
-	this->meshContainer = meshContainer;
 
-	this->chain.push_back(new Joint(angleConstraint, this->meshContainer));
+	this->chain.push_back(new Joint(angleConstraint, meshContainer));
 	this->chain[0]->SetPosition(this->chainStartPos);
 	this->chain[0]->SetTempPosition(this->chainStartPos);
 	for (int i = 1; i < numberOfJoints; i++)
@@ -19,17 +18,12 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, const 
 		this->chain[i]->SetPosition(this->chainStartPos + glm::vec3(DISTANCE_BETWEEN_JOINTS, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength() * (float) i);
 		this->chain[i]->SetParent(this->chain[i - 1]);
 		this->chain[i - 1]->SetChild(this->chain[i]);
-		
-		//glm::vec3 pos = this->chain[i]->GetPosition();
-
-		//std::cout << "Created joint " << i << " at position " << pos.x << ", " << pos.y << " " << pos.z << std::endl;
 	}
 }
 
 void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 {
-	//check if target is out of reach
-
+	//Check if target is out of reach
 	if (glm::distance(this->chainStartPos, this->target->objectPos) > (this->chain.size() * this->chain[0]->GetSegmentLength()))
 	{
 		float segmentLength = this->chain[0]->GetSegmentLength();
@@ -41,7 +35,8 @@ void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 		return;
 	}
 
-	for (int i = 0; i < numberOfIterations; i++)
+	//Shouldn't put i < numberOfIterations || ErrorTooSmall() BECAUSE IT WILL RUN INDEFINITELY SINCE ErrorTooSmall will always return true
+	for (int i = 0; (i < numberOfIterations && !ErrorTooSmall()); i++)
 	{
 		//Calculate new position of every joint
 		ForwardPass();

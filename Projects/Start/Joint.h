@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Mesh.h"
-
+#include <algorithm>
 class Joint
 {
 	private:

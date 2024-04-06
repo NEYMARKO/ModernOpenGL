@@ -6,7 +6,6 @@ class KinematicChain
 {
 	private:
 		Mesh* target;
-		Mesh* meshContainer;
 		std::vector<Joint*> chain;
 		glm::vec3 chainStartPos;
 	public:

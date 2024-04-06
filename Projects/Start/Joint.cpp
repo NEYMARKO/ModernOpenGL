@@ -4,7 +4,10 @@ Joint::Joint(float angleConstraint, Mesh* meshContainer)
 {
 	this->angleConstraint = angleConstraint;
 	this->meshContainer = meshContainer;
-	this->length = abs(this->meshContainer->boundingBox->GetMaxExtremes().z - this->meshContainer->boundingBox->GetMinExtremes().z);
+	this->length = std::max(
+		abs(this->meshContainer->boundingBox->GetMaxExtremes().z - this->meshContainer->boundingBox->GetMinExtremes().z),
+		abs(this->meshContainer->boundingBox->GetMaxExtremes().x - this->meshContainer->boundingBox->GetMinExtremes().x)
+	);
 }
 
 void Joint::RotateTowardsTarget(glm::vec3& targetPos)

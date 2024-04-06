@@ -198,6 +198,21 @@
     <Text Include="sphere.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
+    <Text Include="cone.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="joint.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="joint2.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="joint3.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="joint4.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
