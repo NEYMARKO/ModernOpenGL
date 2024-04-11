@@ -19,6 +19,7 @@ class KinematicChain
 
 		glm::vec3 CalculateNewJointPosition(Joint* joint, const float direction);
 
+		//Returns true if distance between end of IK chain and target is smaller than defined ErrorMargin
 		bool ErrorTooSmall();
 
 		std::vector<Joint*>* GetAllJoints();

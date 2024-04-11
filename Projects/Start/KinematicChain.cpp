@@ -58,6 +58,7 @@ void KinematicChain::ForwardPass()
 		currentJoint->SetTempPosition(
 			currentJoint->GetChild()->GetTempPosition() + glm::normalize(currentJoint->GetPosition() - currentJoint->GetChild()->GetTempPosition()) * currentJoint->GetSegmentLength()
 		);
+		//currentJoint->RotateTowardsTarget(this->target->objectPos);
 		currentJoint = currentJoint->GetParent();
 	}
 }
@@ -75,6 +76,7 @@ void KinematicChain::BackwardsPass()
 			joint->SetPosition(
 				joint->GetParent()->GetPosition() + glm::normalize(joint->GetTempPosition() - joint->GetParent()->GetPosition()) * joint->GetSegmentLength()
 			);
+			//joint->RotateTowardsTarget(this->target->objectPos);
 		}
 	}
 }

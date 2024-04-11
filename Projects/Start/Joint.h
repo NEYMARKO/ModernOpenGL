@@ -20,7 +20,7 @@ class Joint
 
 		Joint(float angleConstraint, Mesh* meshContainer);
 
-		//Rotates joint's forward vector to face target
+		//Rotates joint's forward vector to face the target
 		void RotateTowardsTarget(glm::vec3& targetPos);
 
 		//Returns false if joint has rotated past it's constraint (angle is too big)

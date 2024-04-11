@@ -8,13 +8,26 @@ Joint::Joint(float angleConstraint, Mesh* meshContainer)
 		abs(this->meshContainer->boundingBox->GetMaxExtremes().z - this->meshContainer->boundingBox->GetMinExtremes().z),
 		abs(this->meshContainer->boundingBox->GetMaxExtremes().x - this->meshContainer->boundingBox->GetMinExtremes().x)
 	);
+	this->forward = glm::vec3(-1.0f, 0.0f, 0.0f);
 }
 
 void Joint::RotateTowardsTarget(glm::vec3& targetPos)
 {
-	//Angle between target and joint
+	glm::vec3 directionToTarget = glm::normalize(targetPos - this->position);
+	float rotationAngle = glm::acos(glm::dot(this->forward, directionToTarget));
+	
+	//angle between parent's forward vector and child's future forward direction is larger than constraint allows
+	if (abs(glm::dot(this->parent->forward, directionToTarget)) > this->angleConstraint)
+	{
+		return;
+	}
 
-	float rotationAngle = glm::acos(glm::dot(this->forward, glm::normalize(targetPos - this->position)));
+	glm::vec3 rotationAxis = glm::cross(this->forward, directionToTarget);
+	glm::quat rotationQuaternion = glm::angleAxis(rotationAngle, rotationAxis);
+	
+	this->orientation = rotationQuaternion * this->orientation;
+	this->forward = directionToTarget;
+	this->meshContainer->Rotate(orientation);
 
 	//Rotate forward and up vector using quaternion
 }

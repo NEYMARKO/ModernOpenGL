@@ -41,6 +41,7 @@ class Mesh
 		void InitialTransform(glm::vec3 translation, float scale);
 		void Translate(const glm::vec3& newPosition);
 		void Rotate(const glm::vec3& rotationVector, float angle);
+		void Rotate(const glm::quat& rotation);
 		void Scale(float scale);
 		void CalculateFinalMatrix();
 		void CalculateDistanceFromCamera(Camera* camera);
