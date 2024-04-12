@@ -3,10 +3,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <cerrno>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "PrintClass.h"
 
 std::string get_file_contents(const char* filename);
 
