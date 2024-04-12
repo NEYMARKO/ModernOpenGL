@@ -13,7 +13,7 @@ void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset);
 int globalWidth = 800, globalHeight= 800;
 float deltaTime = 0.0f, lastFrame = 0.0f;
 
-Camera globalCamera(glm::vec3(0.0f, 0.0f, -7.5f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, globalWidth, globalHeight);
+Camera globalCamera(glm::vec3(-10.0f, 0.0f, -20.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, globalWidth, globalHeight);
 
 std::vector<Mesh*> objectsInScene;
 std::vector<MeshLoader*> meshLoaders;
@@ -58,7 +58,8 @@ int main()
 	MeshLoader sphereLoader("sphere.txt");
 	//BLENDER: rotate around X for 270 (-90) degrees,	EXPORT: forward: -X, up: Z
 	MeshLoader coneLoader("cone.txt");
-	MeshLoader jointLoader("joint3.txt");
+	//forward: -X, up: Z - file: joint.blend
+	MeshLoader jointLoader("joint4.txt");
 
 	meshLoaders.push_back(&cubeLoader);
 	meshLoaders.push_back(&dragonLoader);
@@ -74,7 +75,7 @@ int main()
 	Mesh* lightBulb = new Mesh(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	Mesh* dragon = new Mesh(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	//Mesh* cube = new Mesh(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	Mesh* sphere = new Mesh(&sphereLoader, glm::vec3(-15.0f, 0.0f, 0.0f), id++);
+	Mesh* sphere = new Mesh(&sphereLoader, glm::vec3(-25.0f, 0.0f, 0.0f), id++);
 	//Mesh* cone = new Mesh(&coneLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 	Mesh* joint = new Mesh(&jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 
@@ -127,6 +128,7 @@ int main()
 		{
 			joint->GetMeshContainer()->Translate(joint->GetPosition());
 			joint->GetMeshContainer()->Render(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+			joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
 		globalCamera.Move(window, deltaTime);
 
