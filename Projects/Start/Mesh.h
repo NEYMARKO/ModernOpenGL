@@ -46,6 +46,7 @@ class Mesh
 		void CalculateFinalMatrix();
 		void CalculateDistanceFromCamera(Camera* camera);
 		float GetDistanceFromCamera();
+		glm::vec3 GetPosition();
 		glm::mat4 GetFinalMatrix();
 		//Binds VAO, calculates MVP matrices, assigns uniforms and draws object using EBO info
 		void Render(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting);

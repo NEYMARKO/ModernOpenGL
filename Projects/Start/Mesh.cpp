@@ -92,6 +92,10 @@ void Mesh::CalculateFinalMatrix()
 	this->finalMatrix = this->translationMatrix * this->rotationMatrix * this->scalingMatrix;
 }
 
+glm::vec3 Mesh::GetPosition()
+{
+	return glm::vec3(this->finalMatrix[3][0], this->finalMatrix[3][1], this->finalMatrix[3][2]);
+}
 glm::mat4 Mesh::GetFinalMatrix()
 {
 	return this->finalMatrix;

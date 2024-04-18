@@ -8,28 +8,61 @@ Joint::Joint(float angleConstraint, Mesh* meshContainer)
 		abs(this->meshContainer->boundingBox->GetMaxExtremes().z - this->meshContainer->boundingBox->GetMinExtremes().z),
 		abs(this->meshContainer->boundingBox->GetMaxExtremes().x - this->meshContainer->boundingBox->GetMinExtremes().x)
 	);
+	this->jointEnd = this->position + this->forward * this->length;
 	this->forward = glm::vec3(-1.0f, 0.0f, 0.0f);
 }
 
-void Joint::RotateTowardsTarget(glm::vec3& targetPos)
+void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
-	glm::vec3 directionToTarget = glm::normalize(targetPos - this->position);
-	float rotationAngle = glm::acos(glm::dot(this->forward, directionToTarget));
 	
-	//angle between parent's forward vector and child's future forward direction is larger than constraint allows
-	if (abs(glm::dot(this->parent->forward, directionToTarget)) > this->angleConstraint)
+	if (!this->child)
 	{
-		return;
+		glm::vec3 directionToTarget = glm::normalize(targetPos - this->jointEnd);
+
+		//angle between parent's forward vector and child's future forward direction is larger than constraint allows
+		if (this->parent && abs(glm::acos(glm::radians(glm::dot(this->parent->forward, directionToTarget)))) > this->angleConstraint)
+		{
+			return;
+		}
+
+		float rotationAngle = glm::acos(glm::radians(glm::dot(this->forward, directionToTarget)));
+		glm::vec3 rotationAxis = glm::cross(this->forward, directionToTarget);
+		glm::quat rotationQuaternion = glm::normalize(glm::angleAxis(rotationAngle, rotationAxis));
+
+		/*std::cout << "Rotation quat: ";
+		PrintClass::PrintQuat(rotationQuaternion);*/
+
+		this->orientation = glm::normalize(rotationQuaternion * this->orientation);
+
+		/*std::cout << "Orientation quat: ";
+		PrintClass::PrintQuat(this->orientation);*/
+
+		this->forward = directionToTarget;
+		this->meshContainer->Rotate(this->orientation);
 	}
+	else
+	{
+		glm::vec3 directionToTarget = glm::normalize(this->GetChild()->GetPosition() - this->jointEnd);
 
-	glm::vec3 rotationAxis = glm::cross(this->forward, directionToTarget);
-	glm::quat rotationQuaternion = glm::angleAxis(rotationAngle, rotationAxis);
-	
-	this->orientation = rotationQuaternion * this->orientation;
-	this->forward = directionToTarget;
-	this->meshContainer->Rotate(orientation);
+		if (this->parent && abs(glm::acos(glm::radians(glm::dot(this->parent->forward, directionToTarget)))) > this->angleConstraint)
+		{
+			return;
+		}
+		float rotationAngle = glm::acos(glm::radians(glm::dot(this->forward, directionToTarget)));
+		glm::vec3 rotationAxis = glm::cross(this->forward, directionToTarget);
+		glm::quat rotationQuaternion = glm::normalize(glm::angleAxis(rotationAngle, rotationAxis));
 
-	//Rotate forward and up vector using quaternion
+		/*std::cout << "Rotation quat: ";
+		PrintClass::PrintQuat(rotationQuaternion);*/
+
+		this->orientation = glm::normalize(rotationQuaternion * this->orientation);
+
+		/*std::cout << "Orientation quat: ";
+		PrintClass::PrintQuat(this->orientation);*/
+
+		this->forward = directionToTarget;
+		this->meshContainer->Rotate(this->orientation);
+	}
 }
 
 bool Joint::CanRotate()

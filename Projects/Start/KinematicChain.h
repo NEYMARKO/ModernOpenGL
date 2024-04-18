@@ -23,6 +23,7 @@ class KinematicChain
 		bool ErrorTooSmall();
 
 		std::vector<Joint*>* GetAllJoints();
+		Mesh* GetTarget();
 
 		~KinematicChain();
 };

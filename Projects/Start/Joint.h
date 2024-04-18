@@ -8,8 +8,9 @@ class Joint
 		Mesh* meshContainer;
 		Joint* parent = nullptr;
 		Joint* child = nullptr;
-		glm::quat orientation;
+		glm::quat orientation = glm::quat(glm::radians(0.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
 		glm::vec3 position;
+		glm::vec3 jointEnd;
 		glm::vec3 tempPosition;
 		glm::vec3 forward;
 		glm::vec3 up;
@@ -21,7 +22,7 @@ class Joint
 		Joint(float angleConstraint, Mesh* meshContainer);
 
 		//Rotates joint's forward vector to face the target
-		void RotateTowardsTarget(glm::vec3& targetPos);
+		void RotateTowardsTarget(const glm::vec3& targetPos);
 
 		//Returns false if joint has rotated past it's constraint (angle is too big)
 		bool CanRotate();

@@ -15,7 +15,7 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, const 
 	{
 		this->chain.push_back(new Joint(angleConstraint, meshContainer));
 		//creating offset between joints
-		this->chain[i]->SetPosition(this->chainStartPos + glm::vec3(DISTANCE_BETWEEN_JOINTS, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength() * (float) i);
+		this->chain[i]->SetPosition(this->chainStartPos + glm::vec3(1.0f, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength() * (float) i);
 		this->chain[i]->SetParent(this->chain[i - 1]);
 		this->chain[i - 1]->SetChild(this->chain[i]);
 	}
@@ -30,7 +30,7 @@ void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 		//Position of start of the chain should never be changed
 		for (int i = 1; i < this->chain.size(); i++)
 		{
-			this->chain[i]->SetPosition(glm::normalize(this->target->objectPos - this->chainStartPos) * segmentLength * DISTANCE_BETWEEN_JOINTS * (float) i);
+			this->chain[i]->SetPosition(glm::normalize(this->target->objectPos - this->chainStartPos) * segmentLength * (float) i);
 		}
 		return;
 	}
@@ -69,6 +69,7 @@ void KinematicChain::BackwardsPass()
 	{
 		if (!joint->GetParent())
 		{
+			//PrintClass::PrintVec3(joint->GetMeshContainer()->GetPosition());
 			continue;
 		}
 		else
@@ -94,7 +95,10 @@ std::vector<Joint*>* KinematicChain::GetAllJoints()
 {
 	return &this->chain;
 }
-
+Mesh* KinematicChain::GetTarget()
+{
+	return this->target;
+}
 KinematicChain::~KinematicChain()
 {
 	for (Joint* joint : this->chain)

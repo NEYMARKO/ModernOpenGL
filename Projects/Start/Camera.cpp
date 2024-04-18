@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-#define ANGLE_LOWER_BOUND 0
+#define ANGLE_LOWER_BOUND 10
 
 Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed, float sensitivity, int width, int height)
 {

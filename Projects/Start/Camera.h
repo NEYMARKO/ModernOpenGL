@@ -4,8 +4,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
 #include "Ray.h"
 
 class Camera
