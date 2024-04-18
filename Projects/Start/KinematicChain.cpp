@@ -15,7 +15,8 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, const 
 	{
 		this->chain.push_back(new Joint(angleConstraint, meshContainer));
 		//creating offset between joints
-		this->chain[i]->SetPosition(this->chainStartPos + glm::vec3(1.0f, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength() * (float) i);
+		//this->chain[i]->SetPosition(this->chainStartPos + glm::vec3(DISTANCE_BETWEEN_JOINTS, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength() * (float) i);
+		this->chain[i]->SetPosition(this->chainStartPos + (glm::vec3(1.0f, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength()  * (float)i));
 		this->chain[i]->SetParent(this->chain[i - 1]);
 		this->chain[i - 1]->SetChild(this->chain[i]);
 	}

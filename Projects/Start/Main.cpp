@@ -58,7 +58,8 @@ int main()
 	MeshLoader sphereLoader("sphere.txt");
 	//BLENDER: rotate around X for 270 (-90) degrees,	EXPORT: forward: -X, up: Z
 	MeshLoader coneLoader("cone.txt");
-	MeshLoader jointLoader("joint3.txt");
+	//forward: -X, up: Z - file: joint.blend
+	MeshLoader jointLoader("joint4.txt");
 
 	meshLoaders.push_back(&cubeLoader);
 	meshLoaders.push_back(&dragonLoader);
@@ -128,6 +129,7 @@ int main()
 			joint->RotateTowardsTarget(ikChain.GetTarget()->objectPos);
 			joint->GetMeshContainer()->Translate(joint->GetPosition());
 			joint->GetMeshContainer()->Render(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+			joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
 		globalCamera.Move(window, deltaTime);
 
