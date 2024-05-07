@@ -40,6 +40,11 @@ void Ray::UpdateData(glm::vec3& start, glm::vec3& direction)
 {
 	this->start = start;
 	this->direction = direction;
+	
+	this->vertices = {
+		this->start,
+		this->start + this->direction * this->length
+	};
 }
 
 glm::vec3 Ray::GetRayStart()
@@ -71,4 +76,14 @@ void Ray::Draw(Shader& shaderProgram, Camera& camera)
 	rayVAO.Bind();
 	glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, 0);
 	rayVAO.Unbind();
+}
+
+VAO* Ray::GetRayVAO()
+{
+	return &this->rayVAO;
+}
+
+std::vector<unsigned int>* Ray::GetRayIndices()
+{
+	return &this->indices;
 }

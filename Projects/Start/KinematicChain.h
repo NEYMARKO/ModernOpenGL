@@ -9,7 +9,7 @@ class KinematicChain
 		std::vector<Joint*> chain;
 		glm::vec3 chainStartPos;
 	public:
-		KinematicChain(int numberOfJoints, float angleConstraint, const glm::vec3& chainStartPos, Mesh* meshContainer, Mesh* target);
+		KinematicChain(int numberOfJoints, float angleConstraint, const glm::vec3& chainStartPos, Mesh* meshContainer, Mesh* target, Gizmos* gizmos);
 
 		void FabrikAlgorithm(const int numberOfIterations);
 

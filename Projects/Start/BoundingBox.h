@@ -1,5 +1,4 @@
 #pragma once
-#include "Shader.h"
 #include "Camera.h"
 #include "VAO.h"
 #include "VBO.h"
@@ -39,4 +38,8 @@ class BoundingBox
 
 		glm::vec3 GetMinExtremes();
 		glm::vec3 GetMaxExtremes();
+
+		VAO* GetBoundingBoxVAO();
+		Mesh* GetParentMesh();
+		std::vector<unsigned int>* GetIndices();
 };

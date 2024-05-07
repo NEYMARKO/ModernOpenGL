@@ -105,3 +105,16 @@ glm::vec3 BoundingBox::GetMaxExtremes()
 {
 	return this->maxExtremes;
 }
+
+VAO* BoundingBox::GetBoundingBoxVAO()
+{
+	return &this->boxVAO;
+}
+Mesh* BoundingBox::GetParentMesh()
+{
+	return &this->parentMesh;
+}
+std::vector<unsigned int>* BoundingBox::GetIndices()
+{
+	return &this->indices;
+}

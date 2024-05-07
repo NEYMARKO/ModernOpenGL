@@ -3,6 +3,7 @@
 #include "StateMachine.h"
 #include "Grid.h"
 #include "KinematicChain.h"
+#include "Gizmos.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -90,7 +91,12 @@ int main()
 
 	Grid grid(100);
 
-	KinematicChain ikChain(10, 90.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, sphere);
+	Gizmos gizmos(&globalCamera, &shaderProgram, &boundingBoxShaderProgram);
+	
+	KinematicChain ikChain(7, 90.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, sphere, &gizmos);
+
+	Mesh* jointTarget;
+	glm::vec3 jointTargetPosition;
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -126,10 +132,32 @@ int main()
 		//Move joint to it's new position and render it
 		for (Joint* joint : (*ikChain.GetAllJoints()))
 		{
-			joint->RotateTowardsTarget(ikChain.GetTarget()->objectPos);
+			jointTargetPosition = (joint->GetChild() == nullptr ? ikChain.GetTarget()->GetPosition() : joint->GetChild()->GetPosition());
+			//jointTarget = (joint->GetChild() == nullptr ? ikChain.GetTarget() : joint->GetChild()->GetMeshContainer());
+			//joint->RotateTowardsTarget(jointTarget->GetPosition());
+			
+			//only end is printing position, rest of them are printing NaN if they get rotated
+			//joint->RotateTowardsTarget(ikChain.GetTarget()->objectPos);
+			
+			//PrintClass::PrintVec3(jointTargetPosition);
+			
+			/*std::cout << "JOINT POSITION: ";
+			PrintClass::PrintVec3(joint->GetPosition());
+
+			std::cout << "JOINT END: ";
+			PrintClass::PrintVec3(joint->GetJointEnd());*/
+
+			//if (joint->GetChild()) PrintClass::PrintVec3(joint->GetChild()->GetPosition());
 			joint->GetMeshContainer()->Translate(joint->GetPosition());
+			//joint->RotateTowardsTarget(jointTargetPosition);
+			std::string name = "j" + joint->GetID();
+			gizmos.UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 10);
+			glm::vec3 color = glm::vec3(0.0f, 0.0f, 1.0f);
+			gizmos.RenderAllLines(color);
+
+			//gizmos.RenderBoundingBox(joint->GetMeshContainer()->boundingBox);
 			joint->GetMeshContainer()->Render(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
-			joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
+			//joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
 		globalCamera.Move(window, deltaTime);
 

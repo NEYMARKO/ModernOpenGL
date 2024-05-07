@@ -152,12 +152,12 @@ void Camera::Raycast(GLFWwindow* window, const double& mouseX, const double& mou
 
 	if (this->ray == nullptr)
 	{
-		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 50);
+		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 100);
 	}
 	else
 	{
 		delete this->ray;
-		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 50);
+		this->ray = new Ray(rayStartWorld, rayDirectionWorld, 100);
 	}
 }
 

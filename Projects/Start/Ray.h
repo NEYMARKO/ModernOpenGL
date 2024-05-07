@@ -29,9 +29,11 @@ class Ray
 
 		void UpdateData(glm::vec3& start, glm::vec3& direction);
 
+		void Draw(Shader& shaderProgram, Camera& camera);
+
+		float GetRayLength();
 		glm::vec3 GetRayStart();
 		glm::vec3 GetRayDirection();
-		float GetRayLength();
-
-		void Draw(Shader& shaderProgram, Camera& camera);
+		VAO* GetRayVAO();
+		std::vector<unsigned int>* GetRayIndices();
 };

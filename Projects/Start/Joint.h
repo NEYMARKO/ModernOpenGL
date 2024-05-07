@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mesh.h"
+#include "Gizmos.h"
 #include <algorithm>
 class Joint
 {
@@ -16,10 +16,11 @@ class Joint
 		glm::vec3 up;
 		float length;
 		float angleConstraint;
+		int id;
 
 	public:
 
-		Joint(float angleConstraint, Mesh* meshContainer);
+		Joint(float angleConstraint, Mesh* meshContainer, int id);
 
 		//Rotates joint's forward vector to face the target
 		void RotateTowardsTarget(const glm::vec3& targetPos);
@@ -34,10 +35,11 @@ class Joint
 		void SetPosition(const glm::vec3& position);
 		void SetTempPosition(const glm::vec3& tempPosition);
 
+		int GetID();
 		glm::vec3 GetPosition();
 		glm::vec3 GetTempPosition();
 		glm::vec3 GetForwardVector();
-		glm::vec3 GetUpVector();
+		glm::vec3 GetJointEnd();
 		float GetSegmentLength();
 		Mesh* GetMeshContainer();
 		Joint* GetParent();
