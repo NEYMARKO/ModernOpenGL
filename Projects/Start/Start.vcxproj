@@ -177,6 +177,8 @@
     <None Include="default.vert" />
     <None Include="lighting.frag" />
     <None Include="lighting.vert" />
+    <None Include="point.frag" />
+    <None Include="point.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoundingBox.h" />

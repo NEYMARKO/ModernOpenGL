@@ -1,5 +1,5 @@
 #include "Joint.h"
-
+#define ERROR_MARGIN 0.1f
 Joint::Joint(float angleConstraint, Mesh* meshContainer, int id)
 {
 	this->id = id;
@@ -11,31 +11,42 @@ Joint::Joint(float angleConstraint, Mesh* meshContainer, int id)
 	);
 	//this->jointEnd = this->position + this->forward * this->length;
 	this->forward = glm::vec3(-1.0f, 0.0f, 0.0f);
-	std::string name = "j" + id;
+	this->orientation = glm::quat(glm::radians(0.0f), this->forward);
 }
 
 void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
-	glm::vec3 directionToTarget = glm::normalize(targetPos - this->jointEnd);
+
+	if (!this->child && glm::distance(this->position + (this->forward * this->length), targetPos) <= ERROR_MARGIN)
+	{
+		return;
+	}
+	//glm::vec3 directionToTarget = glm::normalize(targetPos - (this->position + (this->forward * this->length)));
+	glm::vec3 directionToTarget = glm::normalize(targetPos - this->position);
+
 	//float rotationAngle = glm::acos(glm::clamp(glm::dot(this->forward, directionToTarget), -1.0f, 1.0f));
 	
-	float forwardLen = glm::length(this->forward);
-	float directionLen = glm::length(directionToTarget);
+	/*float forwardLen = glm::length(this->forward);
+	float directionLen = glm::length(directionToTarget);*/
 
-	float dotResult = glm::dot(this->forward, directionToTarget) / (forwardLen * directionLen);
-	float rotationAngle;
-	rotationAngle = glm::acos(dotResult);
+	float dotResult = glm::dot(this->forward, directionToTarget);
+	dotResult = glm::clamp(dotResult, -1.0f, 1.0f);
+	float rotationAngle = glm::acos(dotResult);
 
-	if (abs(dotResult) >= 1)
+	//vectors are parallel, no need to update rotation
+	if (abs(dotResult) == 1) return;
+	//std::cout << "DOT RESULT: " << dotResult << std::endl;
+	//if (abs(dotResult) >= 1)
+	//{
+	//	//std::cout << "ENTERED IF " << std::endl;
+	//	rotationAngle = glm::radians(0.0f);
+	//}
+
+	//std::cout << "ROTATION ANGLE: " << rotationAngle << std::endl;
+	/*if (isnan(rotationAngle))
 	{
-		//std::cout << "ENTERED IF " << std::endl;
-		rotationAngle = glm::radians(0.0f);
-	}
 
-	if (isnan(rotationAngle))
-	{
-
-		std::cout << "DOT RESULT: " << (glm::dot(this->forward, directionToTarget) / (forwardLen * directionLen)) << std::endl;
+		std::cout << "DOT RESULT: " << dotResult << std::endl;
 		std::cout << "ROTATION ANGLE: " << rotationAngle << std::endl;
 		
 		std::cout << "FORWARD: ";
@@ -48,27 +59,43 @@ void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 
 		std::cout << "DIRECTION LEN: " << directionLen << std::endl<<std::endl;
 
-	}
+	}*/
 
 	//angle between parent's forward vector and child's future forward direction is larger than constraint allows
-	if (!this->parent && abs(rotationAngle) > glm::radians(this->angleConstraint))
+	/*if (!this->parent && abs(rotationAngle) > glm::radians(this->angleConstraint))
 	{
 		return;
-	}
+	}*/
 
 	glm::vec3 rotationAxis = glm::cross(this->forward, directionToTarget);
-	glm::quat rotationQuaternion = glm::normalize(glm::angleAxis(glm::degrees(rotationAngle), rotationAxis));
+
+	/*if (glm::length(rotationAxis) < 0.001f)
+	{
+		return;
+	}*/
+	//if (glm::length(rotationAxis) < 0.001f) { // Threshold for near-zero vectors
+	//	rotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);  // Default axis
+	//}
+	glm::quat rotationQuaternion = glm::normalize(glm::angleAxis(rotationAngle, rotationAxis));
 
 	/*std::cout << "Rotation quat: ";
 	PrintClass::PrintQuat(rotationQuaternion);*/
 
-	this->orientation = glm::normalize(rotationQuaternion * this->orientation);
 
 	/*std::cout << "Orientation quat: ";
 	PrintClass::PrintQuat(this->orientation);*/
 
-	this->forward = directionToTarget;
+	rotationQuaternion = glm::rotation(this->forward, directionToTarget);
+	this->orientation = glm::normalize(rotationQuaternion * this->orientation);
+
+
+	this->forward = glm::rotate(rotationQuaternion, this->forward);
+	//this->forward = directionToTarget;
 	this->meshContainer->Rotate(this->orientation);
+	
+	
+	
+	
 	//if (!this->child)
 	//{
 	//	glm::vec3 directionToTarget = glm::normalize(targetPos - this->jointEnd);

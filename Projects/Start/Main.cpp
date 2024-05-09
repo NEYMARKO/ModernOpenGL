@@ -49,6 +49,7 @@ int main()
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
+	Shader pointShader("point.vert", "point.frag");
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
 	MeshLoader cubeLoader("cubeFlat.txt");
@@ -91,12 +92,14 @@ int main()
 
 	Grid grid(100);
 
-	Gizmos gizmos(&globalCamera, &shaderProgram, &boundingBoxShaderProgram);
+	Gizmos gizmos(&globalCamera, &shaderProgram, &boundingBoxShaderProgram, &pointShader);
 	
 	KinematicChain ikChain(7, 90.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, sphere, &gizmos);
 
 	Mesh* jointTarget;
 	glm::vec3 jointTargetPosition;
+
+	std::vector<glm::vec3> points;
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -130,6 +133,7 @@ int main()
 		ikChain.FabrikAlgorithm(10);
 
 		//Move joint to it's new position and render it
+		
 		for (Joint* joint : (*ikChain.GetAllJoints()))
 		{
 			jointTargetPosition = (joint->GetChild() == nullptr ? ikChain.GetTarget()->GetPosition() : joint->GetChild()->GetPosition());
@@ -149,16 +153,19 @@ int main()
 
 			//if (joint->GetChild()) PrintClass::PrintVec3(joint->GetChild()->GetPosition());
 			joint->GetMeshContainer()->Translate(joint->GetPosition());
-			//joint->RotateTowardsTarget(jointTargetPosition);
-			std::string name = "j" + joint->GetID();
-			gizmos.UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 10);
-			glm::vec3 color = glm::vec3(0.0f, 0.0f, 1.0f);
+			joint->RotateTowardsTarget(jointTargetPosition);
+			std::string name = "j" + std::to_string(joint->GetID());
+			gizmos.UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 4);
+			glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
 			gizmos.RenderAllLines(color);
-
 			//gizmos.RenderBoundingBox(joint->GetMeshContainer()->boundingBox);
 			joint->GetMeshContainer()->Render(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+			points.push_back(joint->GetPosition());
 			//joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
+		gizmos.RenderPoints(10.0f);
+		gizmos.UpdatePoints(points);
+		points.clear();
 		globalCamera.Move(window, deltaTime);
 
 		glfwSwapBuffers(window);

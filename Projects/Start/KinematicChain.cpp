@@ -11,18 +11,23 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, const 
 	this->chain.push_back(new Joint(angleConstraint, meshContainer, id));
 	this->chain[0]->SetPosition(this->chainStartPos);
 	this->chain[0]->SetTempPosition(this->chainStartPos);
+	std::string name = "j" + std::to_string(id);
+	gizmos->AddRay(name, this->chain[0]->GetPosition(), this->chain[0]->GetForwardVector(), 10);
 	for (int i = 1; i < numberOfJoints; i++)
 	{
-		id++;
+		++id;
 		this->chain.push_back(new Joint(angleConstraint, meshContainer, id));
 		//creating offset between joints
 		//this->chain[i]->SetPosition(this->chainStartPos + glm::vec3(DISTANCE_BETWEEN_JOINTS, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength() * (float) i);
 		this->chain[i]->SetPosition(this->chainStartPos + (glm::vec3(-DISTANCE_BETWEEN_JOINTS, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength()  * (float)i));
 		this->chain[i]->SetParent(this->chain[i - 1]);
 		this->chain[i - 1]->SetChild(this->chain[i]);
-		std::string name = "j" + id;
+		std::string name = "j" + std::to_string(id);
+		//std::cout << "ID: " << id << " NAME: " << name << std::endl;
 		gizmos->AddRay(name, this->chain[i]->GetPosition(), this->chain[i]->GetForwardVector(), 10);
+		gizmos->AddPoint(this->chain[i]->GetPosition());
 	}
+	gizmos->SetupPointsBuffer();
 }
 
 void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
@@ -48,16 +53,17 @@ void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 	for (int i = 0; (i < numberOfIterations && !ErrorTooSmall()); i++)
 	{
 		//Calculate new position of every joint
+		BackwardsPass();
+		
 		ForwardPass();
 
-		BackwardsPass();
 		//See if joint surpasses constraint
 
 		//
 	}
 }
 
-void KinematicChain::ForwardPass()
+void KinematicChain::BackwardsPass()
 {
 	Joint* currentJoint = this->chain[this->chain.size() - 1];
 	currentJoint->SetTempPosition(this->target->objectPos);
@@ -65,14 +71,16 @@ void KinematicChain::ForwardPass()
 	while (currentJoint->GetParent())
 	{
 		currentJoint->SetTempPosition(
-			currentJoint->GetChild()->GetTempPosition() + glm::normalize(currentJoint->GetPosition() - currentJoint->GetChild()->GetTempPosition()) * currentJoint->GetSegmentLength()
+			currentJoint->GetChild()->GetTempPosition() + (
+				glm::normalize(currentJoint->GetPosition() - currentJoint->GetChild()->GetTempPosition()) * (currentJoint->GetSegmentLength() + DISTANCE_BETWEEN_JOINTS)
+				)
 		);
 		//currentJoint->RotateTowardsTarget(this->target->objectPos);
 		currentJoint = currentJoint->GetParent();
 	}
 }
 
-void KinematicChain::BackwardsPass()
+void KinematicChain::ForwardPass()
 {
 	for (Joint* joint : this->chain)
 	{
@@ -84,7 +92,9 @@ void KinematicChain::BackwardsPass()
 		else
 		{
 			joint->SetPosition(
-				joint->GetParent()->GetPosition() + glm::normalize(joint->GetTempPosition() - joint->GetParent()->GetPosition()) * joint->GetSegmentLength()
+				joint->GetParent()->GetPosition() + (
+					glm::normalize(joint->GetTempPosition() - joint->GetParent()->GetPosition()) * (joint->GetSegmentLength() + DISTANCE_BETWEEN_JOINTS)
+					)
 			);
 			//joint->RotateTowardsTarget(this->target->objectPos);
 		}

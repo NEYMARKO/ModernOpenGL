@@ -8,7 +8,7 @@ class Joint
 		Mesh* meshContainer;
 		Joint* parent = nullptr;
 		Joint* child = nullptr;
-		glm::quat orientation = glm::quat(glm::radians(0.0f), glm::vec3(-1.0f, 0.0f, 0.0f));
+		glm::quat orientation;
 		glm::vec3 position;
 		glm::vec3 jointEnd;
 		glm::vec3 tempPosition;
