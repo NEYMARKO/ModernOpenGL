@@ -17,10 +17,10 @@ Joint::Joint(float angleConstraint, Mesh* meshContainer, int id)
 
 void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
-	if (!this->child && glm::distance(this->position + (this->forward * this->length), targetPos) <= ERROR_MARGIN)
+	/*if (!this->child && glm::distance(this->position + (this->forward * this->length), targetPos) <= ERROR_MARGIN)
 	{
 		return;
-	}
+	}*/
 	//glm::vec3 directionToTarget = glm::normalize(targetPos - (this->position + (this->forward * this->length)));
 	glm::vec3 directionToTarget = glm::normalize(targetPos - this->position);
 
