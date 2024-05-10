@@ -76,6 +76,7 @@ void Mesh::Rotate(const glm::vec3& rotationVector, float angle)
 }
 void Mesh::Rotate(const glm::quat& rotation)
 {
+	std::cout << "CHANGED ROTATION" << std::endl;
 	this->rotationMatrix = glm::toMat4(rotation);
 	CalculateFinalMatrix();
 	this->boundingBox->VerticesToWorld();

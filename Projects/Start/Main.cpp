@@ -156,13 +156,13 @@ int main()
 			joint->RotateTowardsTarget(jointTargetPosition);
 			std::string name = "j" + std::to_string(joint->GetID());
 			gizmos.UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 4);
-			glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
-			gizmos.RenderAllLines(color);
 			//gizmos.RenderBoundingBox(joint->GetMeshContainer()->boundingBox);
 			joint->GetMeshContainer()->Render(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
 			points.push_back(joint->GetPosition());
 			//joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
+		glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
+		gizmos.RenderAllLines(color);
 		gizmos.RenderPoints(10.0f);
 		gizmos.UpdatePoints(points);
 		points.clear();

@@ -80,10 +80,10 @@ void Gizmos::RenderLine(Ray* ray, glm::vec3& color)
 
 void Gizmos::RenderAllLines(glm::vec3& color)
 {
-	std::cout << "NUMBER OF LINES: " << this->raysInTheScene.size() << std::endl;
+	/*std::cout << "NUMBER OF LINES: " << this->raysInTheScene.size() << std::endl;*/
 	for (auto ray : this->raysInTheScene)
 	{
-		std::cout << "NAME: " << ray.first << std::endl;
+		/*std::cout << "NAME: " << ray.first << std::endl;*/
 		RenderLine(ray.second, color);
 	}
 }

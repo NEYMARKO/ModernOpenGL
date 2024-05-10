@@ -33,9 +33,9 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, const 
 void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 {
 	//Check if target is out of reach
-	if (glm::distance(this->chainStartPos, this->target->objectPos) > (this->chain.size() * this->chain[0]->GetSegmentLength()))
+	float segmentLength = this->chain[0]->GetSegmentLength();
+	if (glm::distance(this->chainStartPos, this->target->objectPos) > (this->chain.size() * (segmentLength + DISTANCE_BETWEEN_JOINTS) - DISTANCE_BETWEEN_JOINTS))
 	{
-		float segmentLength = this->chain[0]->GetSegmentLength();
 		//Position of start of the chain should never be changed
 		for (int i = 1; i < this->chain.size(); i++)
 		{
@@ -66,7 +66,8 @@ void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 void KinematicChain::BackwardsPass()
 {
 	Joint* currentJoint = this->chain[this->chain.size() - 1];
-	currentJoint->SetTempPosition(this->target->objectPos);
+
+	currentJoint->SetTempPosition(this->target->objectPos - (currentJoint->GetForwardVector() * currentJoint->GetSegmentLength()));
 	currentJoint = currentJoint->GetParent();
 	while (currentJoint->GetParent())
 	{
