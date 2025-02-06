@@ -19,5 +19,3 @@ Stvari za popraviti u game engine:
 	- ispravna implementacija state machine-a
 	- bolja rotacija kamere
 	
-
-2Rq,8+x72_Jk_2G - epic games
