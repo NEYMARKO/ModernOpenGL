@@ -49,8 +49,8 @@ void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
-	this->forward = this->worldForward * rotation;
-	this->up = this->worldUp * rotation;
+	this->forward = this->rotation * this->worldForward;
+	this->up = this->rotation * this->worldUp;
 	this->right = glm::normalize(glm::cross(this->forward, this->up));
 	view = glm::lookAt(this->position, this->position + this->forward, this->up);
 	projection = glm::perspective(glm::radians(this->fov), this->width / this->height, 0.1f, 100.0f);
@@ -125,15 +125,15 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 
 	if (yAngle != 0)
 	{
-		glm::quat rotationY = glm::angleAxis(-yAngle * this->sensitivity, this->worldUp);
-		this->rotation = this->rotation * rotationY;
+		glm::quat rotationY = glm::angleAxis(yAngle * this->sensitivity, this->worldUp);
+		this->rotation = rotationY * this->rotation;
 
 	}
 
 	if (xAngle != 0)
 	{
-		glm::quat rotationX = glm::angleAxis(-xAngle * this->sensitivity, glm::normalize(glm::cross(this->forward, this->up)));
-		this->rotation = this->rotation * rotationX;
+		glm::quat rotationX = glm::angleAxis(xAngle * this->sensitivity, glm::normalize(glm::cross(this->forward, this->up)));
+		this->rotation = rotationX * this->rotation;
 
 	}
 }
