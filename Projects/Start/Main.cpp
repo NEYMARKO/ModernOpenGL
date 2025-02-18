@@ -94,7 +94,7 @@ int main()
 
 	Gizmos gizmos(&globalCamera, &shaderProgram, &boundingBoxShaderProgram, &pointShader);
 	
-	KinematicChain ikChain(7, 90.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, sphere, &gizmos);
+	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, sphere, &gizmos);
 
 	Mesh* jointTarget;
 	glm::vec3 jointTargetPosition;

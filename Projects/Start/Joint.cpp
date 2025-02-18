@@ -17,59 +17,45 @@ Joint::Joint(float angleConstraint, Mesh* meshContainer, int id)
 
 void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
-	/*if (!this->child && glm::distance(this->position + (this->forward * this->length), targetPos) <= ERROR_MARGIN)
-	{
-		return;
-	}*/
-	//glm::vec3 directionToTarget = glm::normalize(targetPos - (this->position + (this->forward * this->length)));
 	glm::vec3 directionToTarget = glm::normalize(targetPos - this->position);
-
-
-	std::cout << "ORIENTATION (" << this->id << ") BEFORE STOPPING: ";
-	PrintClass::PrintQuat(this->orientation);
-
-	/*std::cout << "FORWARD: " << std::endl;
-	PrintClass::PrintVec3(this->forward);
-	std::cout << "DIRECTION: " << std::endl;
-	PrintClass::PrintVec3(directionToTarget);*/
-	float dotResult = glm::dot(this->forward, directionToTarget);
-	dotResult = glm::clamp(dotResult, -1.0f, 1.0f);
-	/*if (abs(dotResult - 1.0f) < DOT_PRODUCT_ERROR || abs(dotResult + 1.0f) < DOT_PRODUCT_ERROR)
-	{*/
-	//if (abs(dotResult) >= 1 - DOT_PRODUCT_ALLOWED_ERROR)
-	//{
-	//	/*std::cout << "JOINT " << this->id << " STOPPED MOVING" << std::endl;
-	//	std::cout << "ORIENTATION (" << this->id << ") AFTER STOPPING: ";
-	//	PrintClass::PrintQuat(this->orientation);
-	//	std::cout << std::endl << std::endl;*/
-	//	std::cout << "FORWARD: " << std::endl;
-	//	PrintClass::PrintVec3(this->forward);
-	//	std::cout << "DIRECTION: " << std::endl;
-	//	PrintClass::PrintVec3(directionToTarget);
-
-	//	//std::cout << "EQUAL?: " << (this->forward == directionToTarget) << std::endl;
-	//	return;
-	//}
-
-	/*std::cout << "JOINT " << this->id << " PASSED" << std::endl;
-	std::cout << "FORWARD: " << std::endl;
-	PrintClass::PrintVec3(this->forward);
-	std::cout << "DIRECTION: " << std::endl;
-	PrintClass::PrintVec3(directionToTarget);*/
-	//float rotationAngle = glm::acos(dotResult);
-	//vectors are parallel, no need to update rotation
-
-	/*glm::vec3 rotationAxis = glm::cross(this->forward, directionToTarget);
-	glm::quat rotationQuaternion = glm::normalize(glm::angleAxis(rotationAngle, rotationAxis));*/
-
 	glm::quat rotationQuaternion = glm::rotation(this->forward, directionToTarget);
 	this->orientation = glm::normalize(rotationQuaternion * this->orientation);
-	//if (this->forward == directionToTarget) PrintClass::PrintQuat(rotationQuaternion);
-
-
-	//this->forward = glm::normalize(glm::rotate(rotationQuaternion, this->forward));
 	this->forward = directionToTarget;
 	this->meshContainer->Rotate(this->orientation);
+	//if (this->parent)
+	//{
+	//	float currentAngle = glm::acos(glm::clamp(glm::dot(this->forward, this->parent->forward), -1.0f, 1.0f));
+	//	std::cout << "CURRENT ANGLE (id: " << id << ") : " << currentAngle << std::endl;
+	//	glm::quat desiredRotation = glm::rotation(this->forward, directionToTarget);
+	//	glm::vec3 desiredForward = glm::normalize(glm::rotate(desiredRotation, this->forward));
+	//	float desiredAngle = glm::acos(glm::clamp(glm::dot(desiredForward, this->parent->forward), -1.0f, 1.0f));
+	//	if (abs(desiredAngle) > glm::radians(this->angleConstraint))
+	//	{
+	//		float allowedRotation = glm::radians(this->angleConstraint) - abs(currentAngle);
+	//		glm::vec3 rotationAxis = glm::normalize(glm::cross(this->forward, directionToTarget));
+
+	//		glm::vec3 allowedForward = glm::rotate(this->forward, allowedRotation, rotationAxis);
+	//		// Create a new clamped rotation quaternion
+	//		glm::quat clampedRotation = glm::rotation(this->forward, allowedForward);
+
+	//		// Apply the clamped rotation instead of the full rotation
+	//		this->orientation = glm::normalize(clampedRotation * this->orientation);
+	//		this->forward = glm::normalize(glm::rotate(clampedRotation, this->forward));
+	//	}
+	//	else 
+	//	{
+	//		// No constraint violation, proceed with the desired rotation
+	//		this->orientation = glm::normalize(desiredRotation * this->orientation);
+	//		this->forward = desiredForward;
+	//	}
+	//}
+	//else
+	//{
+	//	glm::quat rotationQuaternion = glm::rotation(this->forward, directionToTarget);
+	//	this->orientation = glm::normalize(rotationQuaternion * this->orientation);
+	//	this->forward = directionToTarget;
+	//}
+	//this->meshContainer->Rotate(this->orientation);
 }
 
 bool Joint::CanRotate()
