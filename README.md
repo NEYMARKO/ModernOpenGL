@@ -11,7 +11,8 @@
 4. open CMake:
   -  for a source code location provide path to the bullet3 directory (made after cloning repo)
   -  for binary build location choose your buildCMake folder
-  -  ![CMake setup](https://github.com/[NEYMARKO]/[ModernOpenGL]/[main]/READMEIMAGES/CMake_options.png?raw=true)
+  -  ![CMake setup](https://raw.githubusercontent.com/NEYMARKO/ModernOpenGL/main/READMEIMAGES/CMake_options.png)
+
 
 5. press CONFIGURE button, then press it againg after new values have been displayed in red, after that press GENERATE
 6. locate BULLET_PHYSICS.sln solution in your buildCMake folder and run it
