@@ -18,7 +18,7 @@ void Grid::SetupGrid()
 			this->vertices.push_back(glm::vec3(j, 0, i));
 		}
 	}
-
+	// array length = size/step - dividing total width of grid with width of one square in grid to get total number of squares, which is length of array
 	int length = this->size * (1 / STEP);
 	for (float i = 0; i < length; i++)
 	{

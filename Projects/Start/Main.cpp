@@ -4,7 +4,8 @@
 #include "Grid.h"
 #include "KinematicChain.h"
 #include "Gizmos.h"
-//#include <btBulletDynamicsCommon.h>
+
+#include <btBulletDynamicsCommon.h>
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -174,54 +175,51 @@ int main()
 		glfwPollEvents();
 
 
-		//btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-		//btDefaultCollisionConfiguration* collisionConfig = new btDefaultCollisionConfiguration();
-		//btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfig);
-		//btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver();
-		//btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
-		//dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+		// Step 1: Initialize Bullet Physics
+		btBroadphaseInterface* broadphase = new btDbvtBroadphase();
+		btDefaultCollisionConfiguration* collisionConfig = new btDefaultCollisionConfiguration();
+		btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfig);
+		btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver();
+		btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
+		dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+		// Create ground shape
+		btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
 
-		//// Create ground shape
-		//btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
+		// Create ground rigid body
+		btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+		btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
+		btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
 
-		//// Create ground rigid body
-		//btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
-		//btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
-		//btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+		// Add to world
+		dynamicsWorld->addRigidBody(groundRigidBody);
+		// Create box shape
+		btCollisionShape* boxShape = new btBoxShape(btVector3(1, 1, 1));
 
-		//// Add to world
-		//dynamicsWorld->addRigidBody(groundRigidBody);
+		// Create motion state
+		btDefaultMotionState* boxMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
 
-		//// Create box shape
-		//btCollisionShape* boxShape = new btBoxShape(btVector3(1, 1, 1));
+		// Define mass and inertia
+		btScalar mass = 1.0f;
+		btVector3 inertia(0, 0, 0);
+		boxShape->calculateLocalInertia(mass, inertia);
 
-		//// Create motion state
-		//btDefaultMotionState* boxMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
+		// Create rigid body
+		btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(mass, boxMotionState, boxShape, inertia);
+		btRigidBody* boxRigidBody = new btRigidBody(boxRigidBodyCI);
 
-		//// Define mass and inertia
-		//btScalar mass = 1.0f;
-		//btVector3 inertia(0, 0, 0);
-		//boxShape->calculateLocalInertia(mass, inertia);
+		// Add to world
+		dynamicsWorld->addRigidBody(boxRigidBody);
 
-		//// Create rigid body
-		//btRigidBody::btRigidBodyConstructionInfo boxRigidBodyCI(mass, boxMotionState, boxShape, inertia);
-		//btRigidBody* boxRigidBody = new btRigidBody(boxRigidBodyCI);
+		float deltaTime = 1.0f / 60.0f;
+		dynamicsWorld->stepSimulation(deltaTime, 10);
 
-		//// Add to world
-		//dynamicsWorld->addRigidBody(boxRigidBody);
+		// Get updated object position
+		btTransform transform;
+		boxRigidBody->getMotionState()->getWorldTransform(transform);
+		btVector3 pos = transform.getOrigin();
 
-		//float deltaTime = 1.0f / 60.0f;
-		//dynamicsWorld->stepSimulation(deltaTime, 10);
-
-		//// Get updated object position
-		//btTransform transform;
-		//boxRigidBody->getMotionState()->getWorldTransform(transform);
-		//btVector3 pos = transform.getOrigin();
-
-		//// Print position for debugging
-		//std::cout << "Box Position: " << pos.getX() << ", " << pos.getY() << ", " << pos.getZ() << std::endl;
-
-
+		// Print position for debugging
+		std::cout << "Box Position: " << pos.getX() << ", " << pos.getY() << ", " << pos.getZ() << std::endl;
 	}
 
 	shaderProgram.Delete();
