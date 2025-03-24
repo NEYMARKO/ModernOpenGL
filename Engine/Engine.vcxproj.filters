@@ -75,15 +75,12 @@
     <ClCompile Include="EBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Texture.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="VAO.h">
@@ -135,6 +132,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="EBO.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
