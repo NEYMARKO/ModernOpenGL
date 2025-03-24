@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{65a8d38e-617f-4fc2-a2f7-14921d87dc43}</ProjectGuid>
-    <RootNamespace>Start</RootNamespace>
+    <ProjectGuid>{e86af7ad-ee0d-4619-8f6e-8fe0b2a27f28}</ProjectGuid>
+    <RootNamespace>Engine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -71,20 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Debug;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Release;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Debug;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Marko\Desktop\SEMINAR\ModernOpenGL\Engine\Libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Marko\Desktop\SEMINAR\ModernOpenGL\Engine\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Debug;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Release;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Debug;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Release;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Marko\Desktop\SEMINAR\ModernOpenGL\Engine\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Marko\Desktop\SEMINAR\ModernOpenGL\Engine\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMAKE\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -92,13 +84,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;Bullet3Geometry_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -109,14 +99,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <RuntimeLibrary>&lt;different options&gt;</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;Bullet3Geometry_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -125,13 +113,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;Bullet3Geometry_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -142,15 +128,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <RuntimeLibrary>&lt;different options&gt;</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;Bullet3Geometry_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -176,20 +159,11 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="borderBox.frag" />
-    <None Include="borderBox.vert" />
-    <None Include="default.frag" />
-    <None Include="default.vert" />
-    <None Include="lighting.frag" />
-    <None Include="lighting.vert" />
-    <None Include="point.frag" />
-    <None Include="point.vert" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="Gizmos.h" />
+    <ClInclude Include="Grab.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Joint.h" />
     <ClInclude Include="KinematicChain.h" />
@@ -201,32 +175,37 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="TransformState.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\..\Downloads\dragon.txt" />
-    <Text Include="all.txt" />
-    <Text Include="arena.txt" />
-    <Text Include="bird.txt" />
-    <Text Include="bull.txt" />
     <Text Include="cone.txt" />
     <Text Include="cubeFlat.txt" />
     <Text Include="dragonSmooth.txt" />
     <Text Include="dragonSmoothRotated.txt" />
     <Text Include="frogSmooth.txt" />
     <Text Include="joint.txt" />
+    <Text Include="joint1.txt" />
     <Text Include="joint2.txt" />
     <Text Include="joint3.txt" />
     <Text Include="joint4.txt" />
-    <Text Include="kocka.txt" />
     <Text Include="lightBulb.txt" />
     <Text Include="planeFlat.txt" />
     <Text Include="sphere.txt" />
-    <Text Include="teddy.txt" />
     <Text Include="teddyFlat.txt" />
     <Text Include="templeFlat.txt" />
-    <Text Include="tsd00.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="borderBox.frag" />
+    <None Include="borderBox.vert" />
+    <None Include="default.frag" />
+    <None Include="default.vert" />
+    <None Include="lighting.frag" />
+    <None Include="lighting.vert" />
+    <None Include="point.frag" />
+    <None Include="point.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg" />
