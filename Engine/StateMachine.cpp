@@ -4,7 +4,7 @@
 #define PICKED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
 StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, std::vector<Mesh*>& objectsInScene)
-	: objectsInScene(objectsInScene), meshLoaders(meshLoaders)
+	: objectsInScene{ objectsInScene }, meshLoaders{ meshLoaders }
 {
 	this->state = NOTHING;
 	this->subState = EMPTY;

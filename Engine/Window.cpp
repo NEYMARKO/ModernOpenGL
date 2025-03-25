@@ -71,6 +71,16 @@ GLFWwindow* Window::getGLFWwindow()
 	return mWindow;
 }
 
+int Window::getWidth()
+{
+	return mWidth;
+}
+
+int Window::getHeight()
+{
+	return mHeight;
+}
+
 void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));

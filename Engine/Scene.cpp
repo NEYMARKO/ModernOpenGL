@@ -4,8 +4,10 @@
 #include "MeshLoader.h"
 #include "Scene.h"
 
-Scene::Scene(Camera* camera, Lighting* lightSource, Shader* objectShader, Shader* boundingBoxShader) 
-	: mCamera(camera), mLightSource(lightSource), mObjectShader(objectShader), mBoundingBoxShader(boundingBoxShader)
+Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<Mesh*>& objectsInScene, 
+	Shader* objectShader, Shader* boundingBoxShader) 
+	: mCamera{ camera }, mLightSource{lightSource}, mObjectsInScene{objectsInScene},
+	mObjectShader{ objectShader }, mBoundingBoxShader{ boundingBoxShader }
 {
 	loadDefaultScene();
 }
@@ -26,45 +28,50 @@ void Scene::loadDefaultScene()
 {
 	//BLENDER: rotate around X for 270 (-90) degrees,	EXPORT: forward: -X, up: Z
 	//forward: -X, up: Z - file: joint.blend
-	MeshLoader lightBulbLoader("lightBulb.txt");
-	MeshLoader cubeLoader("cubeFlat.txt");
+	//MeshLoader lightBulbLoader("lightBulb.txt");
+	//MeshLoader cubeLoader("cubeFlat.txt");
 	MeshLoader dragonLoader("dragonSmooth.txt");
 	MeshLoader templeLoader("templeFlat.txt");
 	MeshLoader frogLoader("frogSmooth.txt");
 	MeshLoader teddyLoader("teddyFlat.txt");
 	MeshLoader sphereLoader("sphere.txt");
 	MeshLoader coneLoader("cone.txt");
-	MeshLoader jointLoader("joint4.txt");
+	//MeshLoader jointLoader("joint4.txt");
 
-	mMeshLoaders.push_back(&lightBulbLoader);
-	mMeshLoaders.push_back(&cubeLoader);
+	//mMeshLoaders.push_back(&lightBulbLoader);
+	//mMeshLoaders.push_back(&cubeLoader);
 	mMeshLoaders.push_back(&dragonLoader);
 	mMeshLoaders.push_back(&templeLoader);
 	mMeshLoaders.push_back(&frogLoader);
 	mMeshLoaders.push_back(&teddyLoader);
 	mMeshLoaders.push_back(&sphereLoader);
 	mMeshLoaders.push_back(&coneLoader);
-	mMeshLoaders.push_back(&jointLoader);
+	//mMeshLoaders.push_back(&jointLoader);
 
 	float id = 0;
 
-	Mesh* lightBulb = new Mesh(mObjectShader, mBoundingBoxShader, &lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
+	//Mesh* lightBulb = new Mesh(mObjectShader, mBoundingBoxShader, &lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	Mesh* dragon = new Mesh(mObjectShader, mBoundingBoxShader, &dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
-	Mesh* cube = new Mesh(mObjectShader, mBoundingBoxShader, &cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+	//Mesh* cube = new Mesh(mObjectShader, mBoundingBoxShader, &cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 	Mesh* sphere = new Mesh(mObjectShader, mBoundingBoxShader, &sphereLoader, glm::vec3(-35.0f, 0.0f, 0.0f), id++);
 	//Mesh* cone = new Mesh(&coneLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	Mesh* joint = new Mesh(mObjectShader, mBoundingBoxShader, &jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+	//Mesh* joint = new Mesh(mObjectShader, mBoundingBoxShader, &jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 
-	mObjectsInScene.push_back(lightBulb);
+	//mObjectsInScene.push_back(lightBulb);
 	mObjectsInScene.push_back(dragon);
-	mObjectsInScene.push_back(cube);
+	//mObjectsInScene.push_back(cube);
 	mObjectsInScene.push_back(sphere);
-	mObjectsInScene.push_back(joint);
+	//mObjectsInScene.push_back(joint);
 
 }
 
 void Scene::renderObjects()
 {
+	//std::cout << "SCENE OBJECTS: " << mObjectsInScene.size() << std::endl;
+	//clear screen
+	glClearColor(0.247059f, 0.247059f, 0.247059f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	for (int i = 0; i < mObjectsInScene.size(); i++)
 	{
 		mObjectsInScene[i]->Render(*mCamera, *mLightSource);

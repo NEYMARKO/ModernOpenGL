@@ -52,5 +52,5 @@ class Mesh
 		glm::vec3 GetPosition();
 		glm::mat4 GetFinalMatrix();
 		//Binds VAO, calculates MVP matrices, assigns uniforms and draws object using EBO info
-		void Render(Camera& camera, const Lighting& lighting);
+		void Render(Camera& camera, Lighting& lighting);
 };

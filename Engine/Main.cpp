@@ -5,105 +5,81 @@
 #include "KinematicChain.h"
 #include "Gizmos.h"
 #include "Window.h"
+#include "Scene.h"
 #include <btBulletDynamicsCommon.h>
 
-
-//void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-//void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-//void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
-//void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-//void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset);
-
-//int globalWidth = 800, globalHeight= 800;
-float deltaTime = 0.0f, lastFrame = 0.0f;
-
-Camera globalCamera(glm::vec3(-15.0f, 0.0f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, 800, 800);
-
-std::vector<Mesh*> objectsInScene;
-std::vector<MeshLoader*> meshLoaders;
-
-StateMachine stateMachine(nullptr, &globalCamera, meshLoaders, objectsInScene);
 
 
 int main()
 {
-	Window window{&globalCamera, 800, 800};
+	std::vector<Mesh*> objectsInScene;
+	std::vector<MeshLoader*> meshLoaders;
 
+	Camera camera(glm::vec3(-15.0f, 0.0f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, 800, 800);
+	
+	Window window{&camera, 800, 800};
 	if (!window.loaded()) return -1;
+	
+	StateMachine stateMachine(nullptr, &camera, meshLoaders, objectsInScene);
 	window.addStateMachine(&stateMachine);
 	
-	/*glfwInit();
+	float deltaTime = 0.0f, lastFrame = 0.0f;
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	GLFWwindow* window = glfwCreateWindow(800, 800, "Intro to Modern OpenGL", NULL, NULL);
-	if (window == NULL)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}*/
-	//glfwMakeContextCurrent(window);
-	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	//glfwSetKeyCallback(window, key_callback);
-	//glfwSetCursorPosCallback(window, cursor_position_callback);
-	//glfwSetMouseButtonCallback(window, mouse_button_callback);
-	//glfwSetScrollCallback(window, mouse_scroll_back);
-	////Load GLAD so it configures OpenGL
-	//gladLoadGL();
-	//glViewport(0, 0, globalWidth, globalHeight);
-
-	Shader shaderProgram("default.vert", "default.frag");
+	Shader defaultShaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
 	Shader pointShader("point.vert", "point.frag");
 	
-	stateMachine.AddShaderPrograms(&shaderProgram, &boundingBoxShaderProgram);
+	stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
+	float id = 0;
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
+	Mesh* lightBulb = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
+	Lighting light(lightBulb, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
+	Scene scene{&camera, &light, objectsInScene, &defaultShaderProgram, &boundingBoxShaderProgram};
+	scene.addObject(lightBulb);
+
 	MeshLoader cubeLoader("cubeFlat.txt");
-	MeshLoader dragonLoader("dragonSmooth.txt");
-	MeshLoader templeLoader("templeFlat.txt");
-	MeshLoader frogLoader("frogSmooth.txt");
-	MeshLoader teddyLoader("teddyFlat.txt");
-	MeshLoader sphereLoader("sphere.txt");
-	//BLENDER: rotate around X for 270 (-90) degrees,	EXPORT: forward: -X, up: Z
-	MeshLoader coneLoader("cone.txt");
-	//forward: -X, up: Z - file: joint.blend
+	//MeshLoader dragonLoader("dragonSmooth.txt");
+	//MeshLoader templeLoader("templeFlat.txt");
+	//MeshLoader frogLoader("frogSmooth.txt");
+	//MeshLoader teddyLoader("teddyFlat.txt");
+	//MeshLoader sphereLoader("sphere.txt");
+	////BLENDER: rotate around X for 270 (-90) degrees,	EXPORT: forward: -X, up: Z
+	//MeshLoader coneLoader("cone.txt");
+	////forward: -X, up: Z - file: joint.blend
 	MeshLoader jointLoader("joint4.txt");
 
-	meshLoaders.push_back(&cubeLoader);
+	/*meshLoaders.push_back(&cubeLoader);
 	meshLoaders.push_back(&dragonLoader);
 	meshLoaders.push_back(&templeLoader);
 	meshLoaders.push_back(&frogLoader);
 	meshLoaders.push_back(&teddyLoader);
 	meshLoaders.push_back(&sphereLoader);
-	meshLoaders.push_back(&coneLoader);
-	meshLoaders.push_back(&jointLoader);
+	meshLoaders.push_back(&coneLoader);*/
+	//meshLoaders.push_back(&jointLoader);
 
-	float id = 0;
 
-	Mesh* lightBulb = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
-	Mesh* dragon = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
-	Mesh* cube = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &cubeLoader, glm::vec3(-30.0f, 0.0f, 0.0f), id++);
-	Mesh* sphere = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &sphereLoader, glm::vec3(-35.0f, 0.0f, 0.0f), id++);
-	//Mesh* cone = new Mesh(&coneLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	Mesh* joint = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+	//Mesh* dragon = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
+	Mesh* cube = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &cubeLoader, glm::vec3(-30.0f, 0.0f, 0.0f), id++);
+	//Mesh* sphere = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &sphereLoader, glm::vec3(-35.0f, 0.0f, 0.0f), id++);
+	////Mesh* cone = new Mesh(&coneLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+	Mesh* joint = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 
-	objectsInScene.push_back(lightBulb);
-	//objectsInScene.push_back(dragon);
-	objectsInScene.push_back(cube);
-	objectsInScene.push_back(sphere);
+	//objectsInScene.push_back(lightBulb);
+	////objectsInScene.push_back(dragon);
+	//objectsInScene.push_back(cube);
+	//objectsInScene.push_back(sphere);
 	//objectsInScene.push_back(cone);
 	//objectsInScene.push_back(joint);
 
-	Lighting light(*lightBulb, glm::vec3(1.0f, 1.0f, 1.0f));
+	scene.addObject(joint);
+	scene.addObject(cube);
 
 	Grid grid(100);
 
-	Gizmos gizmos(&globalCamera, &shaderProgram, &boundingBoxShaderProgram, &pointShader);
+	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
 	
 	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, cube, &gizmos);
 
@@ -150,20 +126,14 @@ int main()
 	groundRigidBody->setRestitution(0.8f); // The ground also needs restitution
 	//sphereRigidBody->setActivationState(DISABLE_DEACTIVATION); // Prevent it from sleeping
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-
-
-
 	const float fixedTimeStep = 1.0f / 60.0f; // Fixed 60Hz physics step
 	float accumulator = 0.0f;
 	//float _lastFrame = static_cast<float>(glfwGetTime());
 	float _lastFrame = 0.0f;
-	objectsInScene[2]->Translate(glm::vec3(0, 50, 0));
+	//objectsInScene[2]->Translate(glm::vec3(0, 50, 0));
+	
+	std::cout << "OBJECTS IN SCENE: " << objectsInScene.size() << std::endl;
+	std::cout << "STATE MACHINE OBJECTS IN SCENE: " << (stateMachine.GetObjectsInScene())->size() << std::endl;
 	while (!glfwWindowShouldClose(window.getGLFWwindow()))
 	{
 		float currentFrame = static_cast<float>(glfwGetTime());
@@ -171,22 +141,23 @@ int main()
 		lastFrame = currentFrame;
 
 		//std::cout << "TIME SINCE LAST FRAME: " << deltaTime << std::endl;
-		glClearColor(0.247059f, 0.247059f, 0.247059f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		/*glClearColor(0.247059f, 0.247059f, 0.247059f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
+		scene.renderObjects();
 
-		light.Draw(lightingShaderProgram, boundingBoxShaderProgram, globalCamera);
+		light.Draw(lightingShaderProgram, boundingBoxShaderProgram, camera);
 
-		grid.Draw(boundingBoxShaderProgram, globalCamera);
+		grid.Draw(boundingBoxShaderProgram, camera);
 		
-		for (int i = 0; i < (*stateMachine.GetObjectsInScene()).size(); i++)
+		/*for (int i = 0; i < (*stateMachine.GetObjectsInScene()).size(); i++)
 		{
-			(*stateMachine.GetObjectsInScene())[i]->Render(globalCamera, light);
-			(*stateMachine.GetObjectsInScene())[i]->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
-		}
+			(*stateMachine.GetObjectsInScene())[i]->Render(camera, light);
+			(*stateMachine.GetObjectsInScene())[i]->boundingBox->Draw(boundingBoxShaderProgram, camera);
+		}*/
 		
-		if (globalCamera.ray != nullptr)
+		if (camera.ray != nullptr)
 		{
-			globalCamera.ray->Draw(boundingBoxShaderProgram, globalCamera);
+			camera.ray->Draw(boundingBoxShaderProgram, camera);
 		}
 
 		ikChain.FabrikAlgorithm(10);
@@ -216,9 +187,9 @@ int main()
 			std::string name = "j" + std::to_string(joint->GetID());
 			gizmos.UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 4);
 			//gizmos.RenderBoundingBox(joint->GetMeshContainer()->boundingBox);
-			joint->GetMeshContainer()->Render(globalCamera, light);
+			joint->GetMeshContainer()->Render(camera, light);
 			points.push_back(joint->GetPosition());
-			//joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
+			//joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, camera);
 		}
 
 		glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -226,7 +197,7 @@ int main()
 		//gizmos.RenderPoints(10.0f);
 		gizmos.UpdatePoints(points);
 		points.clear();
-		globalCamera.Move(window.getGLFWwindow(), deltaTime);
+		camera.Move(window.getGLFWwindow(), deltaTime);
 
 		glfwSwapBuffers(window.getGLFWwindow());
 		glfwPollEvents();
@@ -252,7 +223,7 @@ int main()
 		btVector3 pos = transform.getOrigin();
 
 		glm::vec3 newPos = glm::vec3(pos.getX(), pos.getY(), pos.getZ());
-		(*stateMachine.GetObjectsInScene())[2]->Translate(newPos);
+		//(*stateMachine.GetObjectsInScene())[2]->Translate(newPos);
 	}
 
 	//BULLET CLEANUP
@@ -275,37 +246,10 @@ int main()
 	delete collisionConfig;
 	delete broadphase;
 
-	shaderProgram.Delete();
+	defaultShaderProgram.Delete();
 	lightingShaderProgram.Delete();
 	boundingBoxShaderProgram.Delete();
 	/*glfwDestroyWindow(window);
 	glfwTerminate();*/
 	return 0;
 }
-
-//static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-//{
-//	stateMachine.ChangeState(window, key, action, globalCamera);
-//}
-//
-//static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-//{
-//	stateMachine.MouseMove(window, globalCamera, xpos, ypos);
-//}
-//
-//void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-//{
-//	stateMachine.MouseClick(window, globalCamera, button, action);
-//}
-//
-//void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset)
-//{
-//	globalCamera.Zoom(yoffset);
-//}
-//
-//void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-//{
-//	glfwGetWindowSize(window, &globalWidth, &globalHeight);
-//	globalCamera.UpdateViewportDimensions(globalWidth, globalHeight);
-//	glViewport(0, 0, globalWidth, globalHeight);
-//} 

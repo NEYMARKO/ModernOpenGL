@@ -31,7 +31,11 @@ public:
 	void addStateMachine(StateMachine* stateMachine);
 	//returns true if window was successfully loaded, otherwise returns false
 	bool loaded();
+
+	int getWidth();
+	int getHeight();
 	GLFWwindow* getGLFWwindow();
+
 	//CALLBACKS
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);

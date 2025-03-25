@@ -114,7 +114,7 @@ float Mesh::GetDistanceFromCamera()
 	return this->distanceFromCamera;
 }
 
-void Mesh::Render(Camera& camera, const Lighting& lighting)
+void Mesh::Render(Camera& camera, Lighting& lighting)
 {
 	mShaderProgram->Activate();
 
@@ -122,8 +122,8 @@ void Mesh::Render(Camera& camera, const Lighting& lighting)
 	camera.ViewProjectionMatrix(*mShaderProgram);
 
 	mShaderProgram->SetVec3("objectColor", this->color);
-	mShaderProgram->SetVec3("lightColor", lighting.lightColor);
-	mShaderProgram->SetVec3("lightPos", lighting.position);
+	mShaderProgram->SetVec3("lightColor", lighting.getColor());
+	mShaderProgram->SetVec3("lightPos", lighting.getPosition());
 
 	mVAO.Bind();
 	glDrawElements(GL_TRIANGLES, this->meshLoader->indices.size(), GL_UNSIGNED_INT, 0);

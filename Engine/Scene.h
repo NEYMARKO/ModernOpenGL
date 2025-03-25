@@ -12,7 +12,7 @@ class MeshLoader;
 class Scene
 {
 private:
-	std::vector<Mesh*> mObjectsInScene{};
+	std::vector<Mesh*>& mObjectsInScene;
 	std::vector<MeshLoader*> mMeshLoaders{};
 	Lighting* mLightSource;
 	Camera* mCamera;
@@ -20,7 +20,7 @@ private:
 	Shader* mBoundingBoxShader;
 
 public:
-	Scene(Camera* camera, Lighting* lightSource, Shader* objectShader, Shader* boundingBoxShader);
+	Scene(Camera* camera, Lighting* lightSource, std::vector<Mesh*>& objectsInScene, Shader* objectShader, Shader* boundingBoxShader);
 	~Scene();
 	void loadDefaultScene();
 	//Renders all objects in scene
