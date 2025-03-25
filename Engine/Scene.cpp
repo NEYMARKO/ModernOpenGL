@@ -20,7 +20,7 @@ void Scene::addObject(Mesh* object)
 
 void Scene::addObjects(const std::vector<Mesh*>& objects)
 {
-	mObjectsInScene.insert(std::end(mObjectsInScene), std::begin(objects), std::end(objects);
+	mObjectsInScene.insert(std::end(mObjectsInScene), std::begin(objects), std::end(objects));
 }
 
 void Scene::removeObject()

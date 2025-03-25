@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{2b4957a9-2b82-4f7c-ad63-d7182fc84f9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Objects">
+      <UniqueIdentifier>{8aa0b53a-ca68-47ee-b531-8a666518dd82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -80,135 +86,135 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Texture.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VAO.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VBO.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Grab.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Grid.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="BoundingBox.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Joint.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KinematicChain.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Lighting.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshLoader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PrintClass.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Ray.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StateMachine.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Gizmos.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingBox.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="Grab.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EBO.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gizmos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KinematicChain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Lighting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VAO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="joint.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="joint1.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="joint2.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="joint3.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="joint4.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="lightBulb.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="planeFlat.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="sphere.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="teddyFlat.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="templeFlat.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="frogSmooth.txt">
-      <Filter>Source Files</Filter>
-    </Text>
     <Text Include="cone.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="cubeFlat.txt">
-      <Filter>Source Files</Filter>
-    </Text>
-    <Text Include="dragonSmooth.txt">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Objects</Filter>
     </Text>
     <Text Include="dragonSmoothRotated.txt">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="dragonSmooth.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="cubeFlat.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="frogSmooth.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="joint.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="joint1.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="joint2.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="joint3.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="joint4.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="lightBulb.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="sphere.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="planeFlat.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="teddyFlat.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="templeFlat.txt">
+      <Filter>Resource Files\Objects</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="lighting.frag">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="lighting.vert">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="point.frag">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="point.vert">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="borderBox.frag">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="borderBox.vert">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="default.frag">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="default.vert">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="point.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="point.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="lighting.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="lighting.frag">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
