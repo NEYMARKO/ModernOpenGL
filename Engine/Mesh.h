@@ -5,6 +5,7 @@
 #include "MeshLoader.h"
 #include "BoundingBox.h"
 
+class Shader;
 class Lighting;
 
 class Mesh
@@ -16,12 +17,14 @@ class Mesh
 		
 		glm::vec3 color = glm::vec3(0.862745f, 0.862745f, 0.862745f);
 
-		glm::mat4 translationMatrix = glm::mat4(1.0f);
-		glm::mat4 rotationMatrix = glm::mat4(1.0f);
-		glm::mat4 scalingMatrix = glm::mat4(1.0f);
-		glm::mat4 finalMatrix = glm::mat4(1.0f);
+		glm::mat4 mTranslationMatrix = glm::mat4(1.0f);
+		glm::mat4 mRotationMatrix = glm::mat4(1.0f);
+		glm::mat4 mScalingMatrix = glm::mat4(1.0f);
+		glm::mat4 mFinalMatrix = glm::mat4(1.0f);
 		//Binds buffers, fills VAO & EBO with data, in the end unbinds buffers
 
+		Shader* mShaderProgram;
+		Shader* mBoundingBoxShaderProgram;
 		float distanceFromCamera;
 
 		void setupMesh();
@@ -35,7 +38,7 @@ class Mesh
 		VAO mVAO;
 		
 		Mesh();
-		Mesh(MeshLoader* meshLoader, glm::vec3 objectPos, float id);
+		Mesh(Shader* shaderPProgram, Shader* boundingBoxShaderProgram, MeshLoader* meshLoader, glm::vec3 objectPos, float id);
 		~Mesh();
 		void ChangeColor(const glm::vec3& color);
 		void InitialTransform(glm::vec3 translation, float scale);
@@ -49,5 +52,5 @@ class Mesh
 		glm::vec3 GetPosition();
 		glm::mat4 GetFinalMatrix();
 		//Binds VAO, calculates MVP matrices, assigns uniforms and draws object using EBO info
-		void Render(Shader& shaderProgram, Shader& boundingBoxShaderProgram, Camera& camera, Lighting& lighting);
+		void Render(Camera& camera, const Lighting& lighting);
 };

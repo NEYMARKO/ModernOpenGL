@@ -3,7 +3,7 @@
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define PICKED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
-StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, std::vector<Mesh*>& objectsInScene) 
+StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, std::vector<Mesh*>& objectsInScene)
 	: objectsInScene(objectsInScene), meshLoaders(meshLoaders)
 {
 	this->state = NOTHING;
@@ -14,6 +14,11 @@ StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>&
 	this->mousePosY = this->camera->height / 2;
 }
 
+void StateMachine::AddShaderPrograms(Shader* shader, Shader* boxShader)
+{
+	mShaderProgram = shader;
+	mBoundingBoxShaderProgram = boxShader;
+}
 void StateMachine::ChangeState(GLFWwindow* window, const int key, const int action, Camera& camera)
 {
 	if (action == GLFW_PRESS)
@@ -130,7 +135,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 			{
 				bool objectPicked = false;
 				int pickedId = -1;
-				SortObjectsInScene();
+				//SortObjectsInScene();
 				for (int obj = 0; obj < this->objectsInScene.size() && !objectPicked; obj++)
 				{
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
@@ -295,7 +300,7 @@ void StateMachine::AddObject(Ray* ray)
 	{
 		meshLoaderObj = this->meshLoaders[0];
 	}
-	Mesh* obj = new Mesh(meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->objectsInScene.size());
+	Mesh* obj = new Mesh(mShaderProgram, mBoundingBoxShaderProgram, meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->objectsInScene.size());
 	this->objectsInScene.push_back(obj);
 }
 void StateMachine::DeleteObject()

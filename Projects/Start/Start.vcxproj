@@ -80,11 +80,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
-<<<<<<< HEAD
-    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Debug;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Release;$(LibraryPath)</LibraryPath>
-=======
     <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMAKE\lib\Debug;$(LibraryPath)</LibraryPath>
->>>>>>> 23c39ac146d14374ce2b6ef96158e2d57619ad0a
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>

@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Mesh.h"
 
+class Shader;
 enum State
 {
 	NOTHING,
@@ -40,6 +41,10 @@ struct Plane
 class StateMachine
 {
 	private:
+
+		Shader* mShaderProgram;
+		Shader* mBoundingBoxShaderProgram;
+
 		Camera* camera;
 		Mesh* target;
 		State state;
@@ -58,6 +63,7 @@ class StateMachine
 	public:
 		StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, std::vector<Mesh*>& objectsInScene);
 		
+		void AddShaderPrograms(Shader* shader, Shader* boxShader);
 		//Controls state that StateMachine is currently in. State changes on the press of a button
 		void ChangeState(GLFWwindow* window, const int key, const int action, Camera& camera);
 		//Calculates coefficients of a plane in which target object lies, normal of a plane is opposite to the camera direction
