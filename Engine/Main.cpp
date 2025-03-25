@@ -20,6 +20,7 @@ Camera globalCamera(glm::vec3(-15.0f, 0.0f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f)
 
 std::vector<Mesh*> objectsInScene;
 std::vector<MeshLoader*> meshLoaders;
+
 StateMachine stateMachine(nullptr, &globalCamera, meshLoaders, objectsInScene);
 
 
@@ -52,6 +53,8 @@ int main()
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
 	Shader pointShader("point.vert", "point.frag");
+	
+	stateMachine.AddShaderPrograms(&shaderProgram, &boundingBoxShaderProgram);
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
 	MeshLoader cubeLoader("cubeFlat.txt");
@@ -76,12 +79,12 @@ int main()
 
 	float id = 0;
 
-	Mesh* lightBulb = new Mesh(&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
-	Mesh* dragon = new Mesh(&dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
-	Mesh* cube = new Mesh(&cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	Mesh* sphere = new Mesh(&sphereLoader, glm::vec3(-35.0f, 0.0f, 0.0f), id++);
+	Mesh* lightBulb = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
+	Mesh* dragon = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
+	Mesh* cube = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &cubeLoader, glm::vec3(10.0f, 0.0f, 0.0f), id++);
+	Mesh* sphere = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &sphereLoader, glm::vec3(-35.0f, 0.0f, 0.0f), id++);
 	//Mesh* cone = new Mesh(&coneLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	Mesh* joint = new Mesh(&jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+	Mesh* joint = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 
 	objectsInScene.push_back(lightBulb);
 	//objectsInScene.push_back(dragon);
@@ -96,7 +99,7 @@ int main()
 
 	Gizmos gizmos(&globalCamera, &shaderProgram, &boundingBoxShaderProgram, &pointShader);
 	
-	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, sphere, &gizmos);
+	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, cube, &gizmos);
 
 	Mesh* jointTarget;
 	glm::vec3 jointTargetPosition;
@@ -154,7 +157,7 @@ int main()
 	float accumulator = 0.0f;
 	//float _lastFrame = static_cast<float>(glfwGetTime());
 	float _lastFrame = 0.0f;
-	objectsInScene[1]->Translate(glm::vec3(0, 50, 0));
+	objectsInScene[2]->Translate(glm::vec3(0, 50, 0));
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = static_cast<float>(glfwGetTime());
@@ -171,7 +174,7 @@ int main()
 		
 		for (int i = 0; i < (*stateMachine.GetObjectsInScene()).size(); i++)
 		{
-			(*stateMachine.GetObjectsInScene())[i]->Render(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+			(*stateMachine.GetObjectsInScene())[i]->Render(globalCamera, light);
 			(*stateMachine.GetObjectsInScene())[i]->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
 		
@@ -207,7 +210,7 @@ int main()
 			std::string name = "j" + std::to_string(joint->GetID());
 			gizmos.UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 4);
 			//gizmos.RenderBoundingBox(joint->GetMeshContainer()->boundingBox);
-			//joint->GetMeshContainer()->Render(shaderProgram, boundingBoxShaderProgram, globalCamera, light);
+			//joint->GetMeshContainer()->Render(globalCamera, light);
 			points.push_back(joint->GetPosition());
 			//joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
