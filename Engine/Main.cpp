@@ -4,19 +4,20 @@
 #include "Grid.h"
 #include "KinematicChain.h"
 #include "Gizmos.h"
+#include "Window.h"
 #include <btBulletDynamicsCommon.h>
 
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset);
+//void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+//void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+//void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
+//void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
+//void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset);
 
-int globalWidth = 800, globalHeight= 800;
+//int globalWidth = 800, globalHeight= 800;
 float deltaTime = 0.0f, lastFrame = 0.0f;
 
-Camera globalCamera(glm::vec3(-15.0f, 0.0f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, globalWidth, globalHeight);
+Camera globalCamera(glm::vec3(-15.0f, 0.0f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, 800, 800);
 
 std::vector<Mesh*> objectsInScene;
 std::vector<MeshLoader*> meshLoaders;
@@ -26,7 +27,12 @@ StateMachine stateMachine(nullptr, &globalCamera, meshLoaders, objectsInScene);
 
 int main()
 {
-	glfwInit();
+	Window window{&globalCamera, 800, 800};
+
+	if (!window.loaded()) return -1;
+	window.addStateMachine(&stateMachine);
+	
+	/*glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -38,16 +44,16 @@ int main()
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
-	}
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetCursorPosCallback(window, cursor_position_callback);
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
-	glfwSetScrollCallback(window, mouse_scroll_back);
-	//Load GLAD so it configures OpenGL
-	gladLoadGL();
-	glViewport(0, 0, globalWidth, globalHeight);
+	}*/
+	//glfwMakeContextCurrent(window);
+	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	//glfwSetKeyCallback(window, key_callback);
+	//glfwSetCursorPosCallback(window, cursor_position_callback);
+	//glfwSetMouseButtonCallback(window, mouse_button_callback);
+	//glfwSetScrollCallback(window, mouse_scroll_back);
+	////Load GLAD so it configures OpenGL
+	//gladLoadGL();
+	//glViewport(0, 0, globalWidth, globalHeight);
 
 	Shader shaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
@@ -81,7 +87,7 @@ int main()
 
 	Mesh* lightBulb = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	Mesh* dragon = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
-	Mesh* cube = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &cubeLoader, glm::vec3(10.0f, 0.0f, 0.0f), id++);
+	Mesh* cube = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &cubeLoader, glm::vec3(-30.0f, 0.0f, 0.0f), id++);
 	Mesh* sphere = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &sphereLoader, glm::vec3(-35.0f, 0.0f, 0.0f), id++);
 	//Mesh* cone = new Mesh(&coneLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 	Mesh* joint = new Mesh(&shaderProgram, &boundingBoxShaderProgram, &jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
@@ -158,7 +164,7 @@ int main()
 	//float _lastFrame = static_cast<float>(glfwGetTime());
 	float _lastFrame = 0.0f;
 	objectsInScene[2]->Translate(glm::vec3(0, 50, 0));
-	while (!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(window.getGLFWwindow()))
 	{
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
@@ -210,7 +216,7 @@ int main()
 			std::string name = "j" + std::to_string(joint->GetID());
 			gizmos.UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 4);
 			//gizmos.RenderBoundingBox(joint->GetMeshContainer()->boundingBox);
-			//joint->GetMeshContainer()->Render(globalCamera, light);
+			joint->GetMeshContainer()->Render(globalCamera, light);
 			points.push_back(joint->GetPosition());
 			//joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, globalCamera);
 		}
@@ -220,9 +226,9 @@ int main()
 		//gizmos.RenderPoints(10.0f);
 		gizmos.UpdatePoints(points);
 		points.clear();
-		globalCamera.Move(window, deltaTime);
+		globalCamera.Move(window.getGLFWwindow(), deltaTime);
 
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(window.getGLFWwindow());
 		glfwPollEvents();
 
 
@@ -272,34 +278,34 @@ int main()
 	shaderProgram.Delete();
 	lightingShaderProgram.Delete();
 	boundingBoxShaderProgram.Delete();
-	glfwDestroyWindow(window);
-	glfwTerminate();
+	/*glfwDestroyWindow(window);
+	glfwTerminate();*/
 	return 0;
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	stateMachine.ChangeState(window, key, action, globalCamera);
-}
-
-static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	stateMachine.MouseMove(window, globalCamera, xpos, ypos);
-}
-
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
-{
-	stateMachine.MouseClick(window, globalCamera, button, action);
-}
-
-void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset)
-{
-	globalCamera.Zoom(yoffset);
-}
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	glfwGetWindowSize(window, &globalWidth, &globalHeight);
-	globalCamera.UpdateViewportDimensions(globalWidth, globalHeight);
-	glViewport(0, 0, globalWidth, globalHeight);
-} 
+//static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+//{
+//	stateMachine.ChangeState(window, key, action, globalCamera);
+//}
+//
+//static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+//{
+//	stateMachine.MouseMove(window, globalCamera, xpos, ypos);
+//}
+//
+//void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+//{
+//	stateMachine.MouseClick(window, globalCamera, button, action);
+//}
+//
+//void mouse_scroll_back(GLFWwindow* window, double xoffset, double yoffset)
+//{
+//	globalCamera.Zoom(yoffset);
+//}
+//
+//void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+//{
+//	glfwGetWindowSize(window, &globalWidth, &globalHeight);
+//	globalCamera.UpdateViewportDimensions(globalWidth, globalHeight);
+//	glViewport(0, 0, globalWidth, globalHeight);
+//} 
