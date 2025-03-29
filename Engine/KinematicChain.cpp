@@ -49,7 +49,7 @@ void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 	{
 		return;
 	}
-	//Shouldn't put i < numberOfIterations || ErrorTooSmall() BECAUSE IT WILL RUN INDEFINITELY SINCE ErrorTooSmall will always return true
+	//Shouldn't put i < numberOfIterations || ErrorTooSmall() BECAUSE IT WILL RUN INFINITELY SINCE ErrorTooSmall will always return true
 	for (int i = 0; (i < numberOfIterations && !ErrorTooSmall()); i++)
 	{
 		//Calculate new position of every joint
@@ -57,9 +57,8 @@ void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 		
 		ForwardPass();
 
-		//See if joint surpasses constraint
+		//TODO: See if joint surpasses constraint
 
-		//
 	}
 }
 

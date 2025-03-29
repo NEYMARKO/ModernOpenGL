@@ -4,9 +4,9 @@
 #include "MeshLoader.h"
 #include "Scene.h"
 
-Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<Mesh*>& objectsInScene, 
+Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<Mesh*>& objectsInScene, std::vector<MeshLoader*>& meshLoaders,
 	Shader* objectShader, Shader* boundingBoxShader) 
-	: mCamera{ camera }, mLightSource{lightSource}, mObjectsInScene{objectsInScene},
+	: mCamera{ camera }, mLightSource{lightSource}, mObjectsInScene{objectsInScene}, mMeshLoaders {meshLoaders}, 
 	mObjectShader{ objectShader }, mBoundingBoxShader{ boundingBoxShader }
 {
 	loadDefaultScene();
@@ -40,17 +40,24 @@ void Scene::loadDefaultScene()
 
 	//mMeshLoaders.push_back(&lightBulbLoader);
 	//mMeshLoaders.push_back(&cubeLoader);
+	
 	mMeshLoaders.push_back(&dragonLoader);
 	mMeshLoaders.push_back(&templeLoader);
 	mMeshLoaders.push_back(&frogLoader);
 	mMeshLoaders.push_back(&teddyLoader);
 	mMeshLoaders.push_back(&sphereLoader);
 	mMeshLoaders.push_back(&coneLoader);
+	
 	//mMeshLoaders.push_back(&jointLoader);
+
+	for (int i = 0; i < mMeshLoaders.size(); i++)
+	{
+		std::cout << "MESH LOADER (SCENE) " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
+	}
 
 	float id = 0;
 
-	//Mesh* lightBulb = new Mesh(mObjectShader, mBoundingBoxShader, &lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
+	Mesh* temple = new Mesh(mObjectShader, mBoundingBoxShader, &templeLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	Mesh* dragon = new Mesh(mObjectShader, mBoundingBoxShader, &dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	//Mesh* cube = new Mesh(mObjectShader, mBoundingBoxShader, &cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 	Mesh* sphere = new Mesh(mObjectShader, mBoundingBoxShader, &sphereLoader, glm::vec3(-35.0f, 0.0f, 0.0f), id++);
@@ -61,6 +68,7 @@ void Scene::loadDefaultScene()
 	mObjectsInScene.push_back(dragon);
 	//mObjectsInScene.push_back(cube);
 	mObjectsInScene.push_back(sphere);
+	mObjectsInScene.push_back(temple);
 	//mObjectsInScene.push_back(joint);
 
 }
@@ -75,6 +83,12 @@ void Scene::renderObjects()
 	for (int i = 0; i < mObjectsInScene.size(); i++)
 	{
 		mObjectsInScene[i]->Render(*mCamera, *mLightSource);
+	}
+
+	for (int i = 0; i < mMeshLoaders.size(); i++)
+	{
+		std::cout << "MESH LOADER (SCENE) " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
+
 	}
 }
 

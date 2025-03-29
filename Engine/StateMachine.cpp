@@ -3,8 +3,9 @@
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define PICKED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
-StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, std::vector<Mesh*>& objectsInScene)
-	: objectsInScene{ objectsInScene }, meshLoaders{ meshLoaders }
+StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, 
+	std::vector<Mesh*>& objectsInScene)
+	: mObjectsInScene{ objectsInScene }, mMeshLoaders{ meshLoaders }
 {
 	this->state = NOTHING;
 	this->subState = EMPTY;
@@ -12,6 +13,12 @@ StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>&
 	this->camera = camera;
 	this->mousePosX = this->camera->width / 2;
 	this->mousePosY = this->camera->height / 2;
+	std::cout << "MESH LOADERS IN CONSTRUCTOR: " << std::endl;
+	std::cout << meshLoaders.size() << std::endl;
+	for (int i = 0; i < meshLoaders.size(); i++)
+	{
+		std::cout << "MESH LOADER " << i << " VERTICES: " << meshLoaders[i]->vertices.size() << std::endl;
+	}
 }
 
 void StateMachine::AddShaderPrograms(Shader* shader, Shader* boxShader)
@@ -136,16 +143,16 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 				bool objectPicked = false;
 				int pickedId = -1;
 				//SortObjectsInScene();
-				for (int obj = 0; obj < this->objectsInScene.size() && !objectPicked; obj++)
+				for (int obj = 0; obj < this->mObjectsInScene.size() && !objectPicked; obj++)
 				{
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
-						if (this->objectsInScene[obj]->boundingBox->Intersects(camera, i))
+						if (this->mObjectsInScene[obj]->boundingBox->Intersects(camera, i))
 						{
-							this->objectsInScene[obj]->ChangeColor(PICKED_OBJECT_COLOR);
-							pickedId = this->objectsInScene[obj]->id;
+							this->mObjectsInScene[obj]->ChangeColor(PICKED_OBJECT_COLOR);
+							pickedId = this->mObjectsInScene[obj]->id;
 							objectPicked = true;
-							this->target = this->objectsInScene[obj];
+							this->target = this->mObjectsInScene[obj];
 							CalculateObjectPlane();
 							break;
 						}
@@ -156,11 +163,12 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 				//if not a single object was clicked on, reset target to nullptr
 				if (pickedId == -1) this->target = nullptr;
 				//removing selective color if current click doesn't intersect with any of the objects
-				for (int i = 0; i < this->objectsInScene.size(); i++)
+				for (int i = 0; i < this->mObjectsInScene.size(); i++)
 				{
-					if (this->objectsInScene[i]->id != pickedId) this->objectsInScene[i]->ChangeColor(DEFAULT_OBJECT_COLOR);
+					if (this->mObjectsInScene[i]->id != pickedId) this->mObjectsInScene[i]->ChangeColor(DEFAULT_OBJECT_COLOR);
 				}
 			}
+			std::cout << "AFTER ADD" << std::endl;
 		}
 		break;
 
@@ -292,27 +300,39 @@ void StateMachine::Scale()
 void StateMachine::AddObject(Ray* ray)
 {
 	MeshLoader* meshLoaderObj;
-	if (this->subState != EMPTY && this->subState < this->meshLoaders.size())
+	std::cout << "MESH LOADERS SIZE AT ADD: " << mMeshLoaders.size() << std::endl;
+	std::cout << "SUBSTATE: " << subState << std::endl;
+	if (this->subState != EMPTY && this->subState < this->mMeshLoaders.size())
 	{
-		meshLoaderObj = this->meshLoaders[this->subState];
+		meshLoaderObj = this->mMeshLoaders[this->subState];
 	}
 	else
 	{
-		meshLoaderObj = this->meshLoaders[0];
+		meshLoaderObj = this->mMeshLoaders[0];
 	}
-	Mesh* obj = new Mesh(mShaderProgram, mBoundingBoxShaderProgram, meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->objectsInScene.size());
-	this->objectsInScene.push_back(obj);
+
+	std::cout << "MESH LOADERS IN STATE MACHINE: " << std::endl;
+	for (int i = 0; i < mMeshLoaders.size(); i++)
+	{
+		std::cout << "MESH LOADER " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
+	}
+	std::cout << "VERTICES: " << meshLoaderObj->vertices.size() << std::endl;
+	Mesh* obj = new Mesh(mShaderProgram, mBoundingBoxShaderProgram, meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->mObjectsInScene.size());
+	std::cout << "AFTER NEW MESH" << std::endl;
+	std::cout << "BEFORE PUSH" << std::endl;
+	this->mObjectsInScene.push_back(obj);
+	std::cout << "AFTER PUSH" << std::endl;
 }
 void StateMachine::DeleteObject()
 {
 	int position = 0;
 
-	for (position; position < this->objectsInScene.size() && 
-		this->target->id != this->objectsInScene[position]->id; position++)
+	for (position; position < this->mObjectsInScene.size() && 
+		this->target->id != this->mObjectsInScene[position]->id; position++)
 	{
 	}
 
-	this->objectsInScene.erase(this->objectsInScene.begin() + position);
+	this->mObjectsInScene.erase(this->mObjectsInScene.begin() + position);
 	
 	/*for (int i = targetPos; i < this->objectsInScene.size(); i++)
 	{
@@ -329,7 +349,7 @@ void StateMachine::CloseWindow(GLFWwindow* window)
 
 std::vector<Mesh*>* StateMachine::GetObjectsInScene()
 {
-	return &this->objectsInScene;
+	return &this->mObjectsInScene;
 }
 
 bool StateMachine::ShouldFollowMouse()
@@ -339,11 +359,11 @@ bool StateMachine::ShouldFollowMouse()
 
 void StateMachine::SortObjectsInScene()
 {
-	for (Mesh* mesh : this->objectsInScene)
+	for (Mesh* mesh : this->mObjectsInScene)
 	{
 		mesh->CalculateDistanceFromCamera(this->camera);
 	}
-	QuickSort(0, this->objectsInScene.size() - 1);
+	QuickSort(0, this->mObjectsInScene.size() - 1);
 }
 
 void StateMachine::QuickSort(const int& low, const int& high)
@@ -357,10 +377,10 @@ void StateMachine::QuickSort(const int& low, const int& high)
 
 int StateMachine::Partition(const int& low, const int& high)
 {
-	float pivot = this->objectsInScene[high]->GetDistanceFromCamera();
+	float pivot = this->mObjectsInScene[high]->GetDistanceFromCamera();
 	int i = low - 1;
 	for (int j = low; j < high; j++) {
-		if (this->objectsInScene[j]->GetDistanceFromCamera() < pivot) {
+		if (this->mObjectsInScene[j]->GetDistanceFromCamera() < pivot) {
 			i++;
 			Swap(i, j);
 		}
@@ -371,17 +391,17 @@ int StateMachine::Partition(const int& low, const int& high)
 
 void StateMachine::Swap(const int& firstPos, const int& secondPos)
 {
-	Mesh* temp = this->objectsInScene[firstPos];
-	this->objectsInScene[firstPos] = this->objectsInScene[secondPos];
-	this->objectsInScene[secondPos] = temp;
+	Mesh* temp = this->mObjectsInScene[firstPos];
+	this->mObjectsInScene[firstPos] = this->mObjectsInScene[secondPos];
+	this->mObjectsInScene[secondPos] = temp;
 }
 StateMachine::~StateMachine()
 {
 	//deleting objects, it isn't enough to just clear the vector - objects have to be removed from heap
 	//objects should be deleted from the back of the vector, because vector is getting smaller with each delete operation
-	for (int i = this->objectsInScene.size() - 1; i >=0; i--)
+	for (int i = this->mObjectsInScene.size() - 1; i >=0; i--)
 	{
-		delete this->objectsInScene[i];
+		delete this->mObjectsInScene[i];
 	}
 	std::cout << "Deleted state machine" << std::endl;
 }

@@ -51,8 +51,8 @@ class StateMachine
 		SubState subState;
 		Plane objectPlane;
 
-		std::vector<Mesh*>& objectsInScene;
-		std::vector<MeshLoader*>& meshLoaders;
+		std::vector<Mesh*>& mObjectsInScene;
+		std::vector<MeshLoader*>& mMeshLoaders;
 		bool followMouse = false;
 		bool canRotateCamera = false;
 		double mousePosX;

@@ -173,6 +173,7 @@
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshLoader.h" />
+    <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="PrintClass.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Scene.h" />

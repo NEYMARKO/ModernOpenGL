@@ -37,51 +37,22 @@ int main()
 	Mesh* lightBulb = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	Lighting light(lightBulb, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
-	Scene scene{&camera, &light, objectsInScene, &defaultShaderProgram, &boundingBoxShaderProgram};
+	Scene scene{&camera, &light, objectsInScene, meshLoaders, &defaultShaderProgram, &boundingBoxShaderProgram};
 	scene.addObject(lightBulb);
 
 	MeshLoader cubeLoader("cubeFlat.txt");
-	//MeshLoader dragonLoader("dragonSmooth.txt");
-	//MeshLoader templeLoader("templeFlat.txt");
-	//MeshLoader frogLoader("frogSmooth.txt");
-	//MeshLoader teddyLoader("teddyFlat.txt");
-	//MeshLoader sphereLoader("sphere.txt");
-	////BLENDER: rotate around X for 270 (-90) degrees,	EXPORT: forward: -X, up: Z
-	//MeshLoader coneLoader("cone.txt");
-	////forward: -X, up: Z - file: joint.blend
+
 	MeshLoader jointLoader("joint4.txt");
 
-	/*meshLoaders.push_back(&cubeLoader);
-	meshLoaders.push_back(&dragonLoader);
-	meshLoaders.push_back(&templeLoader);
-	meshLoaders.push_back(&frogLoader);
-	meshLoaders.push_back(&teddyLoader);
-	meshLoaders.push_back(&sphereLoader);
-	meshLoaders.push_back(&coneLoader);*/
-	//meshLoaders.push_back(&jointLoader);
-
-
-	//Mesh* dragon = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
+	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
 	Mesh* cube = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &cubeLoader, glm::vec3(-30.0f, 0.0f, 0.0f), id++);
-	//Mesh* sphere = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &sphereLoader, glm::vec3(-35.0f, 0.0f, 0.0f), id++);
-	////Mesh* cone = new Mesh(&coneLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
 	Mesh* joint = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-
-	//objectsInScene.push_back(lightBulb);
-	////objectsInScene.push_back(dragon);
-	//objectsInScene.push_back(cube);
-	//objectsInScene.push_back(sphere);
-	//objectsInScene.push_back(cone);
-	//objectsInScene.push_back(joint);
+	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, cube, &gizmos);
 
 	scene.addObject(joint);
 	scene.addObject(cube);
 
 	Grid grid(100);
-
-	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
-	
-	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, cube, &gizmos);
 
 	Mesh* jointTarget;
 	glm::vec3 jointTargetPosition;
@@ -130,10 +101,10 @@ int main()
 	float accumulator = 0.0f;
 	//float _lastFrame = static_cast<float>(glfwGetTime());
 	float _lastFrame = 0.0f;
-	//objectsInScene[2]->Translate(glm::vec3(0, 50, 0));
+	objectsInScene[2]->Translate(glm::vec3(0, 50, 0));
 	
-	std::cout << "OBJECTS IN SCENE: " << objectsInScene.size() << std::endl;
-	std::cout << "STATE MACHINE OBJECTS IN SCENE: " << (stateMachine.GetObjectsInScene())->size() << std::endl;
+	std::cout << "MESHLOADERS IN SCENE: " << meshLoaders.size() << std::endl;
+	//std::cout << "STATE MACHINE OBJECTS IN SCENE: " << (stateMachine.GetObjectsInScene())->size() << std::endl;
 	while (!glfwWindowShouldClose(window.getGLFWwindow()))
 	{
 		float currentFrame = static_cast<float>(glfwGetTime());
@@ -223,7 +194,7 @@ int main()
 		btVector3 pos = transform.getOrigin();
 
 		glm::vec3 newPos = glm::vec3(pos.getX(), pos.getY(), pos.getZ());
-		//(*stateMachine.GetObjectsInScene())[2]->Translate(newPos);
+		(*stateMachine.GetObjectsInScene())[2]->Translate(newPos);
 	}
 
 	//BULLET CLEANUP
