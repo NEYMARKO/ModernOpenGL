@@ -8,20 +8,20 @@ class Mesh;
 class BoundingBox
 {
 	private:
-		VBO boxVBO;
-		EBO boxEBO;
-		VAO boxVAO;
-		Mesh& parentMesh;
-		glm::vec3 minExtremes;
-		glm::vec3 maxExtremes;
+		VBO mBoxVBO;
+		EBO mBoxEBO;
+		VAO mBoxVAO;
+		glm::vec3 mMinExtremes;
+		glm::vec3 mMaxExtremes;
+		Mesh* mParentMesh;
 		//needed to be able to calculate world min and max extremes
-		glm::vec3 localMinExtremes;
-		glm::vec3 localMaxExtremes;
-		std::vector<glm::vec3> vertices;
-		std::vector<unsigned int> indices;
+		glm::vec3 mLocalMinExtremes;
+		glm::vec3 mLocalMaxExtremes;
+		std::vector<glm::vec3> mVertices;
+		std::vector<unsigned int> mIndices;
 	public:
 		glm::vec3 boxCenter;
-		BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& parentMesh);
+		BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh* parentMesh);
 		~BoundingBox();
 		//Initializes borders, fills vertices and indices with data 
 		void Initialize();

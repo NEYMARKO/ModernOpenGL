@@ -6,14 +6,15 @@
 #include "Gizmos.h"
 #include "Window.h"
 #include "Scene.h"
+#include <memory>
 #include <btBulletDynamicsCommon.h>
 
 
 
 int main()
 {
-	std::vector<Mesh*> objectsInScene;
-	std::vector<MeshLoader*> meshLoaders;
+	std::vector<std::unique_ptr<Mesh>> objectsInScene;
+	std::vector<std::unique_ptr<MeshLoader>> meshLoaders;
 
 	Camera camera(glm::vec3(-15.0f, 0.0f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, 800, 800);
 	
@@ -34,23 +35,26 @@ int main()
 	float id = 0;
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
-	Mesh* lightBulb = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
-	Lighting light(lightBulb, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto lightBulb = std::make_unique<Mesh>(&defaultShaderProgram, &boundingBoxShaderProgram, 
+		&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
+	Lighting light(lightBulb.get(), glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	Scene scene{&camera, &light, objectsInScene, meshLoaders, &defaultShaderProgram, &boundingBoxShaderProgram};
-	scene.addObject(lightBulb);
+	scene.addObject(std::move(lightBulb));
 
 	MeshLoader cubeLoader("cubeFlat.txt");
 
 	MeshLoader jointLoader("joint4.txt");
 
 	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
-	Mesh* cube = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &cubeLoader, glm::vec3(-30.0f, 0.0f, 0.0f), id++);
-	Mesh* joint = new Mesh(&defaultShaderProgram, &boundingBoxShaderProgram, &jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint, cube, &gizmos);
+	auto cube = std::make_unique<Mesh>(&defaultShaderProgram, &boundingBoxShaderProgram, 
+		&cubeLoader, glm::vec3(-30.0f, 0.0f, 0.0f), id++);
+	auto joint = std::make_unique<Mesh>(&defaultShaderProgram, &boundingBoxShaderProgram, 
+		&jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint.get(), cube.get(), &gizmos);
 
-	scene.addObject(joint);
-	scene.addObject(cube);
+	scene.addObject(std::move(joint));
+	scene.addObject(std::move(cube));
 
 	Grid grid(100);
 
@@ -194,7 +198,7 @@ int main()
 		btVector3 pos = transform.getOrigin();
 
 		glm::vec3 newPos = glm::vec3(pos.getX(), pos.getY(), pos.getZ());
-		(*stateMachine.GetObjectsInScene())[2]->Translate(newPos);
+		//stateMachine.GetObjectsInScene()[2]->Translate(newPos);
 	}
 
 	//BULLET CLEANUP

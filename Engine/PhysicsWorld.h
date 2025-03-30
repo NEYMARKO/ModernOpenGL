@@ -7,17 +7,17 @@
 class PhysicsWorld
 {
 private:
-	btBroadphaseInterface* broadphase;
-	btDefaultCollisionConfiguration* collisionConfig;
-	btCollisionDispatcher* collisionDispatcher;
-	btSequentialImpulseConstraintSolver* solver;
-	btDiscreteDynamicsWorld* dynamicsWorld;
+	btBroadphaseInterface* mBroadPhase;
+	btDefaultCollisionConfiguration* mCollisionConfig;
+	btCollisionDispatcher* mCollisionDispatcher;
+	btSequentialImpulseConstraintSolver* mSolver;
+	btDiscreteDynamicsWorld* mDynamicsWorld;
 
-	float lastFrame{};
-	float currentFrame{};
-	float deltaTime{};
-	float accumulator{};
-	const float fixedTimeStep{ 1 / 60.f };
+	float mLastFrame{};
+	float mCurrentFrame{};
+	float mDeltaTime{};
+	float mAccumulator{};
+	const float mFixedTimeStep{ 1 / 60.f };
 public:
 	PhysicsWorld();
 	//Bullet physics cleanup

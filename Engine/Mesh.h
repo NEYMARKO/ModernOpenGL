@@ -4,6 +4,7 @@
 #include "EBO.h"
 #include "MeshLoader.h"
 #include "BoundingBox.h"
+#include <memory>
 
 class Shader;
 class Lighting;
@@ -29,7 +30,8 @@ class Mesh
 
 		void setupMesh();
 	public:
-		BoundingBox* boundingBox;
+		std::unique_ptr<BoundingBox> boundingBox;
+		//BoundingBox* boundingBox;
 		MeshLoader* meshLoader;
 
 		glm::vec3 objectPos = glm::vec3(0.0, 0.0, 0.0);
@@ -37,7 +39,6 @@ class Mesh
 		int id;
 		VAO mVAO;
 		
-		Mesh();
 		Mesh(Shader* shaderPProgram, Shader* boundingBoxShaderProgram, MeshLoader* meshLoader, glm::vec3 objectPos, float id);
 		~Mesh();
 		void ChangeColor(const glm::vec3& color);

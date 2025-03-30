@@ -2,10 +2,6 @@
 #include "Shader.h"
 #include "Lighting.h"
 
-Mesh::Mesh()
-{
-
-}
 Mesh::Mesh(Shader* shaderProgram, Shader* boundingBoxShaderProgram, MeshLoader* meshLoader, glm::vec3 objectPosition, float id)
 {
 	mShaderProgram = shaderProgram;
@@ -14,7 +10,8 @@ Mesh::Mesh(Shader* shaderProgram, Shader* boundingBoxShaderProgram, MeshLoader* 
 	this->id = id;
 	setupMesh();
 	InitialTransform(objectPosition, this->meshLoader->scalingFactor);
-	this->boundingBox = new BoundingBox(meshLoader->minExtremes, meshLoader->maxExtremes, *this);
+	boundingBox = std::make_unique<BoundingBox>(meshLoader->minExtremes, meshLoader->maxExtremes, this);
+	//boundingBox = new BoundingBox(meshLoader->minExtremes, meshLoader->maxExtremes, this);
 
 	//std::cout << "Spawned mesh with id: " << id << std::endl;
 }
@@ -24,11 +21,6 @@ Mesh::~Mesh()
 	mVAO.Delete();
 	mVBO.Delete();
 	mEBO.Delete();
-
-	if (this->boundingBox != nullptr) {
-		delete this->boundingBox;
-		this->boundingBox = nullptr;  
-	}
 
 	std::cout << "DESTROYED MESH: " << id << std::endl;
 }

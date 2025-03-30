@@ -1,28 +1,35 @@
 #include "Mesh.h"
 #include "BoundingBox.h"
-BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh& parentMesh) : parentMesh(parentMesh)
+BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh* parentMesh) : 
+	mLocalMinExtremes{ minExtremes }, mLocalMaxExtremes{ maxExtremes }, mParentMesh{ parentMesh } 
 {
-	this->localMinExtremes = minExtremes;
-	this->localMaxExtremes = maxExtremes;
 	Initialize();
 	SetupBuffers();
 	VerticesToWorld();
+
+	std::cout << "INITIALIZED BOUNDING BOX WITH BORDERS: " << std::endl;
+	std::cout << "MIN: " << " (" << mLocalMinExtremes[0] << ", " << mLocalMinExtremes[1] << ", " <<
+		mLocalMinExtremes[2] << ")" << std::endl;
+	std::cout << "MAX: " << " (" << mLocalMaxExtremes[0] << ", " << mLocalMaxExtremes[1] << ", " <<
+		mLocalMaxExtremes[2] << ")" << std::endl;
 }
 BoundingBox::~BoundingBox()
 {
-	boxVAO.Delete();
-	boxVBO.Delete();
-	boxEBO.Delete();
+	mBoxVAO.Delete();
+	mBoxVBO.Delete();
+	mBoxEBO.Delete();
+	std::cout << "DELETED BOUNDING BOX" << std::endl;
+
 }
 void BoundingBox::Initialize()
 {
-	float xmin = this->localMinExtremes[0];
-	float ymin = this->localMinExtremes[1];
-	float zmin = this->localMinExtremes[2];
-	float xmax = this->localMaxExtremes[0];
-	float ymax = this->localMaxExtremes[1];
-	float zmax = this->localMaxExtremes[2];
-	this->vertices = {
+	float xmin = this->mLocalMinExtremes[0];
+	float ymin = this->mLocalMinExtremes[1];
+	float zmin = this->mLocalMinExtremes[2];
+	float xmax = this->mLocalMaxExtremes[0];
+	float ymax = this->mLocalMaxExtremes[1];
+	float zmax = this->mLocalMaxExtremes[2];
+	this->mVertices = {
 		glm::vec3(xmin, ymin, zmin), // 0
 		glm::vec3(xmax, ymin, zmin), // 1
 		glm::vec3(xmax, ymax, zmin), // 2
@@ -33,7 +40,7 @@ void BoundingBox::Initialize()
 		glm::vec3(xmin, ymax, zmax)  // 7
 	};
 
-	this->indices = {
+	this->mIndices = {
 		// Bottom face
 		0, 1, 1, 2, 2, 3, 3, 0,
 		// Top face
@@ -46,23 +53,24 @@ void BoundingBox::Initialize()
 
 void BoundingBox::SetupBuffers()
 {
-	this->boxVAO.Bind();
-	this->boxVBO = VBO(this->vertices);
-	this->boxEBO = EBO(this->indices);
+	this->mBoxVAO.Bind();
+	this->mBoxVBO = VBO(this->mVertices);
+	this->mBoxEBO = EBO(this->mIndices);
 
-	this->boxVAO.LinkVBO(boxVBO, 0, 3, sizeof(glm::vec3), 0);
+	this->mBoxVAO.LinkVBO(mBoxVBO, 0, 3, sizeof(glm::vec3), 0);
 
-	this->boxVAO.Unbind();
-	this->boxVBO.Unbind();
-	this->boxEBO.Unbind();
+	this->mBoxVAO.Unbind();
+	this->mBoxVBO.Unbind();
+	this->mBoxEBO.Unbind();
+
 }
 
 
 void BoundingBox::VerticesToWorld()
 {
-	glm::mat4 model = this->parentMesh.GetFinalMatrix();
-	this->minExtremes = glm::vec3(model * glm::vec4(this->localMinExtremes, 1.0));
-	this->maxExtremes = glm::vec3(model * glm::vec4(this->localMaxExtremes, 1.0));
+	glm::mat4 model = mParentMesh->GetFinalMatrix();
+	this->mMinExtremes = glm::vec3(model * glm::vec4(this->mLocalMinExtremes, 1.0));
+	this->mMaxExtremes = glm::vec3(model * glm::vec4(this->mLocalMaxExtremes, 1.0));
 }
 
 bool BoundingBox::Intersects(Camera& camera, float step)
@@ -72,9 +80,10 @@ bool BoundingBox::Intersects(Camera& camera, float step)
 	glm::vec3 rayPoint = ray->GetRayStart() + ray->GetRayDirection() * step;
 	for (int i = 0; i < 3; i++)
 	{
-		if (rayPoint[i] > this->maxExtremes[i] || rayPoint[i] < this->minExtremes[i]) return false;
+		if (rayPoint[i] > this->mMaxExtremes[i] || rayPoint[i] < this->mMinExtremes[i]) return false;
 	}
 	
+	std::cout << "INTERSECT FOR object: " << mParentMesh->id << std::endl;
 	return true;
 }
 
@@ -82,39 +91,39 @@ void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 {
 	shaderProgram.Activate();
 	
-	glm::mat4 model = this->parentMesh.GetFinalMatrix();
+	glm::mat4 model = mParentMesh->GetFinalMatrix();
 	shaderProgram.SetMat4("model", model);
 	shaderProgram.SetVec3("cameraPos", camera.GetCameraPosition());
 	shaderProgram.SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));
 
 	camera.ViewProjectionMatrix(shaderProgram);
 
-	boxVAO.Bind();
+	mBoxVAO.Bind();
 
-	glDrawElements(GL_LINES, indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINES, mIndices.size(), GL_UNSIGNED_INT, 0);
 
-	boxVAO.Unbind();
+	mBoxVAO.Unbind();
 }
 
 glm::vec3 BoundingBox::GetMinExtremes()
 {
-	return this->minExtremes;
+	return this->mMinExtremes;
 }
 
 glm::vec3 BoundingBox::GetMaxExtremes()
 {
-	return this->maxExtremes;
+	return this->mMaxExtremes;
 }
 
 VAO* BoundingBox::GetBoundingBoxVAO()
 {
-	return &this->boxVAO;
+	return &this->mBoxVAO;
 }
 Mesh* BoundingBox::GetParentMesh()
 {
-	return &this->parentMesh;
+	return mParentMesh;
 }
 std::vector<unsigned int>* BoundingBox::GetIndices()
 {
-	return &this->indices;
+	return &this->mIndices;
 }

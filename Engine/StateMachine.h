@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "Mesh.h"
+#include <memory>
 
 class Shader;
 enum State
@@ -51,8 +52,8 @@ class StateMachine
 		SubState subState;
 		Plane objectPlane;
 
-		std::vector<Mesh*>& mObjectsInScene;
-		std::vector<MeshLoader*>& mMeshLoaders;
+		std::vector<std::unique_ptr<Mesh>>& mObjectsInScene;
+		std::vector<std::unique_ptr<MeshLoader>>& mMeshLoaders;
 		bool followMouse = false;
 		bool canRotateCamera = false;
 		double mousePosX;
@@ -61,7 +62,7 @@ class StateMachine
 		glm::vec3 mouseDirectionWorld;
 
 	public:
-		StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, std::vector<Mesh*>& objectsInScene);
+		StateMachine(Mesh* mesh, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Mesh>>& objectsInScene);
 		
 		void AddShaderPrograms(Shader* shader, Shader* boxShader);
 		//Controls state that StateMachine is currently in. State changes on the press of a button
@@ -77,7 +78,7 @@ class StateMachine
 		void MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY);
 		
 		//Returns vector containing pointers to all objects in the scene
-		std::vector<Mesh*>* GetObjectsInScene();
+		/*std::vector<std::unique_ptr<Mesh>> GetObjectsInScene();*/
 		//Checks if any object has been clicked on
 		void CheckTarget();
 		bool ShouldFollowMouse();
@@ -96,5 +97,5 @@ class StateMachine
 		//Deletes selected object from both the scene and the vector containing all objects in the scene
 		void DeleteObject();
 		void CloseWindow(GLFWwindow* window);
-		~StateMachine();
+		//~StateMachine();
 };

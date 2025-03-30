@@ -1,10 +1,9 @@
 #include "StateMachine.h"
 #define GLFW_HAND_CURSOR 0x00036004
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
-#define PICKED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
+#define SELECTED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
-StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<MeshLoader*>& meshLoaders, 
-	std::vector<Mesh*>& objectsInScene)
+StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Mesh>>& objectsInScene)
 	: mObjectsInScene{ objectsInScene }, mMeshLoaders{ meshLoaders }
 {
 	this->state = NOTHING;
@@ -143,16 +142,18 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 				bool objectPicked = false;
 				int pickedId = -1;
 				//SortObjectsInScene();
+				std::cout << "OBJ IN SCENE SIZE: " << mObjectsInScene.size() << std::endl;
 				for (int obj = 0; obj < this->mObjectsInScene.size() && !objectPicked; obj++)
 				{
+					std::cout << "INSIDE OF OBJECTS IN SCENE " << std::endl;
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
-						if (this->mObjectsInScene[obj]->boundingBox->Intersects(camera, i))
+						if (mObjectsInScene[obj]->boundingBox->Intersects(camera, i))
 						{
-							this->mObjectsInScene[obj]->ChangeColor(PICKED_OBJECT_COLOR);
+							this->mObjectsInScene[obj]->ChangeColor(SELECTED_OBJECT_COLOR);
 							pickedId = this->mObjectsInScene[obj]->id;
 							objectPicked = true;
-							this->target = this->mObjectsInScene[obj];
+							this->target = mObjectsInScene[obj].get();
 							CalculateObjectPlane();
 							break;
 						}
@@ -299,16 +300,16 @@ void StateMachine::Scale()
 
 void StateMachine::AddObject(Ray* ray)
 {
-	MeshLoader* meshLoaderObj;
+	/*MeshLoader* meshLoaderObj;
 	std::cout << "MESH LOADERS SIZE AT ADD: " << mMeshLoaders.size() << std::endl;
 	std::cout << "SUBSTATE: " << subState << std::endl;
 	if (this->subState != EMPTY && this->subState < this->mMeshLoaders.size())
 	{
-		meshLoaderObj = this->mMeshLoaders[this->subState];
+		meshLoaderObj = this->mMeshLoaders[this->subState].get();
 	}
 	else
 	{
-		meshLoaderObj = this->mMeshLoaders[0];
+		meshLoaderObj = this->mMeshLoaders[0].get();
 	}
 
 	std::cout << "MESH LOADERS IN STATE MACHINE: " << std::endl;
@@ -317,40 +318,40 @@ void StateMachine::AddObject(Ray* ray)
 		std::cout << "MESH LOADER " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
 	}
 	std::cout << "VERTICES: " << meshLoaderObj->vertices.size() << std::endl;
-	Mesh* obj = new Mesh(mShaderProgram, mBoundingBoxShaderProgram, meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->mObjectsInScene.size());
+	auto obj = std::make_unique<Mesh>(mShaderProgram, mBoundingBoxShaderProgram, meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->mObjectsInScene.size());
 	std::cout << "AFTER NEW MESH" << std::endl;
 	std::cout << "BEFORE PUSH" << std::endl;
-	this->mObjectsInScene.push_back(obj);
-	std::cout << "AFTER PUSH" << std::endl;
+	mObjectsInScene.push_back(std::move(obj));
+	std::cout << "AFTER PUSH" << std::endl;*/
 }
 void StateMachine::DeleteObject()
 {
-	int position = 0;
+	//int position = 0;
 
-	for (position; position < this->mObjectsInScene.size() && 
-		this->target->id != this->mObjectsInScene[position]->id; position++)
-	{
-	}
+	//for (position; position < this->mObjectsInScene.size() && 
+	//	this->target->id != this->mObjectsInScene[position]->id; position++)
+	//{
+	//}
 
-	this->mObjectsInScene.erase(this->mObjectsInScene.begin() + position);
-	
-	/*for (int i = targetPos; i < this->objectsInScene.size(); i++)
-	{
-		this->objectsInScene[i]->id--;
-	}*/
+	//this->mObjectsInScene.erase(this->mObjectsInScene.begin() + position);
+	//
+	///*for (int i = targetPos; i < this->objectsInScene.size(); i++)
+	//{
+	//	this->objectsInScene[i]->id--;
+	//}*/
 
-	delete this->target;
-	this->state = NOTHING;
+	//delete this->target;
+	//this->state = NOTHING;
 }
 void StateMachine::CloseWindow(GLFWwindow* window)
 {
 	glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-std::vector<Mesh*>* StateMachine::GetObjectsInScene()
-{
-	return &this->mObjectsInScene;
-}
+//std::vector<std::unique_ptr<Mesh>> StateMachine::GetObjectsInScene()
+//{
+//	return mObjectsInScene;
+//}
 
 bool StateMachine::ShouldFollowMouse()
 {
@@ -359,11 +360,11 @@ bool StateMachine::ShouldFollowMouse()
 
 void StateMachine::SortObjectsInScene()
 {
-	for (Mesh* mesh : this->mObjectsInScene)
+	/*for (Mesh* mesh : this->mObjectsInScene)
 	{
 		mesh->CalculateDistanceFromCamera(this->camera);
 	}
-	QuickSort(0, this->mObjectsInScene.size() - 1);
+	QuickSort(0, this->mObjectsInScene.size() - 1);*/
 }
 
 void StateMachine::QuickSort(const int& low, const int& high)
@@ -391,17 +392,7 @@ int StateMachine::Partition(const int& low, const int& high)
 
 void StateMachine::Swap(const int& firstPos, const int& secondPos)
 {
-	Mesh* temp = this->mObjectsInScene[firstPos];
+	/*Mesh* temp = this->mObjectsInScene[firstPos];
 	this->mObjectsInScene[firstPos] = this->mObjectsInScene[secondPos];
-	this->mObjectsInScene[secondPos] = temp;
-}
-StateMachine::~StateMachine()
-{
-	//deleting objects, it isn't enough to just clear the vector - objects have to be removed from heap
-	//objects should be deleted from the back of the vector, because vector is getting smaller with each delete operation
-	for (int i = this->mObjectsInScene.size() - 1; i >=0; i--)
-	{
-		delete this->mObjectsInScene[i];
-	}
-	std::cout << "Deleted state machine" << std::endl;
+	this->mObjectsInScene[secondPos] = temp;*/
 }

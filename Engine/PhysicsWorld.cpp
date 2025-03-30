@@ -1,47 +1,47 @@
 #include "PhysicsWorld.h"
 
 PhysicsWorld::PhysicsWorld() :
-	broadphase{ new btDbvtBroadphase() }, collisionConfig{ new btDefaultCollisionConfiguration() },
-	collisionDispatcher{ new btCollisionDispatcher(collisionConfig) }, 
-	solver{ new btSequentialImpulseConstraintSolver() }, 
-	dynamicsWorld { new btDiscreteDynamicsWorld(collisionDispatcher, broadphase, solver, collisionConfig) }
+	mBroadPhase{ new btDbvtBroadphase() }, mCollisionConfig{ new btDefaultCollisionConfiguration() },
+	mCollisionDispatcher{ new btCollisionDispatcher(mCollisionConfig) }, 
+	mSolver{ new btSequentialImpulseConstraintSolver() }, 
+	mDynamicsWorld { new btDiscreteDynamicsWorld(mCollisionDispatcher, mBroadPhase, mSolver, mCollisionConfig) }
 {
 }
 PhysicsWorld::~PhysicsWorld()
 {
-	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
+	for (int i = mDynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
-		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
+		btCollisionObject* obj = mDynamicsWorld->getCollisionObjectArray()[i];
 		btRigidBody* body = btRigidBody::upcast(obj);
 		if (body && body->getMotionState())
 			delete body->getMotionState();
-		dynamicsWorld->removeCollisionObject(obj);
+		mDynamicsWorld->removeCollisionObject(obj);
 		delete obj;
 	}
-	delete dynamicsWorld;
-	delete solver;
-	delete collisionDispatcher;
-	delete collisionConfig;
-	delete broadphase;
+	delete mDynamicsWorld;
+	delete mSolver;
+	delete mCollisionDispatcher;
+	delete mCollisionConfig;
+	delete mBroadPhase;
 }
 
 void PhysicsWorld::updateDeltaTime()
 {
-	deltaTime = currentFrame - lastFrame;
-	if (deltaTime > 10 * fixedTimeStep)
-		deltaTime = 10 * fixedTimeStep;
+	mDeltaTime = mCurrentFrame - mLastFrame;
+	if (mDeltaTime > 10 * mFixedTimeStep)
+		mDeltaTime = 10 * mFixedTimeStep;
 }
 
 void PhysicsWorld::simulate()
 {
-	currentFrame = static_cast<float>(glfwGetTime());
+	mCurrentFrame = static_cast<float>(glfwGetTime());
 	updateDeltaTime();
-	lastFrame = currentFrame;
+	mLastFrame = mCurrentFrame;
 
-	accumulator += deltaTime;
-	while (accumulator >= fixedTimeStep)
+	mAccumulator += mDeltaTime;
+	while (mAccumulator >= mFixedTimeStep)
 	{
-		dynamicsWorld->stepSimulation(fixedTimeStep, 10); // Perform physics updates at 60Hz
-		accumulator -= fixedTimeStep;
+		mDynamicsWorld->stepSimulation(mFixedTimeStep, 10); // Perform physics updates at 60Hz
+		mAccumulator -= mFixedTimeStep;
 	}
 }

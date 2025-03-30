@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <memory>
 
 //Forward declaration
 class Shader;
@@ -12,22 +13,22 @@ class MeshLoader;
 class Scene
 {
 private:
-	std::vector<Mesh*>& mObjectsInScene;
-	std::vector<MeshLoader*>& mMeshLoaders; //THIS HAS TO BE MADE REFERENCE IF IT WILL BE USED (LOOK AT THE LINE ABOVE)
+	//No need for cleanup if using smart pointers
+	std::vector<std::unique_ptr<Mesh>>& mObjectsInScene;
+	std::vector<std::unique_ptr<MeshLoader>>& mMeshLoaders; 
 	Lighting* mLightSource;
 	Camera* mCamera;
 	Shader* mObjectShader;
 	Shader* mBoundingBoxShader;
 
 public:
-	Scene(Camera* camera, Lighting* lightSource, std::vector<Mesh*>& objectsInScene, std::vector<MeshLoader*>& meshLoaders,
+	Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Mesh>>& objectsInScene, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,
 		Shader* objectShader, Shader* boundingBoxShader);
-	~Scene();
 	void loadDefaultScene();
 	//Renders all objects in scene
 	void renderObjects();
 	//Adds object to scene
-	void addObject(Mesh* object);
+	void addObject(std::unique_ptr<Mesh> object);
 	//Adds multiple objects to the scene
 	void addObjects(const std::vector<Mesh*>& objects);
 	void removeObject();
