@@ -12,7 +12,8 @@ class Lighting;
 class Mesh
 {
 	private:
-		
+		static inline int s_idGenerator{};
+		int m_id{};
 		VBO mVBO;
 		EBO mEBO;
 		
@@ -26,20 +27,19 @@ class Mesh
 
 		Shader* mShaderProgram;
 		Shader* mBoundingBoxShaderProgram;
-		float distanceFromCamera;
+		float mDistanceFromCamera;
 
 		void setupMesh();
 	public:
 		std::unique_ptr<BoundingBox> boundingBox;
 		//BoundingBox* boundingBox;
-		MeshLoader* meshLoader;
+		MeshLoader* mMeshLoader;
 
 		glm::vec3 objectPos = glm::vec3(0.0, 0.0, 0.0);
 		float scalingFactor;
-		int id;
 		VAO mVAO;
 		
-		Mesh(Shader* shaderPProgram, Shader* boundingBoxShaderProgram, MeshLoader* meshLoader, glm::vec3 objectPos, float id);
+		Mesh(Shader* shaderPProgram, Shader* boundingBoxShaderProgram, MeshLoader* meshLoader, glm::vec3 objectPos);
 		~Mesh();
 		void ChangeColor(const glm::vec3& color);
 		void InitialTransform(glm::vec3 translation, float scale);
@@ -50,6 +50,7 @@ class Mesh
 		void CalculateFinalMatrix();
 		void CalculateDistanceFromCamera(Camera* camera);
 		float GetDistanceFromCamera();
+		int GetID();
 		glm::vec3 GetPosition();
 		glm::mat4 GetFinalMatrix();
 		//Binds VAO, calculates MVP matrices, assigns uniforms and draws object using EBO info

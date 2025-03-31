@@ -76,7 +76,7 @@ bool BoundingBox::Intersects(Camera& camera, float step)
 		if (rayPoint[i] > this->mMaxExtremes[i] || rayPoint[i] < this->mMinExtremes[i]) return false;
 	}
 	
-	std::cout << "INTERSECT FOR object: " << mParentMesh->id << std::endl;
+	std::cout << "INTERSECT FOR object: " << mParentMesh->GetID() << std::endl;
 	return true;
 }
 

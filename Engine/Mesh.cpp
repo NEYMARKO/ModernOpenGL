@@ -2,18 +2,11 @@
 #include "Shader.h"
 #include "Lighting.h"
 
-Mesh::Mesh(Shader* shaderProgram, Shader* boundingBoxShaderProgram, MeshLoader* meshLoader, glm::vec3 objectPosition, float id)
+Mesh::Mesh(Shader* shaderProgram, Shader* boundingBoxShaderProgram, MeshLoader* meshLoader, glm::vec3 objectPosition) : m_id{ s_idGenerator++ }, mShaderProgram { shaderProgram }, mBoundingBoxShaderProgram{ boundingBoxShaderProgram }, mMeshLoader { meshLoader }
 {
-	mShaderProgram = shaderProgram;
-	mBoundingBoxShaderProgram = boundingBoxShaderProgram;
-	this->meshLoader = meshLoader;
-	this->id = id;
 	setupMesh();
-	InitialTransform(objectPosition, this->meshLoader->scalingFactor);
+	InitialTransform(objectPosition, this->mMeshLoader->scalingFactor);
 	boundingBox = std::make_unique<BoundingBox>(meshLoader->minExtremes, meshLoader->maxExtremes, this);
-	//boundingBox = new BoundingBox(meshLoader->minExtremes, meshLoader->maxExtremes, this);
-
-	//std::cout << "Spawned mesh with id: " << id << std::endl;
 }
 
 Mesh::~Mesh()
@@ -22,14 +15,14 @@ Mesh::~Mesh()
 	mVBO.Delete();
 	mEBO.Delete();
 
-	std::cout << "DESTROYED MESH: " << id << std::endl;
+	std::cout << "DESTROYED MESH: " << m_id << std::endl;
 }
 
 void Mesh::setupMesh()
 {
 	this->mVAO.Bind();
-	this->mVBO = VBO(this->meshLoader->vertices);
-	this->mEBO = EBO(this->meshLoader->indices);
+	this->mVBO = VBO(this->mMeshLoader->vertices);
+	this->mEBO = EBO(this->mMeshLoader->indices);
 
 	this->mVAO.LinkVBO(mVBO, 0, 3, sizeof(Vertex), 0);
 	this->mVAO.LinkVBO(mVBO, 1, 3, sizeof(Vertex), (void*)offsetof(Vertex, normal));
@@ -98,12 +91,17 @@ glm::mat4 Mesh::GetFinalMatrix()
 
 void Mesh::CalculateDistanceFromCamera(Camera* camera)
 {
-	this->distanceFromCamera = glm::distance(this->objectPos, camera->GetCameraPosition());
+	this->mDistanceFromCamera = glm::distance(this->objectPos, camera->GetCameraPosition());
 }
 
 float Mesh::GetDistanceFromCamera()
 {
-	return this->distanceFromCamera;
+	return this->mDistanceFromCamera;
+}
+
+int Mesh::GetID()
+{
+	return m_id;
 }
 
 void Mesh::Render(Camera& camera, Lighting& lighting)
@@ -118,6 +116,6 @@ void Mesh::Render(Camera& camera, Lighting& lighting)
 	mShaderProgram->SetVec3("lightPos", lighting.getPosition());
 
 	mVAO.Bind();
-	glDrawElements(GL_TRIANGLES, this->meshLoader->indices.size(), GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, this->mMeshLoader->indices.size(), GL_UNSIGNED_INT, 0);
 	mVAO.Unbind();
 }

@@ -142,16 +142,16 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 				bool objectPicked = false;
 				int pickedId = -1;
 				//SortObjectsInScene();
-				std::cout << "OBJ IN SCENE SIZE: " << mObjectsInScene.size() << std::endl;
+				//std::cout << "OBJ IN SCENE SIZE: " << mObjectsInScene.size() << std::endl;
 				for (int obj = 0; obj < this->mObjectsInScene.size() && !objectPicked; obj++)
 				{
-					std::cout << "INSIDE OF OBJECTS IN SCENE " << std::endl;
+					//std::cout << "INSIDE OF OBJECTS IN SCENE " << std::endl;
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
 						if (mObjectsInScene[obj]->boundingBox->Intersects(camera, i))
 						{
 							this->mObjectsInScene[obj]->ChangeColor(SELECTED_OBJECT_COLOR);
-							pickedId = this->mObjectsInScene[obj]->id;
+							pickedId = this->mObjectsInScene[obj]->GetID();
 							objectPicked = true;
 							this->target = mObjectsInScene[obj].get();
 							CalculateObjectPlane();
@@ -166,10 +166,10 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 				//removing selective color if current click doesn't intersect with any of the objects
 				for (int i = 0; i < this->mObjectsInScene.size(); i++)
 				{
-					if (this->mObjectsInScene[i]->id != pickedId) this->mObjectsInScene[i]->ChangeColor(DEFAULT_OBJECT_COLOR);
+					if (this->mObjectsInScene[i]->GetID() != pickedId) this->mObjectsInScene[i]->ChangeColor(DEFAULT_OBJECT_COLOR);
 				}
 			}
-			std::cout << "AFTER ADD" << std::endl;
+			//std::cout << "AFTER ADD" << std::endl;
 		}
 		break;
 
@@ -318,7 +318,7 @@ void StateMachine::AddObject(Ray* ray)
 		std::cout << "MESH LOADER " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
 	}*/
 	std::cout << "VERTICES: " << meshLoaderObj->vertices.size() << std::endl;
-	auto obj = std::make_unique<Mesh>(mShaderProgram, mBoundingBoxShaderProgram, meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->mObjectsInScene.size());
+	auto obj = std::make_unique<Mesh>(mShaderProgram, mBoundingBoxShaderProgram, meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f));
 	/*std::cout << "AFTER NEW MESH" << std::endl;
 	std::cout << "BEFORE PUSH" << std::endl;*/
 	mObjectsInScene.push_back(std::move(obj));

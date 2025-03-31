@@ -20,23 +20,22 @@ int main()
 	
 	Window window{&camera, 800, 800};
 	if (!window.loaded()) return -1;
-	
-	StateMachine stateMachine(nullptr, &camera, meshLoaders, objectsInScene);
-	window.addStateMachine(&stateMachine);
-	
-	float deltaTime = 0.0f, lastFrame = 0.0f;
 
 	Shader defaultShaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
 	Shader pointShader("point.vert", "point.frag");
 	
+	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
+	StateMachine stateMachine(nullptr, &camera, meshLoaders, objectsInScene);
 	stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
-	float id = 0;
+	
+	window.addStateMachine(&stateMachine);
+	float deltaTime = 0.0f, lastFrame = 0.0f;
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
 	auto lightBulb = std::make_unique<Mesh>(&defaultShaderProgram, &boundingBoxShaderProgram, 
-		&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
+		&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f));
 	Lighting light(lightBulb.get(), glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	Scene scene{&camera, &light, objectsInScene, meshLoaders, &defaultShaderProgram, &boundingBoxShaderProgram};
@@ -46,11 +45,10 @@ int main()
 
 	MeshLoader jointLoader("joint4.txt");
 
-	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
 	auto cube = std::make_unique<Mesh>(&defaultShaderProgram, &boundingBoxShaderProgram, 
-		&cubeLoader, glm::vec3(-30.0f, 0.0f, 0.0f), id++);
+		&cubeLoader, glm::vec3(-30.0f, 0.0f, 0.0f));
 	auto joint = std::make_unique<Mesh>(&defaultShaderProgram, &boundingBoxShaderProgram, 
-		&jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
+		&jointLoader, glm::vec3(0.0f, 0.0f, 0.0f));
 	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint.get(), cube.get(), &gizmos);
 
 	scene.addObject(std::move(joint));

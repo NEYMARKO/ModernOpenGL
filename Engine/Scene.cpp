@@ -29,14 +29,12 @@ void Scene::loadDefaultScene()
 		std::cout << "MESH LOADER (SCENE) " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
 	}*/
 
-	float id = 0;
-
 	mObjectsInScene.push_back(std::move(std::make_unique<Mesh>(mObjectShader, mBoundingBoxShader, 
-		mMeshLoaders[0].get(), glm::vec3(-5.0f, 4.0f, 0.0f), id++)));
+		mMeshLoaders[0].get(), glm::vec3(-5.0f, 4.0f, 0.0f))));
 	mObjectsInScene.push_back(std::move(std::make_unique<Mesh>(mObjectShader, mBoundingBoxShader, 
-		mMeshLoaders[1].get(), glm::vec3(5.0f, 4.0f, 0.0f), id++)));
+		mMeshLoaders[1].get(), glm::vec3(5.0f, 4.0f, 0.0f))));
 	mObjectsInScene.push_back(std::move(std::make_unique<Mesh>(mObjectShader, mBoundingBoxShader,
-		mMeshLoaders[2].get(), glm::vec3(-35.0f, 0.0f, 0.0f), id++)));
+		mMeshLoaders[2].get(), glm::vec3(-35.0f, 0.0f, 0.0f))));
 	//Mesh* temple = new Mesh(mObjectShader, mBoundingBoxShader, &templeLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
 	//Mesh* dragon = new Mesh(mObjectShader, mBoundingBoxShader, &dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
 	//Mesh* cube = new Mesh(mObjectShader, mBoundingBoxShader, &cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
