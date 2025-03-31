@@ -300,29 +300,29 @@ void StateMachine::Scale()
 
 void StateMachine::AddObject(Ray* ray)
 {
-	/*MeshLoader* meshLoaderObj;
-	std::cout << "MESH LOADERS SIZE AT ADD: " << mMeshLoaders.size() << std::endl;
-	std::cout << "SUBSTATE: " << subState << std::endl;
-	if (this->subState != EMPTY && this->subState < this->mMeshLoaders.size())
+	MeshLoader* meshLoaderObj;
+	/*std::cout << "MESH LOADERS SIZE AT ADD: " << mMeshLoaders.size() << std::endl;
+	std::cout << "SUBSTATE: " << subState << std::endl;*/
+	if (this->subState != EMPTY && this->subState < mMeshLoaders.size())
 	{
-		meshLoaderObj = this->mMeshLoaders[this->subState].get();
+		meshLoaderObj = mMeshLoaders[this->subState].get();
 	}
 	else
 	{
 		meshLoaderObj = this->mMeshLoaders[0].get();
 	}
 
-	std::cout << "MESH LOADERS IN STATE MACHINE: " << std::endl;
-	for (int i = 0; i < mMeshLoaders.size(); i++)
+	//std::cout << "MESH LOADERS IN STATE MACHINE: " << std::endl;
+	/*for (int i = 0; i < mMeshLoaders.size(); i++)
 	{
 		std::cout << "MESH LOADER " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
-	}
+	}*/
 	std::cout << "VERTICES: " << meshLoaderObj->vertices.size() << std::endl;
 	auto obj = std::make_unique<Mesh>(mShaderProgram, mBoundingBoxShaderProgram, meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f), this->mObjectsInScene.size());
-	std::cout << "AFTER NEW MESH" << std::endl;
-	std::cout << "BEFORE PUSH" << std::endl;
+	/*std::cout << "AFTER NEW MESH" << std::endl;
+	std::cout << "BEFORE PUSH" << std::endl;*/
 	mObjectsInScene.push_back(std::move(obj));
-	std::cout << "AFTER PUSH" << std::endl;*/
+	//std::cout << "AFTER PUSH" << std::endl;
 }
 void StateMachine::DeleteObject()
 {

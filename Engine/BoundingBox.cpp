@@ -6,12 +6,6 @@ BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh* par
 	Initialize();
 	SetupBuffers();
 	VerticesToWorld();
-
-	std::cout << "INITIALIZED BOUNDING BOX WITH BORDERS: " << std::endl;
-	std::cout << "MIN: " << " (" << mLocalMinExtremes[0] << ", " << mLocalMinExtremes[1] << ", " <<
-		mLocalMinExtremes[2] << ")" << std::endl;
-	std::cout << "MAX: " << " (" << mLocalMaxExtremes[0] << ", " << mLocalMaxExtremes[1] << ", " <<
-		mLocalMaxExtremes[2] << ")" << std::endl;
 }
 BoundingBox::~BoundingBox()
 {
@@ -19,7 +13,6 @@ BoundingBox::~BoundingBox()
 	mBoxVBO.Delete();
 	mBoxEBO.Delete();
 	std::cout << "DELETED BOUNDING BOX" << std::endl;
-
 }
 void BoundingBox::Initialize()
 {

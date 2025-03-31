@@ -31,22 +31,6 @@ void Scene::loadDefaultScene()
 
 	float id = 0;
 
-	std::cout << "MESHLOADER BOUNDS MIN: " << std::endl;
-	for (int i=0; i < mMeshLoaders.size(); i++)
-	{
-		std::cout << "( " << 
-			mMeshLoaders[i]->minExtremes[0] << ", "
-			<< mMeshLoaders[i]->minExtremes[1] << ", "
-			<< mMeshLoaders[i]->minExtremes[2] << ") " << std::endl;
-	}
-	std::cout << "MESHLOADER BOUNDS MAX: " << std::endl;
-	for (int i = 0; i < mMeshLoaders.size(); i++)
-	{
-		std::cout << "( " <<
-			mMeshLoaders[i]->minExtremes[0] << ", "
-			<< mMeshLoaders[i]->minExtremes[1] << ", "
-			<< mMeshLoaders[i]->minExtremes[2] << ") " << std::endl;
-	}
 	mObjectsInScene.push_back(std::move(std::make_unique<Mesh>(mObjectShader, mBoundingBoxShader, 
 		mMeshLoaders[0].get(), glm::vec3(-5.0f, 4.0f, 0.0f), id++)));
 	mObjectsInScene.push_back(std::move(std::make_unique<Mesh>(mObjectShader, mBoundingBoxShader, 

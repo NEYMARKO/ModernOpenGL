@@ -198,7 +198,7 @@ int main()
 		btVector3 pos = transform.getOrigin();
 
 		glm::vec3 newPos = glm::vec3(pos.getX(), pos.getY(), pos.getZ());
-		//stateMachine.GetObjectsInScene()[2]->Translate(newPos);
+		objectsInScene[2]->Translate(newPos);
 	}
 
 	//BULLET CLEANUP
