@@ -25,6 +25,9 @@ public:
 	Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Mesh>>& objectsInScene, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,
 		Shader* objectShader, Shader* boundingBoxShader);
 	void loadDefaultScene();
+
+	void renderScene();
+	void renderLight();
 	//Renders all objects in scene
 	void renderObjects();
 	//Adds object to scene

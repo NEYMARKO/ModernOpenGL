@@ -1,8 +1,11 @@
 #pragma once
 #include <iostream>
-#include <chrono>
+#include <vector>
 #include <GLFW/glfw3.h>
 #include <btBulletDynamicsCommon.h>
+#include <memory>
+
+class PhysicsObject;
 
 class PhysicsWorld
 {
@@ -12,6 +15,8 @@ private:
 	btCollisionDispatcher* mCollisionDispatcher;
 	btSequentialImpulseConstraintSolver* mSolver;
 	btDiscreteDynamicsWorld* mDynamicsWorld;
+
+	std::vector<std::unique_ptr<PhysicsObject>> mPhysicsObjects;
 
 	float mLastFrame{};
 	float mCurrentFrame{};
@@ -29,4 +34,5 @@ public:
 	// Starts dynamic's world simulation
 	// In case of previous delay, simulates multiple steps until simulation catches up
 	void simulate();
+	void addObjectToWorld(std::unique_ptr<PhysicsObject> object);
 };

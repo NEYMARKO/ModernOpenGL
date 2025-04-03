@@ -29,32 +29,32 @@ int main()
 	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
 	StateMachine stateMachine(nullptr, &camera, meshLoaders, objectsInScene);
 	stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
-	
 	window.addStateMachine(&stateMachine);
+	
 	float deltaTime = 0.0f, lastFrame = 0.0f;
+	Grid grid(100);
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
 	auto lightBulb = std::make_unique<Mesh>(&defaultShaderProgram, &boundingBoxShaderProgram, 
 		&lightBulbLoader, glm::vec3(-5.0f, 4.0f, 0.0f));
-	Lighting light(lightBulb.get(), glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	Lighting light(&lightingShaderProgram, lightBulb.get(), glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	Scene scene{&camera, &light, objectsInScene, meshLoaders, &defaultShaderProgram, &boundingBoxShaderProgram};
 	scene.addObject(std::move(lightBulb));
 
 	MeshLoader cubeLoader("cubeFlat.txt");
-
 	MeshLoader jointLoader("joint4.txt");
 
 	auto cube = std::make_unique<Mesh>(&defaultShaderProgram, &boundingBoxShaderProgram, 
 		&cubeLoader, glm::vec3(-30.0f, 0.0f, 0.0f));
 	auto joint = std::make_unique<Mesh>(&defaultShaderProgram, &boundingBoxShaderProgram, 
 		&jointLoader, glm::vec3(0.0f, 0.0f, 0.0f));
-	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint.get(), cube.get(), &gizmos);
 
+	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), joint.get(), cube.get(), &gizmos);
+	//AKO SE OVO STAVI PRIJE DEFINICIJE IK CHAIN-A, DOLAZI DO PROBLEMA JER SU JOINT I CUBE MOVED
 	scene.addObject(std::move(joint));
 	scene.addObject(std::move(cube));
 
-	Grid grid(100);
 
 	Mesh* jointTarget;
 	glm::vec3 jointTargetPosition;
@@ -116,9 +116,7 @@ int main()
 		//std::cout << "TIME SINCE LAST FRAME: " << deltaTime << std::endl;
 		/*glClearColor(0.247059f, 0.247059f, 0.247059f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
-		scene.renderObjects();
-
-		light.Draw(lightingShaderProgram, boundingBoxShaderProgram, camera);
+		scene.renderScene();
 
 		grid.Draw(boundingBoxShaderProgram, camera);
 		

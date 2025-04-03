@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "MeshLoader.h"
 #include "Scene.h"
+#include "Lighting.h"
 
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Mesh>>& objectsInScene, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, Shader* objectShader, Shader* boundingBoxShader) 
 	: mCamera{ camera }, mLightSource{ lightSource }, mObjectsInScene{ objectsInScene }, 
@@ -51,16 +52,27 @@ void Scene::loadDefaultScene()
 
 }
 
-void Scene::renderObjects()
+void Scene::renderScene()
 {
-	//std::cout << "SCENE OBJECTS: " << mObjectsInScene.size() << std::endl;
 	//clear screen
 	glClearColor(0.247059f, 0.247059f, 0.247059f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	renderLight();
+	renderObjects();
+}
+
+void Scene::renderLight()
+{
+	mLightSource->Draw(*mCamera);
+}
+
+void Scene::renderObjects()
+{
+	//std::cout << "SCENE OBJECTS: " << mObjectsInScene.size() << std::endl;
 	for (int i = 0; i < mObjectsInScene.size(); i++)
 	{
-		mObjectsInScene[i]->Render(*mCamera, *mLightSource);
+		if (mObjectsInScene[i]) mObjectsInScene[i]->Render(*mCamera, *mLightSource);
 	}
 
 	/*for (int i = 0; i < mMeshLoaders.size(); i++)

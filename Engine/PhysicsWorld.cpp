@@ -1,3 +1,4 @@
+#include "PhysicsObject.h"
 #include "PhysicsWorld.h"
 
 PhysicsWorld::PhysicsWorld() :
@@ -6,18 +7,20 @@ PhysicsWorld::PhysicsWorld() :
 	mSolver{ new btSequentialImpulseConstraintSolver() }, 
 	mDynamicsWorld { new btDiscreteDynamicsWorld(mCollisionDispatcher, mBroadPhase, mSolver, mCollisionConfig) }
 {
+	mDynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
 }
 PhysicsWorld::~PhysicsWorld()
 {
 	for (int i = mDynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
 		btCollisionObject* obj = mDynamicsWorld->getCollisionObjectArray()[i];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		if (body && body->getMotionState())
-			delete body->getMotionState();
 		mDynamicsWorld->removeCollisionObject(obj);
-		delete obj;
 	}
+
+	// Only reference to unique pointers - destructor will be called
+	mPhysicsObjects.clear();
+
+	// Delete bullet world setup
 	delete mDynamicsWorld;
 	delete mSolver;
 	delete mCollisionDispatcher;
@@ -44,4 +47,10 @@ void PhysicsWorld::simulate()
 		mDynamicsWorld->stepSimulation(mFixedTimeStep, 10); // Perform physics updates at 60Hz
 		mAccumulator -= mFixedTimeStep;
 	}
+}
+
+void PhysicsWorld::addObjectToWorld(std::unique_ptr<PhysicsObject> object)
+{
+	mDynamicsWorld->addRigidBody(object.get()->getRigidBody());
+	mPhysicsObjects.push_back(std::move(object));
 }
