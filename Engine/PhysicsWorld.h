@@ -28,6 +28,7 @@ public:
 	//Bullet physics cleanup
 	~PhysicsWorld();
 
+	void loadDefaultSimulation();
 	// Updates duration between current and last frame
 	// In case of stuter sets delta time to max allowed delay
 	void updateDeltaTime();

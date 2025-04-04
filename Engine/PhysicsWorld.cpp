@@ -28,6 +28,18 @@ PhysicsWorld::~PhysicsWorld()
 	delete mBroadPhase;
 }
 
+void PhysicsWorld::loadDefaultSimulation()
+{
+	auto p1{ std::make_unique<PhysicsObject>(glm::vec3(0.0f, -1.0f, 0.0f), glm::quat(0.0f, 0.0f, 0.0f, 1.0f),
+		CollisionShape::PLANE, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f)) };
+	auto p2{ std::make_unique<PhysicsObject>(glm::vec3(0.0f, 50.0f, 0.0f), glm::quat(0.0f, 0.0f, 0.0f, 1.0f),
+		CollisionShape::SPHERE, 0.2f) };
+
+	addObjectToWorld(std::move(p1));
+	addObjectToWorld(std::move(p2));
+
+}
+
 void PhysicsWorld::updateDeltaTime()
 {
 	mDeltaTime = mCurrentFrame - mLastFrame;
