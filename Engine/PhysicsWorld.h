@@ -21,7 +21,7 @@ private:
 	float mLastFrame{};
 	float mCurrentFrame{};
 	float mDeltaTime{};
-	float mAccumulator{};
+	float mAccumulator{0.0f};
 	const float mFixedTimeStep{ 1 / 60.f };
 public:
 	PhysicsWorld();
@@ -36,4 +36,5 @@ public:
 	// In case of previous delay, simulates multiple steps until simulation catches up
 	void simulate();
 	void addObjectToWorld(std::unique_ptr<PhysicsObject> object);
+	std::vector<std::unique_ptr<PhysicsObject>>* getPhysicsObjects();
 };

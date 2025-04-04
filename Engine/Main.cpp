@@ -7,9 +7,9 @@
 #include "Window.h"
 #include "Scene.h"
 #include <memory>
-#include <btBulletDynamicsCommon.h>
-
-
+//#include <btBulletDynamicsCommon.h>
+#include "PhysicsObject.h"
+#include "PhysicsWorld.h"
 
 int main()
 {
@@ -62,51 +62,10 @@ int main()
 	std::vector<glm::vec3> points;
 
 
-	//BULLET PHYSICS
-	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-	btDefaultCollisionConfiguration* collisionConfig = new btDefaultCollisionConfiguration();
-	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfig);
-	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver();
-	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
-	dynamicsWorld->setGravity(btVector3(0, -9.81f, 0));
+	PhysicsWorld physicsWorld{};
+	//(*physicsWorld.getPhysicsObjects())[1].get();
+	//physicsWorld.loadDefaultSimulation();
 
-	// Create ground shape
-	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
-
-	// Create ground rigid body
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
-	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
-	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-
-	// Add to world
-	dynamicsWorld->addRigidBody(groundRigidBody);
-
-	// Create box shape
-	btCollisionShape* sphereShape = new btSphereShape(1.0f); // Radius of 1.0
-	btDefaultMotionState* sphereMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 50, 0))); // Start at (0,10,0)
-
-	btScalar mass = 0.2f;
-	btVector3 inertia(0, 0, 0);
-	sphereShape->calculateLocalInertia(mass, inertia);
-
-	btRigidBody::btRigidBodyConstructionInfo sphereRigidBodyCI(mass, sphereMotionState, sphereShape, inertia);
-	btRigidBody* sphereRigidBody = new btRigidBody(sphereRigidBodyCI);
-
-	dynamicsWorld->addRigidBody(sphereRigidBody);
-
-	//BOUNCINES
-	sphereRigidBody->setRestitution(0.8f);   // Higher values (0.8 - 1.0) make it bounce more
-	groundRigidBody->setRestitution(0.8f); // The ground also needs restitution
-	//sphereRigidBody->setActivationState(DISABLE_DEACTIVATION); // Prevent it from sleeping
-
-	const float fixedTimeStep = 1.0f / 60.0f; // Fixed 60Hz physics step
-	float accumulator = 0.0f;
-	//float _lastFrame = static_cast<float>(glfwGetTime());
-	float _lastFrame = 0.0f;
-	objectsInScene[2]->Translate(glm::vec3(0, 50, 0));
-	
-	std::cout << "MESHLOADERS IN SCENE: " << meshLoaders.size() << std::endl;
-	//std::cout << "STATE MACHINE OBJECTS IN SCENE: " << (stateMachine.GetObjectsInScene())->size() << std::endl;
 	while (!glfwWindowShouldClose(window.getGLFWwindow()))
 	{
 		float currentFrame = static_cast<float>(glfwGetTime());
@@ -174,48 +133,37 @@ int main()
 		glfwPollEvents();
 
 
-		float _currentFrame = static_cast<float>(glfwGetTime());
-		float _deltaTime = _currentFrame - _lastFrame;
-		_deltaTime = (_deltaTime > 3 * fixedTimeStep) ? 3 * fixedTimeStep : _deltaTime;
-		//std::cout << "TIME SINCE LAST FRAME: " << _deltaTime << std::endl;
-		_lastFrame = _currentFrame;
+		physicsWorld.simulate();
 
-		accumulator += _deltaTime;
-
-		//dynamicsWorld->stepSimulation(_deltaTime, 10);
-		while (accumulator >= fixedTimeStep) {
-			dynamicsWorld->stepSimulation(fixedTimeStep, 10); // Perform physics updates at 60Hz
-			accumulator -= fixedTimeStep;
-		}
-
+		PhysicsObject* spherePhysicsObject = (*physicsWorld.getPhysicsObjects())[1].get();
 		// Get updated object position
 		btTransform transform;
-		sphereRigidBody->getMotionState()->getWorldTransform(transform);
+		spherePhysicsObject->getMotionState()->getWorldTransform(transform);
 		btVector3 pos = transform.getOrigin();
-
+		std::cout << "Sphere Pos: " << pos.getX() << ", " << pos.getY() << ", " << pos.getZ() << std::endl;
 		glm::vec3 newPos = glm::vec3(pos.getX(), pos.getY(), pos.getZ());
 		objectsInScene[2]->Translate(newPos);
 	}
 
-	//BULLET CLEANUP
-	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
-	{
-		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		if (body && body->getMotionState())
-			delete body->getMotionState();
-		dynamicsWorld->removeCollisionObject(obj);
-		delete obj;
-	}
-	/*delete sphereRigidBody;
-	delete sphereShape;
-	delete groundRigidBody;
-	delete groundShape;*/
-	delete dynamicsWorld;
-	delete solver;
-	delete dispatcher;
-	delete collisionConfig;
-	delete broadphase;
+	////BULLET CLEANUP
+	//for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
+	//{
+	//	btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
+	//	btRigidBody* body = btRigidBody::upcast(obj);
+	//	if (body && body->getMotionState())
+	//		delete body->getMotionState();
+	//	dynamicsWorld->removeCollisionObject(obj);
+	//	delete obj;
+	//}
+	///*delete sphereRigidBody;
+	//delete sphereShape;
+	//delete groundRigidBody;
+	//delete groundShape;*/
+	//delete dynamicsWorld;
+	//delete solver;
+	//delete dispatcher;
+	//delete collisionConfig;
+	//delete broadphase;
 
 	defaultShaderProgram.Delete();
 	lightingShaderProgram.Delete();
