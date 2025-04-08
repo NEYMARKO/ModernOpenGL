@@ -29,12 +29,12 @@ public:
 	//initializes glfw and loads glad 
 	void initialize();
 	void addStateMachine(StateMachine* stateMachine);
+	void alignCameraToWindow();
 	//returns true if window was successfully loaded, otherwise returns false
-	bool loaded();
-
-	int getWidth();
-	int getHeight();
-	GLFWwindow* getGLFWwindow();
+	bool loaded() { return mStatus == VALID; };
+	int getWidth() { return mWidth; };
+	int getHeight() { return mHeight; };
+	GLFWwindow* getGLFWWindow() { return mWindow; };
 
 	//CALLBACKS
 

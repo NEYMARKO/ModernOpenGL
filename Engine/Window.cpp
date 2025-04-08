@@ -6,6 +6,7 @@ Window::Window(Camera* camera, int width = 1920, int height = 1080)
 	: mWidth{ width }, mHeight{ height }, mCamera{ camera }
 {
 	initialize();
+	alignCameraToWindow();
 }
 
 Window::~Window()
@@ -61,24 +62,17 @@ void Window::addStateMachine(StateMachine* stateMachine)
 	mStateMachine = stateMachine;
 }
 
-bool Window::loaded()
+void Window::alignCameraToWindow()
 {
-	return mStatus == VALID;
-}
-
-GLFWwindow* Window::getGLFWwindow()
-{
-	return mWindow;
-}
-
-int Window::getWidth()
-{
-	return mWidth;
-}
-
-int Window::getHeight()
-{
-	return mHeight;
+	if (mCamera)
+	{
+		mCamera->UpdateViewportDimensions(mWidth, mHeight);
+		glViewport(0, 0, mWidth, mHeight);
+	}
+	else
+	{
+		std::cout << "Camera is nullptr" << std::endl;
+	}
 }
 
 void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

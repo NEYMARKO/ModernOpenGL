@@ -68,7 +68,7 @@ void BoundingBox::VerticesToWorld()
 
 bool BoundingBox::Intersects(Camera& camera, float step)
 {
-	Ray* ray = camera.ray;
+	Ray* ray = camera.mRay;
 
 	glm::vec3 rayPoint = ray->GetRayStart() + ray->GetRayDirection() * step;
 	for (int i = 0; i < 3; i++)

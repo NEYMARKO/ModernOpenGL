@@ -36,6 +36,7 @@ public:
 	// In case of previous delay, simulates multiple steps until simulation catches up
 	void simulate();
 	void addObjectToWorld(std::unique_ptr<PhysicsObject> object);
+	float getDeltaTime() { return mDeltaTime; }
 	std::vector<std::unique_ptr<PhysicsObject>>* getPhysicsObjects() { return &mPhysicsObjects; };
 	btDiscreteDynamicsWorld* getDynamicsWorld() { return mDynamicsWorld; }
 };

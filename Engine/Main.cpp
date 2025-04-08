@@ -17,7 +17,7 @@ int main()
 
 	Camera camera(glm::vec3(-15.0f, 0.0f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, 800, 800);
 	
-	Window window{&camera, 800, 800};
+	Window window{&camera, 1920, 1080};
 	if (!window.loaded()) return -1;
 
 	Shader defaultShaderProgram("default.vert", "default.frag");
@@ -30,7 +30,6 @@ int main()
 	stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
 	window.addStateMachine(&stateMachine);
 	
-	float deltaTime = 0.0f, lastFrame = 0.0f;
 	Grid grid(100);
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
@@ -58,24 +57,17 @@ int main()
 	Mesh* jointTarget;
 	glm::vec3 jointTargetPosition;
 
-	std::vector<glm::vec3> points;
-
-
 	PhysicsWorld physicsWorld{};
 
-	while (!glfwWindowShouldClose(window.getGLFWwindow()))
+	while (!glfwWindowShouldClose(window.getGLFWWindow()))
 	{
-		float currentFrame = static_cast<float>(glfwGetTime());
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-
 		scene.renderScene();
 
 		grid.Draw(boundingBoxShaderProgram, camera);
 		
-		if (camera.ray != nullptr)
+		if (camera.mRay != nullptr)
 		{
-			camera.ray->Draw(boundingBoxShaderProgram, camera);
+			camera.mRay->Draw(boundingBoxShaderProgram, camera);
 		}
 
 		ikChain.FabrikAlgorithm(10);
@@ -85,41 +77,18 @@ int main()
 		for (Joint* joint : (*ikChain.GetAllJoints()))
 		{
 			jointTargetPosition = (joint->GetChild() == nullptr ? ikChain.GetTarget()->GetPosition() : joint->GetChild()->GetPosition());
-			//jointTarget = (joint->GetChild() == nullptr ? ikChain.GetTarget() : joint->GetChild()->GetMeshContainer());
-			//joint->RotateTowardsTarget(jointTarget->GetPosition());
-			
-			//only end is printing position, rest of them are printing NaN if they get rotated
-			//joint->RotateTowardsTarget(ikChain.GetTarget()->objectPos);
-			
-			//PrintClass::PrintVec3(jointTargetPosition);
-			
-			/*std::cout << "JOINT POSITION: ";
-			PrintClass::PrintVec3(joint->GetPosition());
-
-			std::cout << "JOINT END: ";
-			PrintClass::PrintVec3(joint->GetJointEnd());*/
-
-			//if (joint->GetChild()) PrintClass::PrintVec3(joint->GetChild()->GetPosition());
 			joint->GetMeshContainer()->Translate(joint->GetPosition());
 			joint->RotateTowardsTarget(jointTargetPosition);
 			std::string name = "j" + std::to_string(joint->GetID());
 			gizmos.UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 4);
 			//gizmos.RenderBoundingBox(joint->GetMeshContainer()->boundingBox);
 			joint->GetMeshContainer()->Render(camera, light);
-			points.push_back(joint->GetPosition());
 			//joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, camera);
 		}
+		camera.Move(window.getGLFWWindow(), physicsWorld.getDeltaTime());
 
-		glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
-		//gizmos.RenderAllLines(color);
-		//gizmos.RenderPoints(10.0f);
-		gizmos.UpdatePoints(points);
-		points.clear();
-		camera.Move(window.getGLFWwindow(), deltaTime);
-
-		glfwSwapBuffers(window.getGLFWwindow());
+		glfwSwapBuffers(window.getGLFWWindow());
 		glfwPollEvents();
-
 
 		physicsWorld.simulate();
 

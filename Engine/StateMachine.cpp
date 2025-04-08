@@ -10,8 +10,8 @@ StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<std::unique_p
 	this->subState = EMPTY;
 	this->target = mesh;
 	this->camera = camera;
-	this->mousePosX = this->camera->width / 2;
-	this->mousePosY = this->camera->height / 2;
+	this->mousePosX = this->camera->mWidth / 2;
+	this->mousePosY = this->camera->mHeight / 2;
 	std::cout << "MESH LOADERS IN CONSTRUCTOR: " << std::endl;
 	std::cout << meshLoaders.size() << std::endl;
 	for (int i = 0; i < meshLoaders.size(); i++)
@@ -123,7 +123,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 			double xpos, ypos;
 			glfwGetCursorPos(window, &xpos, &ypos);
 			camera.Raycast(window, xpos, ypos);
-			Ray* ray = camera.ray;
+			Ray* ray = camera.mRay;
 
 			if (this->state == ADD)
 			{

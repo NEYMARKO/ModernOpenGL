@@ -11,32 +11,33 @@
 class Camera
 {
 	private:
-		float fov = 45.0f;
+		float mFov = 45.0f;
 
-		glm::vec3 position;
-		glm::quat rotation;
+		glm::vec3 mPosition;
+		glm::quat mRotation;
 
-		glm::vec3 forward;
-		glm::vec3 up;
-		glm::vec3 right;
+		glm::vec3 mForward;
+		glm::vec3 mUp;
+		glm::vec3 mRight;
 
-		glm::vec3 worldForward = glm::vec3(0.0f, 0.0f, 1.0f);
-		glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		const glm::vec3 mWorldForward = glm::vec3(0.0f, 0.0f, 1.0f);
+		const glm::vec3 mWorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		//direction doesn't matter, only thing that matters is that it is indeed x-axis (both vec3(1.0f, 0.0f, 0.0f) and vec3(-1.0f, 0.0f, 0.0f) lie in x axis) - it actually does
 		//matter because it will rotate differently when we rotate 180 around y axis => up becomes down and down becomes up
-		glm::vec3 worldRight = glm::vec3(1.0f, 0.0f, 0.0f);
+		const glm::vec3 mWorldRight = glm::vec3(1.0f, 0.0f, 0.0f);
 
 	public:
-		glm::vec3 lookAtPosition;
-		float width;
-		float height;
-		float speed;
-		float sensitivity;
+		glm::vec3 mLookAtPosition;
+		float mWidth;
+		float mHeight;
+		float mSpeed;
+		float mSensitivity;
 		bool focus = false;
-		Ray* ray;
-		Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, int width, int height);
+		Ray* mRay;
 
-		Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, float sensitivity, glm::vec3 upVector, int width, int height);
+		Camera(glm::vec3 cameraPos, glm::vec3 targetPos, float speed, 
+			float sensitivity, int width, int height, 
+			const glm::vec3& upVector = glm::vec3(0.0f, 1.0f, 0.0f));
 
 		//Calculates cameraUp vector
 		void CalculateCameraUp(glm::vec3 upVector);
@@ -63,11 +64,12 @@ class Camera
 		void Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY);
 
 		void RestartCameraParameters();
-		glm::vec3 GetCameraForward();
-		glm::vec3 GetCameraUp();
-		glm::vec3 GetCameraRight();
-		glm::quat GetCameraRotation();
 
-		glm::vec3 GetCameraPosition();
+		glm::vec3 GetCameraForward() { return mForward; };
+		glm::vec3 GetCameraUp() { return mUp; };
+		glm::vec3 GetCameraRight() { return mRight; };
+		glm::vec3 GetCameraPosition() { return mPosition; };
+		glm::quat GetCameraRotation() { return mRotation; };
+
 		~Camera();
 };
