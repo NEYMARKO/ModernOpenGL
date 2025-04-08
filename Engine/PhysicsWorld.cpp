@@ -31,14 +31,46 @@ PhysicsWorld::~PhysicsWorld()
 
 void PhysicsWorld::loadDefaultSimulation()
 {
-	auto p1{ std::make_unique<PhysicsObject>(glm::vec3(0.0f, -1.0f, 0.0f), glm::quat(0.0f, 0.0f, 0.0f, 1.0f),
-		CollisionShape::PLANE, glm::vec3(0.0f, 1.0f, 0.0f), 0.0f) };
+	auto p1{ std::make_unique<PhysicsObject>(btVector3(0.0f, -1.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
+		CollisionShapeType::PLANE, btVector3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f, 0.8f) };
 	p1.get()->setRestitution(0.8f);
-	auto p2{ std::make_unique<PhysicsObject>(glm::vec3(0.0f, 50.0f, 0.0f), glm::quat(0.0f, 0.0f, 0.0f, 1.0f),
-		CollisionShape::SPHERE, glm::vec3(0.0f, 0.0f, 0.0f), 0.2f, 1.0f) };
+	addObjectToWorld(std::move(p1));
+	auto p2{ std::make_unique<PhysicsObject>(btVector3(0.0f, 50.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
+		CollisionShapeType::SPHERE, btVector3(0.0f, 0.0f, 0.0f), 0.2f, 1.5f, 0.8f) };
 	p2.get()->setRestitution(0.8f);
+	addObjectToWorld(std::move(p2));
+	auto p3{ std::make_unique<PhysicsObject>(btVector3(0.0f, 70.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
+		CollisionShapeType::SPHERE, btVector3(0.0f, 0.0f, 0.0f), 0.2f, 1.5f, 0.8f) };
+	p3.get()->setRestitution(0.2f);
+	addObjectToWorld(std::move(p3));
+
+	//btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
+
+	//// Create ground rigid body
+	//btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+	//btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
+	//btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+
+	//// Add to world
+	//mDynamicsWorld->addRigidBody(groundRigidBody);
+
+	//btCollisionShape* sphereShape = new btSphereShape(1.0f); // Radius of 1.0
+	//btDefaultMotionState* sphereMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 50, 0))); // Start at (0,10,0)
+
+	//btScalar mass = 0.2f;
+	//btVector3 inertia(0, 0, 0);
+	//sphereShape->calculateLocalInertia(mass, inertia);
+
+	//btRigidBody::btRigidBodyConstructionInfo sphereRigidBodyCI(mass, sphereMotionState, sphereShape, inertia);
+	//btRigidBody* sphereRigidBody = new btRigidBody(sphereRigidBodyCI);
+
+	//mDynamicsWorld->addRigidBody(sphereRigidBody);
+
+	//sphereRigidBody->setRestitution(0.8f);   // Higher values (0.8 - 1.0) make it bounce more
+	//groundRigidBody->setRestitution(0.8f);
+	//p2.get()->setRestitution(0.8f);
 	
-	PhysicsObject* spherePhysicsObject = p2.get();
+	/*PhysicsObject* spherePhysicsObject = p2.get();
 	btTransform transform;
 	spherePhysicsObject->getMotionState()->getWorldTransform(transform);
 	btVector3 pos = transform.getOrigin();
@@ -46,11 +78,9 @@ void PhysicsWorld::loadDefaultSimulation()
 		<< pos.getX() << ", " << pos.getY() << ", " << pos.getZ() << std::endl;
 
 	btVector3 inertia = p2->getInertia();
-	std::cout << "SPHERE INERTIA: " << inertia.getX() << " " << inertia.getY() << " " << inertia.getZ() << std::endl;
+	std::cout << "SPHERE INERTIA: " << inertia.getX() << " " << inertia.getY() << " " << inertia.getZ() << std::endl;*/
 	/*mPhysicsObjects.push_back(std::move(p1));
 	mPhysicsObjects.push_back(std::move(p2));*/
-	addObjectToWorld(std::move(p1));
-	addObjectToWorld(std::move(p2));
 }
 
 void PhysicsWorld::updateDeltaTime()
@@ -77,7 +107,7 @@ void PhysicsWorld::simulate()
 	updateDeltaTime();
 	mLastFrame = mCurrentFrame;
 
-	std::cout << "DELTA TIME: " << mDeltaTime << std::endl;
+	//std::cout << "DELTA TIME: " << mDeltaTime << std::endl;
 	mAccumulator += mDeltaTime;
 	while (mAccumulator >= mFixedTimeStep)
 	{
@@ -89,8 +119,9 @@ void PhysicsWorld::simulate()
 
 void PhysicsWorld::addObjectToWorld(std::unique_ptr<PhysicsObject> object)
 {
-	mDynamicsWorld->addRigidBody(object.get()->getRigidBody());
 	mPhysicsObjects.push_back(std::move(object));
+	if (!object) std::cout << "Object is nullptr" << std::endl;
+	mDynamicsWorld->addRigidBody(mPhysicsObjects.back().get()->getRigidBody());
 }
 
 std::vector<std::unique_ptr<PhysicsObject>>* PhysicsWorld::getPhysicsObjects()

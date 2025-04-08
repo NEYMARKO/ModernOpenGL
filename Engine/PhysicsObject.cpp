@@ -1,26 +1,32 @@
 #include "PhysicsObject.h"
 
 PhysicsObject::PhysicsObject(
-	const glm::vec3& position,
-	const glm::quat& rotation,
-	CollisionShape collisionShapeType,
-	const glm::vec3& planeNormal,
+	btVector3 position,
+	btQuaternion rotation,
+	CollisionShapeType collisionShapeType,
+	btVector3 planeNormal,
 	float mass,
 	float radius,
 	float restitution)
-	: mMass{ mass }, mRestitution{ restitution }, mPlaneNormal{ planeNormal },
+	: mMass{ mass }, mRestitution{ restitution }, mPlaneNormal{ planeNormal }, mPosition{ position },
 	mCollisionShape{ setCollisionShape(collisionShapeType) },
 	mInertia{ calculateInertia() },
 	mMotionState{
-		std::make_unique<btDefaultMotionState>(btTransform(
-		btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w),
-		btVector3(position.x, position.y, position.z)
-	)) },
+		std::make_unique<btDefaultMotionState>(btTransform(rotation, position)) 
+	},
 	mRigidBodyCI{ mMass, mMotionState.get(), mCollisionShape.get(), mInertia },
 	mRigidBody{ std::make_unique<btRigidBody>(mRigidBodyCI) },
 	mRadius { radius } 
 {
-	mRigidBody.get()->setRestitution(mRestitution);
+	/*mCollisionShape = setCollisionShape(collisionShapeType);
+	mInertia = calculateInertia();
+	mMotionState = std::make_unique<btDefaultMotionState>(btTransform(
+		btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w),
+		btVector3(position.x, position.y, position.z)
+	));
+	btRigidBody::btRigidBodyConstructionInfo mRigidBodyCI = btRigidBody::btRigidBodyConstructionInfo(mMass, mMotionState.get(), mCollisionShape.get(), mInertia);
+	mRigidBody = std::make_unique<btRigidBody>(mRigidBodyCI);
+	mRigidBody.get()->setRestitution(mRestitution);*/
 }
 
 PhysicsObject::~PhysicsObject()
@@ -28,26 +34,17 @@ PhysicsObject::~PhysicsObject()
 	std::cout << "Deleted Physics object" << std::endl;
 }
 
-std::unique_ptr<btCollisionShape> PhysicsObject::setCollisionShape(CollisionShape shapeType)
+std::unique_ptr<btCollisionShape> PhysicsObject::setCollisionShape(CollisionShapeType shapeType)
 {
 	switch (shapeType)
 	{
-	case CollisionShape::SPHERE:
-		return std::make_unique<btSphereShape>(mRadius);  // OK: returns unique_ptr<btCollisionShape>
-	case CollisionShape::PLANE:
-		return std::make_unique<btStaticPlaneShape>(
-			btVector3(mPlaneNormal.x, mPlaneNormal.y, mPlaneNormal.z), 0
-		);
-	case CollisionShape::CUBE:
-		//POSITION IS DEFINED IN MOTION STATE - THIS IS WHERE SHAPE DIMENSIONS
-		// ARE DEFINED
-		// return std::make_unique<btBoxShape>(...);
-		break;
-	case CollisionShape::CAPSULE:
-		// return std::make_unique<btCapsuleShape>(...);
-		break;
+	case CollisionShapeType::SPHERE:
+		std::cout << "SPHERE RADIUS: " << mRadius << std::endl;
+		return std::make_unique<btSphereShape>(mRadius);
+	case CollisionShapeType::PLANE:
+		std::cout << "PLANE NORMAL: " << mPlaneNormal.getX() << " " << mPlaneNormal.getY() << " " << mPlaneNormal.getZ() << std::endl;
+		return std::make_unique<btStaticPlaneShape>(mPlaneNormal, -1.0f);
 	default:
-		std::cerr << "Warning: Unknown CollisionShape type! Using EmptyShape.\n";
 		return std::make_unique<btEmptyShape>();
 	}
 }
@@ -60,15 +57,10 @@ btVector3 PhysicsObject::calculateInertia()
 	return inertia;
 }
 
-btVector3 PhysicsObject::getInertia()
-{
-	return mInertia;
-}
-
-btRigidBody* PhysicsObject::getRigidBody()
-{
-	return mRigidBody.get();
-}
+//btRigidBody* PhysicsObject::getRigidBody()
+//{
+//	return mRigidBody.get();
+//}
 
 btDefaultMotionState* PhysicsObject::getMotionState()
 {

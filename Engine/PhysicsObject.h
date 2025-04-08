@@ -4,7 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
 
-enum CollisionShape
+enum CollisionShapeType
 {
 	SPHERE,
 	CAPSULE,
@@ -18,7 +18,8 @@ private:
 	btScalar mMass;
 	float mRestitution{0.8f};
 	float mRadius;
-	glm::vec3 mPlaneNormal;
+	btVector3 mPlaneNormal;
+	btVector3 mPosition;
 	//RIGID COMPONENTS
 	std::unique_ptr<btCollisionShape> mCollisionShape;
 	//Must be defined after collisionShape because it is using collision
@@ -27,22 +28,24 @@ private:
 	std::unique_ptr<btDefaultMotionState> mMotionState;
 	btRigidBody::btRigidBodyConstructionInfo mRigidBodyCI;
 	std::unique_ptr<btRigidBody> mRigidBody;
-	CollisionShape mCollisionShapeType{PLANE};
+	CollisionShapeType mCollisionShapeType{PLANE};
 	//COLLISION COMPONENTS
 public:
-	PhysicsObject(const glm::vec3& position,
-		const glm::quat& rotation,
-		CollisionShape collisionShapeType,
-		const glm::vec3& planeNormal = glm::vec3(0.0f, 0.0f, 0.0f),
-		float mass = 0.0f,
-		float radius = 0.0f,
-		float restitution = 0.0f);
+	PhysicsObject(
+		btVector3 position,
+		btQuaternion rotation,
+		CollisionShapeType collisionShapeType,
+		btVector3 planeNormal,
+		float mass,
+		float radius,
+		float restitution);
 	//No need for any manual cleanup, since smart pointers are being used
 	~PhysicsObject();
-	std::unique_ptr<btCollisionShape> setCollisionShape(CollisionShape shapeType);
+	std::unique_ptr<btCollisionShape> setCollisionShape(CollisionShapeType shapeType);
 	btVector3 calculateInertia();
 	btVector3 getInertia();
 	void setRestitution(float restitution);
+	bool checkIfSphere();
 	btDefaultMotionState* getMotionState();
-	btRigidBody* getRigidBody();
+	btRigidBody* getRigidBody() { return mRigidBody.get(); };
 };

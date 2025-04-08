@@ -37,4 +37,5 @@ public:
 	void simulate();
 	void addObjectToWorld(std::unique_ptr<PhysicsObject> object);
 	std::vector<std::unique_ptr<PhysicsObject>>* getPhysicsObjects();
+	btDiscreteDynamicsWorld* getDynamicsWorld() { return mDynamicsWorld; }
 };

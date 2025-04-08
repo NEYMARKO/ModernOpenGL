@@ -135,14 +135,26 @@ int main()
 
 		physicsWorld.simulate();
 
-		PhysicsObject* spherePhysicsObject = (*physicsWorld.getPhysicsObjects())[1].get();
-		// Get updated object position
+		//btRigidBody* spherePhysicsObject = (*physicsWorld.getPhysicsObjects())[1].get()->getRigidBody();
+		btRigidBody* spherePhysicsObject = btRigidBody::upcast(physicsWorld.getDynamicsWorld()->getCollisionObjectArray()[1]);
+		btRigidBody* spherePhysicsObject2 = btRigidBody::upcast(physicsWorld.getDynamicsWorld()->getCollisionObjectArray()[2]);
+
+		////std::cout << "IS SPHERE: " << spherePhysicsObject->checkIfSphere() << std::endl;
+		//// Get updated object position
 		btTransform transform;
 		spherePhysicsObject->getMotionState()->getWorldTransform(transform);
 		btVector3 pos = transform.getOrigin();
-		std::cout << "Sphere Pos: " << pos.getX() << ", " << pos.getY() << ", " << pos.getZ() << std::endl;
+
+		btTransform transform2;
+		spherePhysicsObject2->getMotionState()->getWorldTransform(transform2);
+		btVector3 pos2 = transform2.getOrigin();
+		//std::cout << "Sphere Pos: " << pos.getX() << ", " << pos.getY() << ", " << pos.getZ() << std::endl;
 		glm::vec3 newPos = glm::vec3(pos.getX(), pos.getY(), pos.getZ());
+		glm::vec3 newPos2 = glm::vec3(pos2.getX(), pos2.getY(), pos2.getZ());
 		objectsInScene[2]->Translate(newPos);
+		objectsInScene[1]->Translate(newPos2);
+		/*btVector3 vel = spherePhysicsObject->getRigidBody()->getLinearVelocity();
+		std::cout << "Velocity after sim: " << vel.getX() << ", " << vel.getY() << ", " << vel.getZ() << std::endl;*/
 	}
 
 	////BULLET CLEANUP
