@@ -7,7 +7,6 @@
 #include "Window.h"
 #include "Scene.h"
 #include <memory>
-//#include <btBulletDynamicsCommon.h>
 #include "PhysicsObject.h"
 #include "PhysicsWorld.h"
 
@@ -63,8 +62,6 @@ int main()
 
 
 	PhysicsWorld physicsWorld{};
-	//(*physicsWorld.getPhysicsObjects())[1].get();
-	//physicsWorld.loadDefaultSimulation();
 
 	while (!glfwWindowShouldClose(window.getGLFWwindow()))
 	{
@@ -72,18 +69,9 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		//std::cout << "TIME SINCE LAST FRAME: " << deltaTime << std::endl;
-		/*glClearColor(0.247059f, 0.247059f, 0.247059f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);*/
 		scene.renderScene();
 
 		grid.Draw(boundingBoxShaderProgram, camera);
-		
-		/*for (int i = 0; i < (*stateMachine.GetObjectsInScene()).size(); i++)
-		{
-			(*stateMachine.GetObjectsInScene())[i]->Render(camera, light);
-			(*stateMachine.GetObjectsInScene())[i]->boundingBox->Draw(boundingBoxShaderProgram, camera);
-		}*/
 		
 		if (camera.ray != nullptr)
 		{
@@ -157,30 +145,8 @@ int main()
 		std::cout << "Velocity after sim: " << vel.getX() << ", " << vel.getY() << ", " << vel.getZ() << std::endl;*/
 	}
 
-	////BULLET CLEANUP
-	//for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
-	//{
-	//	btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
-	//	btRigidBody* body = btRigidBody::upcast(obj);
-	//	if (body && body->getMotionState())
-	//		delete body->getMotionState();
-	//	dynamicsWorld->removeCollisionObject(obj);
-	//	delete obj;
-	//}
-	///*delete sphereRigidBody;
-	//delete sphereShape;
-	//delete groundRigidBody;
-	//delete groundShape;*/
-	//delete dynamicsWorld;
-	//delete solver;
-	//delete dispatcher;
-	//delete collisionConfig;
-	//delete broadphase;
-
 	defaultShaderProgram.Delete();
 	lightingShaderProgram.Delete();
 	boundingBoxShaderProgram.Delete();
-	/*glfwDestroyWindow(window);
-	glfwTerminate();*/
 	return 0;
 }
