@@ -26,6 +26,12 @@ class Camera
 		//matter because it will rotate differently when we rotate 180 around y axis => up becomes down and down becomes up
 		const glm::vec3 mWorldRight = glm::vec3(1.0f, 0.0f, 0.0f);
 
+
+		float mXOffset{};
+		float mYOffset{};
+		float mSphereRadius = 5.0f;
+		glm::vec3 mPointOnSphere = glm::vec3(0.0f, 0.0f, 0.0f);
+
 	public:
 		glm::vec3 mLookAtPosition;
 		float mWidth;
@@ -63,6 +69,7 @@ class Camera
 		//and going into direction of a camera
 		void Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY);
 
+		void calculatePointOnSphere(const double& startingX, const double& startingY, const double& currentX, const double& currentY);
 		void RestartCameraParameters();
 
 		glm::vec3 GetCameraForward() { return mForward; };

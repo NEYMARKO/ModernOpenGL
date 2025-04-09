@@ -12,6 +12,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed,
 	mRay { nullptr }
 {
 	CalculateCameraUp(worldUp);
+	calculatePointOnSphere(0.0, 0.0, 0.0, 0.0);
 }
 
 void Camera::CalculateCameraUp(glm::vec3 worldUp)
@@ -32,10 +33,7 @@ void Camera::ViewProjectionMatrix(Shader& shaderProgram)
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
-	mForward = mRotation * mWorldForward;
-	mUp = mRotation* mWorldUp;
-	mRight = glm::normalize(glm::cross(mForward, mUp));
-	view = glm::lookAt(mPosition, mPosition + mForward, mUp);
+	view = glm::lookAt(mPosition + mPointOnSphere, (mPosition + mPointOnSphere) + mForward, mUp);
 	projection = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
 
 	shaderProgram.SetMat4("view", view);
@@ -97,20 +95,18 @@ void Camera::Zoom(double amount)
 
 void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
 {
+	calculatePointOnSphere(startingX, startingY, currentX, currentY);
 	///https://gamedev.stackexchange.com/questions/30644/how-to-keep-my-quaternion-using-fps-camera-from-tilting-and-messing-up/30669#30669
-	double xOffset = currentX - startingX;
-	double yOffset = currentY - startingY;
-
-	float yAngle = fabs(xOffset) <= ANGLE_LOWER_BOUND ? 0 : xOffset / (2 * mWidth) * glm::radians(360.0f);
-	float xAngle = fabs(yOffset) <= ANGLE_LOWER_BOUND ? 0 : yOffset / (2 * mHeight) * glm::radians(360.0f);
 
 	///CAMERA SHOULD BE ROTATED ALONG WORLD Y AXIS, AND LOCAL X AXIS
 
-	if (yAngle != 0)
+	//std::cout << "X: " << xAngle << " Y: " << yAngle << std::endl;
+	//mRotation = glm::angleAxis(xAngle * mSensitivity, glm::normalize(glm::cross(mForward, mUp)));
+	//mRotation = glm::angleAxis(yAngle * mSensitivity, mWorldUp) * mRotation;
+	/*if (yAngle != 0)
 	{
 		glm::quat rotationY = glm::angleAxis(yAngle * mSensitivity, mWorldUp);
-		mRotation = rotationY * mRotation;
-
+		mRotation = glm::angleAxis(yAngle * mSensitivity, mWorldUp) * mRotation;
 	}
 
 	if (xAngle != 0)
@@ -118,7 +114,27 @@ void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, doub
 		glm::quat rotationX = glm::angleAxis(xAngle * mSensitivity, glm::normalize(glm::cross(mForward, mUp)));
 		mRotation = rotationX * mRotation;
 
-	}
+	}*/
+}
+
+void Camera::calculatePointOnSphere(const double& startingX, const double& startingY, const double& currentX, const double& currentY)
+{
+	mXOffset += currentX - startingX;
+	mYOffset += currentY - startingY;
+
+	//angle around y-axis
+	float theta = mXOffset / mWidth * glm::radians(360.0f) * mSensitivity * -1;
+	//angle around x-axis
+	float phi = mYOffset / mHeight * glm::radians(180.0f) * mSensitivity * -1;
+	
+	mPointOnSphere.x = mSphereRadius * glm::cos(theta) * glm::sin(phi);
+	mPointOnSphere.y = mSphereRadius * glm::cos(phi);
+	mPointOnSphere.z = mSphereRadius * glm::sin(theta) * glm::sin(phi);
+
+	mForward = glm::normalize(mPointOnSphere);
+
+	mRight = glm::normalize(glm::cross(mForward, mWorldUp));
+	mUp = glm::normalize(glm::cross(mRight, mForward));
 }
 
 void Camera::UpdateViewportDimensions(const int& width, const int& height)
@@ -154,7 +170,7 @@ void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, 
 	glm::vec4 rayEnd = glm::vec4(xNDC, yNDC, 1.0, 1.0);
 
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
-	glm::mat4 viewMatrix = glm::lookAt(mPosition, mLookAtPosition, mUp);
+	glm::mat4 viewMatrix = glm::lookAt(mPosition + mPointOnSphere, mPosition + mPointOnSphere + mForward, mUp);
 
 	glm::mat4 invProjection = glm::inverse(projectionMatrix);
 	rayStart = invProjection * rayStart;

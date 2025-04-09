@@ -15,7 +15,7 @@ int main()
 	std::vector<std::unique_ptr<Mesh>> objectsInScene;
 	std::vector<std::unique_ptr<MeshLoader>> meshLoaders;
 
-	Camera camera(glm::vec3(-15.0f, 0.0f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1.0f, 800, 800);
+	Camera camera(glm::vec3(-15.0f, 10.0f, -7.5f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 0.5f, 800, 800);
 	
 	Window window{&camera, 1920, 1080};
 	if (!window.loaded()) return -1;
