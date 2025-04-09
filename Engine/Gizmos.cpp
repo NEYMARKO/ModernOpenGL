@@ -42,7 +42,7 @@ void Gizmos::RenderPoints(float radius)
 	glm::mat4 model = glm::mat4(1.0f);
 	this->pointShader->SetMat4("model", model);
 
-	this->camera->ViewProjectionMatrix(*(this->boundingBoxShader));
+	this->camera->generateViewProjectionMatrices(*(this->boundingBoxShader));
 
 	glDisable(GL_DEPTH_TEST);
 	this->pointsVAOBuffer.Bind();
@@ -69,7 +69,7 @@ void Gizmos::RenderLine(Ray* ray, glm::vec3& color)
 	glm::mat4 model = glm::mat4(1.0f);
 
 	this->boundingBoxShader->SetMat4("model", model);
-	this->camera->ViewProjectionMatrix(*(this->boundingBoxShader));
+	this->camera->generateViewProjectionMatrices(*(this->boundingBoxShader));
 
 	this->boundingBoxShader->SetVec3("lineColor", color);
 
@@ -101,7 +101,7 @@ void Gizmos::RenderBoundingBox(BoundingBox* boundingBox)
 	this->boundingBoxShader->SetVec3("cameraPos", this->camera->GetCameraPosition());
 	this->boundingBoxShader->SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));
 
-	this->camera->ViewProjectionMatrix(*(this->boundingBoxShader));
+	this->camera->generateViewProjectionMatrices(*(this->boundingBoxShader));
 
 	boundingBox->GetBoundingBoxVAO()->Bind();
 

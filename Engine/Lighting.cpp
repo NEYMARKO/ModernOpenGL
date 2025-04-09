@@ -29,7 +29,7 @@ void Lighting::Draw(/*Shader& boundingBoxShaderProgram, */Camera& camera)
 	glm::mat4 model = mMesh->GetFinalMatrix();
 	mPosition = glm::vec3(model[3]);
 	mShaderProgram->SetMat4("model", model);
-	camera.ViewProjectionMatrix(*mShaderProgram);
+	camera.generateViewProjectionMatrices(*mShaderProgram);
 
 	mShaderProgram->SetVec3("lightColor", mColor);
 

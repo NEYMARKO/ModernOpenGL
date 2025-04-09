@@ -6,7 +6,8 @@ Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed,
 	float sensitivity, int width, int height, 
 	const glm::vec3& worldUp)
 	:
-	mPosition { position }, mRotation { glm::quat(1.0f, 0.0f, 0.0f, 0.0f) }, mForward { glm::normalize(targetPos - position) },
+	mPosition { position }, mRotation { glm::quat(1.0f, 0.0f, 0.0f, 0.0f) }, 
+	mForward { glm::normalize(targetPos - position) },
 	mWorldUp { worldUp }, mWidth{ (float)width }, mHeight{ (float)height },
 	mLookAtPosition{ targetPos }, mSpeed{ speed }, mSensitivity{ sensitivity },
 	mRay { nullptr }
@@ -22,16 +23,13 @@ void Camera::CalculateCameraUp(glm::vec3 worldUp)
 	mUp = glm::cross(mRight, mForward);
 }
 
-void Camera::ViewProjectionMatrix(Shader& shaderProgram)
+void Camera::generateViewProjectionMatrices(Shader& shaderProgram)
 {
 	//If window gets minimized, it's width and height become 0 => when calculating projection matrix, 0 division happens
 	if (mWidth <= 0 || mHeight <= 0)
 	{
 		return;
 	}
-	//glm::mat4 view = glm::lookAt(this->position, this->position + this->cameraForward, this->up);
-	glm::mat4 view = glm::mat4(1.0f);
-	glm::mat4 projection = glm::mat4(1.0f);
 
 	view = glm::lookAt(mPosition + mPointOnSphere, (mPosition + mPointOnSphere) + mForward, mUp);
 	projection = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
@@ -96,25 +94,7 @@ void Camera::Zoom(double amount)
 void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
 {
 	calculatePointOnSphere(startingX, startingY, currentX, currentY);
-	///https://gamedev.stackexchange.com/questions/30644/how-to-keep-my-quaternion-using-fps-camera-from-tilting-and-messing-up/30669#30669
-
-	///CAMERA SHOULD BE ROTATED ALONG WORLD Y AXIS, AND LOCAL X AXIS
-
-	//std::cout << "X: " << xAngle << " Y: " << yAngle << std::endl;
-	//mRotation = glm::angleAxis(xAngle * mSensitivity, glm::normalize(glm::cross(mForward, mUp)));
-	//mRotation = glm::angleAxis(yAngle * mSensitivity, mWorldUp) * mRotation;
-	/*if (yAngle != 0)
-	{
-		glm::quat rotationY = glm::angleAxis(yAngle * mSensitivity, mWorldUp);
-		mRotation = glm::angleAxis(yAngle * mSensitivity, mWorldUp) * mRotation;
-	}
-
-	if (xAngle != 0)
-	{
-		glm::quat rotationX = glm::angleAxis(xAngle * mSensitivity, glm::normalize(glm::cross(mForward, mUp)));
-		mRotation = rotationX * mRotation;
-
-	}*/
+	updateCameraVectors();
 }
 
 void Camera::calculatePointOnSphere(const double& startingX, const double& startingY, const double& currentX, const double& currentY)
@@ -123,16 +103,20 @@ void Camera::calculatePointOnSphere(const double& startingX, const double& start
 	mYOffset += currentY - startingY;
 
 	//angle around y-axis
+	//should be in range [0,2pi]
 	float theta = mXOffset / mWidth * glm::radians(360.0f) * mSensitivity * -1;
 	//angle around x-axis
+	//should be in range [0,pi]
 	float phi = mYOffset / mHeight * glm::radians(180.0f) * mSensitivity * -1;
 	
 	mPointOnSphere.x = mSphereRadius * glm::cos(theta) * glm::sin(phi);
 	mPointOnSphere.y = mSphereRadius * glm::cos(phi);
 	mPointOnSphere.z = mSphereRadius * glm::sin(theta) * glm::sin(phi);
+}
 
+void Camera::updateCameraVectors()
+{
 	mForward = glm::normalize(mPointOnSphere);
-
 	mRight = glm::normalize(glm::cross(mForward, mWorldUp));
 	mUp = glm::normalize(glm::cross(mRight, mForward));
 }

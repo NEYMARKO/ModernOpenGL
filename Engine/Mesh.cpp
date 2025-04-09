@@ -109,7 +109,7 @@ void Mesh::Render(Camera& camera, Lighting& lighting)
 	mShaderProgram->Activate();
 
 	mShaderProgram->SetMat4("model", this->mFinalMatrix);
-	camera.ViewProjectionMatrix(*mShaderProgram);
+	camera.generateViewProjectionMatrices(*mShaderProgram);
 
 	mShaderProgram->SetVec3("objectColor", this->color);
 	mShaderProgram->SetVec3("lightColor", lighting.getColor());

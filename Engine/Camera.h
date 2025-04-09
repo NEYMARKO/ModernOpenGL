@@ -13,6 +13,7 @@ class Camera
 	private:
 		float mFov = 45.0f;
 
+		// Center of the sphere on which the camera is moving
 		glm::vec3 mPosition;
 		glm::quat mRotation;
 
@@ -26,11 +27,13 @@ class Camera
 		//matter because it will rotate differently when we rotate 180 around y axis => up becomes down and down becomes up
 		const glm::vec3 mWorldRight = glm::vec3(1.0f, 0.0f, 0.0f);
 
-
 		float mXOffset{};
-		float mYOffset{};
+		float mYOffset{-90.0};
 		float mSphereRadius = 5.0f;
 		glm::vec3 mPointOnSphere = glm::vec3(0.0f, 0.0f, 0.0f);
+
+		glm::mat4 view;
+		glm::mat4 projection;
 
 	public:
 		glm::vec3 mLookAtPosition;
@@ -49,7 +52,7 @@ class Camera
 		void CalculateCameraUp(glm::vec3 upVector);
 		
 		//Initializes view and projection matrices and sends them to shader as uniforms
-		void ViewProjectionMatrix(Shader& shaderProgram);
+		void generateViewProjectionMatrices(Shader& shaderProgram);
 		
 		//Moves camera in all 4 directions and up/down
 		void Move(GLFWwindow* window, float deltaTime);
@@ -69,7 +72,9 @@ class Camera
 		//and going into direction of a camera
 		void Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY);
 
-		void calculatePointOnSphere(const double& startingX, const double& startingY, const double& currentX, const double& currentY);
+		void calculatePointOnSphere(const double& startingX, const double& startingY, 
+			const double& currentX, const double& currentY);
+		void updateCameraVectors();
 		void RestartCameraParameters();
 
 		glm::vec3 GetCameraForward() { return mForward; };

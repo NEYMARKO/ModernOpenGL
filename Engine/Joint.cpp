@@ -1,27 +1,25 @@
 #include "Joint.h"
 #define ERROR_MARGIN 0.5f
 #define DOT_PRODUCT_ALLOWED_ERROR 0.01f
-Joint::Joint(float angleConstraint, Mesh* meshContainer, int id)
+Joint::Joint(int id, float angleConstraint, Mesh* meshContainer) :
+	mID{ id }, mAngleConstraint{ angleConstraint }, 
+	mMeshContainer { meshContainer }, 
+	mParent{ nullptr }, mChild{ nullptr },
+	mLength{ std::max(
+		abs(mMeshContainer->boundingBox->GetMaxExtremes().z - mMeshContainer->boundingBox->GetMinExtremes().z),
+		abs(mMeshContainer->boundingBox->GetMaxExtremes().x - mMeshContainer->boundingBox->GetMinExtremes().x)
+	) }, mForward{ glm::vec3(-1.0f, 0.0f, 0.0f) }, mOrientation{ glm::quat(glm::radians(0.0f), mForward) }
+
 {
-	this->id = id;
-	this->angleConstraint = angleConstraint;
-	this->meshContainer = meshContainer;
-	this->length = std::max(
-		abs(this->meshContainer->boundingBox->GetMaxExtremes().z - this->meshContainer->boundingBox->GetMinExtremes().z),
-		abs(this->meshContainer->boundingBox->GetMaxExtremes().x - this->meshContainer->boundingBox->GetMinExtremes().x)
-	);
-	//this->jointEnd = this->position + this->forward * this->length;
-	this->forward = glm::vec3(-1.0f, 0.0f, 0.0f);
-	this->orientation = glm::quat(glm::radians(0.0f), this->forward);
 }
 
 void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
-	glm::vec3 directionToTarget = glm::normalize(targetPos - this->position);
-	glm::quat rotationQuaternion = glm::rotation(this->forward, directionToTarget);
-	this->orientation = glm::normalize(rotationQuaternion * this->orientation);
-	this->forward = directionToTarget;
-	this->meshContainer->Rotate(this->orientation);
+	glm::vec3 directionToTarget = glm::normalize(targetPos - mPosition);
+	glm::quat rotationQuaternion = glm::rotation(mForward, directionToTarget);
+	mOrientation = glm::normalize(rotationQuaternion * mOrientation);
+	mForward = directionToTarget;
+	mMeshContainer->Rotate(mOrientation);
 	//if (this->parent)
 	//{
 	//	float currentAngle = glm::acos(glm::clamp(glm::dot(this->forward, this->parent->forward), -1.0f, 1.0f));
@@ -60,9 +58,9 @@ void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 
 bool Joint::CanRotate()
 {
-	float parentToChildAngle = glm::acos(glm::dot(this->forward, this->parent->GetForwardVector()));
+	float parentToChildAngle = glm::acos(glm::dot(mForward, mParent->GetForwardVector()));
 
-	return abs(parentToChildAngle) < this->angleConstraint ? true : false;
+	return abs(parentToChildAngle) < mAngleConstraint ? true : false;
 }
 
 Joint::~Joint()
@@ -72,64 +70,21 @@ Joint::~Joint()
 
 void Joint::SetParent(Joint* parent)
 {
-	this->parent = parent;
+	mParent = parent;
 }
 
 void Joint::SetChild(Joint* child)
 {
-	this->child = child;
+	mChild = child;
 }
 
 void Joint::SetTempPosition(const glm::vec3& tempPosition)
 {
-	this->tempPosition = tempPosition;
+	mTempPosition = tempPosition;
 }
 
 void Joint::SetPosition(const glm::vec3& position)
 {
-	this->position = position;
-	this->jointEnd = this->position + (this->forward * this->length);
-}
-
-int Joint::GetID()
-{
-	return this->id;
-}
-glm::vec3 Joint::GetPosition()
-{
-	return this->position;
-}
-
-glm::vec3 Joint::GetJointEnd()
-{
-	return this->jointEnd;
-}
-glm::vec3 Joint::GetTempPosition()
-{
-	return this->tempPosition;
-}
-
-glm::vec3 Joint::GetForwardVector()
-{
-	return this->forward;
-}
-
-Joint* Joint::GetParent()
-{
-	return this->parent;
-}
-
-Joint* Joint::GetChild()
-{
-	return this->child;
-}
-
-float Joint::GetSegmentLength()
-{
-	return this->length;
-}
-
-Mesh* Joint::GetMeshContainer()
-{
-	return this->meshContainer;
+	mPosition = position;
+	mJointEnd = mPosition + (mForward * mLength);
 }

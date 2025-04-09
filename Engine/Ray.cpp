@@ -69,7 +69,7 @@ void Ray::Draw(Shader& shaderProgram, Camera& camera)
 	glm::mat4 model = glm::mat4(1.0f);
 
 	shaderProgram.SetMat4("model", model);
-	camera.ViewProjectionMatrix(shaderProgram);
+	camera.generateViewProjectionMatrices(shaderProgram);
 
 	shaderProgram.SetVec3("lineColor", glm::vec3(1.0f, 0.0f, 0.0f));
 

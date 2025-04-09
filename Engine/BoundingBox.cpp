@@ -89,7 +89,7 @@ void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 	shaderProgram.SetVec3("cameraPos", camera.GetCameraPosition());
 	shaderProgram.SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));
 
-	camera.ViewProjectionMatrix(shaderProgram);
+	camera.generateViewProjectionMatrices(shaderProgram);
 
 	mBoxVAO.Bind();
 

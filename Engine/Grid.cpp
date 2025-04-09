@@ -58,7 +58,7 @@ void Grid::Draw(Shader& shaderProgram, Camera& camera)
 	shaderProgram.SetVec3("cameraPos", camera.GetCameraPosition());
 	shaderProgram.SetVec3("lineColor", glm::vec3(0.329412f, 0.329412f, 0.329412f));
 
-	camera.ViewProjectionMatrix(shaderProgram);
+	camera.generateViewProjectionMatrices(shaderProgram);
 
 	gridVAO.Bind();
 

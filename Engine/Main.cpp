@@ -2,6 +2,7 @@
 #include "Lighting.h"
 #include "StateMachine.h"
 #include "Grid.h"
+#include "Joint.h"
 #include "KinematicChain.h"
 #include "Gizmos.h"
 #include "Window.h"
@@ -74,8 +75,10 @@ int main()
 
 		//Move joint to it's new position and render it
 		
-		for (Joint* joint : (*ikChain.GetAllJoints()))
+		std::vector<std::unique_ptr<Joint>>* joints = ikChain.GetAllJoints();
+		for (int i = 0; i < joints->size(); i++)
 		{
+			Joint* joint = (*joints)[i].get();
 			jointTargetPosition = (joint->GetChild() == nullptr ? ikChain.GetTarget()->GetPosition() : joint->GetChild()->GetPosition());
 			joint->GetMeshContainer()->Translate(joint->GetPosition());
 			joint->RotateTowardsTarget(jointTargetPosition);

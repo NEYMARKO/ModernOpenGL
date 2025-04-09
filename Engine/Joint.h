@@ -5,22 +5,22 @@
 class Joint
 {
 	private:
-		Mesh* meshContainer;
-		Joint* parent = nullptr;
-		Joint* child = nullptr;
-		glm::quat orientation;
-		glm::vec3 position;
-		glm::vec3 jointEnd;
-		glm::vec3 tempPosition;
-		glm::vec3 forward;
-		glm::vec3 up;
-		float length;
-		float angleConstraint;
-		int id;
+		int mID;
+		float mAngleConstraint;
+		Mesh* mMeshContainer;
+		Joint* mParent;
+		Joint* mChild;
+		glm::vec3 mForward;
+		glm::quat mOrientation;
+		glm::vec3 mPosition;
+		glm::vec3 mJointEnd;
+		glm::vec3 mTempPosition;
+		glm::vec3 mUp;
+		float mLength;
 
 	public:
 
-		Joint(float angleConstraint, Mesh* meshContainer, int id);
+		Joint(int id, float angleConstraint, Mesh* meshContainer);
 
 		//Rotates joint's forward vector to face the target
 		void RotateTowardsTarget(const glm::vec3& targetPos);
@@ -35,14 +35,14 @@ class Joint
 		void SetPosition(const glm::vec3& position);
 		void SetTempPosition(const glm::vec3& tempPosition);
 
-		int GetID();
-		glm::vec3 GetPosition();
-		glm::vec3 GetTempPosition();
-		glm::vec3 GetForwardVector();
-		glm::vec3 GetJointEnd();
-		float GetSegmentLength();
-		Mesh* GetMeshContainer();
-		Joint* GetParent();
-		Joint* GetChild();
+		int GetID() { return mID; };
+		glm::vec3 GetPosition() { return mPosition; };
+		glm::vec3 GetTempPosition() { return mTempPosition; };
+		glm::vec3 GetForwardVector() { return mForward; };
+		glm::vec3 GetJointEnd() { return mJointEnd; };
+		float GetSegmentLength() { return mLength; };
+		Mesh* GetMeshContainer() { return mMeshContainer; };
+		Joint* GetParent() { return mParent; };
+		Joint* GetChild() { return mChild; };
 		~Joint();
 };
