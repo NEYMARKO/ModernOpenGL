@@ -21,7 +21,7 @@ class Camera
 		glm::vec3 mUp;
 		glm::vec3 mRight;
 
-		const glm::vec3 mWorldForward = glm::vec3(0.0f, 0.0f, 1.0f);
+		const glm::vec3 mWorldForward = glm::vec3(0.0f, 0.0f, -1.0f);
 		const glm::vec3 mWorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 		//direction doesn't matter, only thing that matters is that it is indeed x-axis (both vec3(1.0f, 0.0f, 0.0f) and vec3(-1.0f, 0.0f, 0.0f) lie in x axis) - it actually does
 		//matter because it will rotate differently when we rotate 180 around y axis => up becomes down and down becomes up
@@ -29,7 +29,7 @@ class Camera
 
 		float mXOffset{};
 		float mYOffset{};
-		float mSphereRadius = 5.0f;
+		float mSphereRadius = 15.0f;
 		glm::vec3 mPointOnSphere = glm::vec3(0.0f, 0.0f, 0.0f);
 
 		glm::mat4 view;
@@ -74,7 +74,7 @@ class Camera
 
 		void calculatePointOnSphere(const double& startingX, const double& startingY, 
 			const double& currentX, const double& currentY);
-		void updateCameraVectors();
+		void updateCameraAxis();
 		void RestartCameraParameters();
 
 

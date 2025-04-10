@@ -12,10 +12,14 @@ Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed,
 	mLookAtPosition{ targetPos }, mSpeed{ speed }, mSensitivity{ sensitivity },
 	mRay { nullptr }
 {
-	CalculateCameraUp(worldUp);
-
+	//CalculateCameraUp(worldUp);
 	//theta and phi have to be pi/2 to get sphere coordinate (0, 0, r) which is facing forward
-	calculatePointOnSphere(0.0, 0.0, mWidth / 4, mHeight / 2);
+	calculatePointOnSphere(0.0, 0.0, mWidth / (mSensitivity * 4), mHeight / (mSensitivity * 2));
+	updateCameraAxis();
+
+	std::cout << "FORWARD " << mForward.x << " " << mForward.y << " " << mForward.z << std::endl;
+	std::cout << "RIGHT: " << mRight.x << " " << mRight.y << " " << mRight.z << std::endl;
+	std::cout << "UP: " << mUp.x << " " << mUp.y << " " << mUp.z << std::endl;
 }
 
 void Camera::CalculateCameraUp(glm::vec3 worldUp)
@@ -33,11 +37,18 @@ void Camera::generateViewProjectionMatrices(Shader& shaderProgram)
 		return;
 	}
 
-	view = glm::lookAt(mPosition + mPointOnSphere, (mPosition + mPointOnSphere) + mForward, mUp);
+	//view = glm::lookAt(mPosition + mPointOnSphere, mPosition, mUp);
+	view = glm::lookAt(mPosition + mPointOnSphere, mPosition, glm::vec3(0.0f, 1.0f, 0.0f));
 	projection = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
 
 	shaderProgram.SetMat4("view", view);
 	shaderProgram.SetMat4("projection", projection);
+
+	/*glm::vec3 eye = mPosition + mPointOnSphere;
+	glm::vec3 center = mPosition;*/
+	/*std::cout << "EYE: " << eye.x << " " << eye.y << " " << eye.z << std::endl;
+	std::cout << "Center: " << center.x << " " << center.y << " " << center.z << std::endl;
+	std::cout << "Up: " << mUp.x << " " << mUp.y << " " << mUp.z << std::endl;*/
 }
 
 //Good orientation 
@@ -80,6 +91,7 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 		mPosition -= cameraSpeed * mUp;
 	}
 
+	std::cout << "Camera position: " << mPosition.x << " " << mPosition.y << " " << mPosition.z << std::endl;
 
 	//glm::vec3 direction = this->position - this->targetPos;
 	if (!this->focus)
@@ -96,7 +108,7 @@ void Camera::Zoom(double amount)
 void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
 {
 	calculatePointOnSphere(startingX, startingY, currentX, currentY);
-	updateCameraVectors();
+	updateCameraAxis();
 }
 
 void Camera::calculatePointOnSphere(const double& startingX, const double& startingY, const double& currentX, const double& currentY)
@@ -121,11 +133,11 @@ void Camera::calculatePointOnSphere(const double& startingX, const double& start
 	//std::cout << "X: " << mXOffset << " Y: " << mYOffset << std::endl;	
 	//angle around y-axis
 	//should be in range [0,2pi]
-	std::cout << "RATIOX: " << mXOffset / mWidth << " RATIOY: " << mYOffset / mHeight << std::endl;
-	float theta = mXOffset / mWidth * glm::radians(360.0f)/* * mSensitivity * -1*/;
+	//std::cout << "RATIOX: " << mXOffset / mWidth << " RATIOY: " << mYOffset / mHeight << std::endl;
+	float theta = mXOffset / mWidth * glm::radians(360.0f) * mSensitivity;
 	//angle around x-axis
 	//should be in range [0,pi]
-	float phi = mYOffset / mHeight * glm::radians(180.0f) /** mSensitivity * -1*/;
+	float phi = mYOffset / mHeight * glm::radians(180.0f) * mSensitivity;
 	//phi *= (int)mYOffset / (int)mHeight % 2 != 0 ? -1 : 1;
 	//std::cout << "Theta: " << theta << " Phi: " << phi << std::endl;
 	mPointOnSphere.x = mSphereRadius * glm::cos(theta) * glm::sin(phi);
@@ -141,9 +153,11 @@ float Camera::alignOffset(float offset, float upBound)
 	else if (offset < -upBound) return offset + 2 * upBound;
 	else return offset;
 }
-void Camera::updateCameraVectors()
+void Camera::updateCameraAxis()
 {
-	mForward = glm::normalize(mPointOnSphere);
+
+	//vector pointing from A to B: B - A => center - eye
+	mForward = glm::normalize(-mPointOnSphere);
 	mRight = glm::normalize(glm::cross(mForward, mWorldUp));
 	mUp = glm::normalize(glm::cross(mRight, mForward));
 }
@@ -161,7 +175,7 @@ void Camera::UpdateViewportDimensions(const int& width, const int& height)
 
 	//std::cout << "RATIOX_FN: " << mXOffset / mWidth << " RATIOY_FN: " << mYOffset / mHeight << std::endl;
 	calculatePointOnSphere(0.0, 0.0, 0.0, 0.0);
-	updateCameraVectors();
+	updateCameraAxis();
 }
 void Camera::Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY)
 {
@@ -191,7 +205,7 @@ void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, 
 	glm::vec4 rayEnd = glm::vec4(xNDC, yNDC, 1.0, 1.0);
 
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
-	glm::mat4 viewMatrix = glm::lookAt(mPosition + mPointOnSphere, mPosition + mPointOnSphere + mForward, mUp);
+	glm::mat4 viewMatrix = glm::lookAt(mPosition + mPointOnSphere, mPosition, mUp);
 
 	glm::mat4 invProjection = glm::inverse(projectionMatrix);
 	rayStart = invProjection * rayStart;
