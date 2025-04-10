@@ -28,7 +28,7 @@ class Camera
 		const glm::vec3 mWorldRight = glm::vec3(1.0f, 0.0f, 0.0f);
 
 		float mXOffset{};
-		float mYOffset{-90.0};
+		float mYOffset{};
 		float mSphereRadius = 5.0f;
 		glm::vec3 mPointOnSphere = glm::vec3(0.0f, 0.0f, 0.0f);
 
@@ -77,6 +77,8 @@ class Camera
 		void updateCameraVectors();
 		void RestartCameraParameters();
 
+
+		float alignOffset(float offset, float upBound);
 		glm::vec3 GetCameraForward() { return mForward; };
 		glm::vec3 GetCameraUp() { return mUp; };
 		glm::vec3 GetCameraRight() { return mRight; };

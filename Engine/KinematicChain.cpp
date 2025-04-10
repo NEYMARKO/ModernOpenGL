@@ -122,6 +122,28 @@ bool KinematicChain::ErrorTooSmall()
 	return (glm::distance(this->mChain[this->mChain.size() - 1]->GetJointEnd(), this->mTarget->GetPosition()) < ERROR_MARGIN);
 }
 
+
+//void KinematicChain::simulate()
+//{
+//	glm::vec3 jointTargetPos;
+//	for (int i = 0; i < mChain.size(); i++)
+//	{
+//		Joint* joint = mChain[i].get();
+//		jointTargetPos = (joint->GetChild() == nullptr ? mTarget->GetPosition() : joint->GetChild()->GetPosition());
+//
+//		joint->GetMeshContainer()->Translate(joint->GetPosition());
+//		joint->RotateTowardsTarget(jointTargetPos);
+//
+//		joint->SetPosition(joint->GetTempPosition());
+//		joint->RotateTowardsTarget(mTarget->objectPos);
+//		std::string name = "j" + std::to_string(mID);
+//		//gizmos->UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 4);
+//		//gizmos->RenderBoundingBox(joint->GetMeshContainer()->boundingBox);
+//		joint->GetMeshContainer()->Translate(joint->GetPosition());
+//		joint->GetMeshContainer()->Render();
+//	}
+//}
+
 KinematicChain::~KinematicChain()
 {
 	std::cout << "Kinematic chain destructor called" << std::endl;

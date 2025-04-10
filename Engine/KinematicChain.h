@@ -35,5 +35,6 @@ class KinematicChain
 		Mesh* GetTarget() { return mTarget; };
 		std::vector<std::unique_ptr<Joint>>* GetAllJoints() { return &mChain; };
 
+		//void simulate();
 		~KinematicChain();
 };
