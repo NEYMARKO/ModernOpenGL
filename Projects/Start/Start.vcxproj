@@ -71,20 +71,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Debug;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Debug;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMAKE\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Marko\Desktop\Seminar\ModernOpenGL\Projects\Start\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Debug;C:\Users\Marko\Desktop\bullet3\buildCMake\lib\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -93,11 +93,12 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;Bullet3Geometry_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -108,13 +109,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>&lt;different options&gt;</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;Bullet3Geometry_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -124,11 +126,12 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;Bullet3Geometry_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,13 +143,14 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>&lt;different options&gt;</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;Bullet3Collision_Debug.lib;Bullet3Common_Debug.lib;Bullet3Dynamics_Debug.lib;Bullet3Geometry_Debug.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
