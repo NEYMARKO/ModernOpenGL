@@ -12,14 +12,9 @@ Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed,
 	mLookAtPosition{ targetPos }, mSpeed{ speed }, mSensitivity{ sensitivity },
 	mRay { nullptr }
 {
-	//CalculateCameraUp(worldUp);
 	//theta and phi have to be pi/2 to get sphere coordinate (0, 0, r) which is facing forward
 	calculatePointOnSphere(0.0, 0.0, mWidth / (mSensitivity * 4), mHeight / (mSensitivity * 2));
 	updateCameraAxis();
-
-	std::cout << "FORWARD " << mForward.x << " " << mForward.y << " " << mForward.z << std::endl;
-	std::cout << "RIGHT: " << mRight.x << " " << mRight.y << " " << mRight.z << std::endl;
-	std::cout << "UP: " << mUp.x << " " << mUp.y << " " << mUp.z << std::endl;
 }
 
 void Camera::CalculateCameraUp(glm::vec3 worldUp)
@@ -37,18 +32,11 @@ void Camera::generateViewProjectionMatrices(Shader& shaderProgram)
 		return;
 	}
 
-	//view = glm::lookAt(mPosition + mPointOnSphere, mPosition, mUp);
 	view = glm::lookAt(mPosition + mPointOnSphere, mPosition, glm::vec3(0.0f, 1.0f, 0.0f));
 	projection = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
 
 	shaderProgram.SetMat4("view", view);
 	shaderProgram.SetMat4("projection", projection);
-
-	/*glm::vec3 eye = mPosition + mPointOnSphere;
-	glm::vec3 center = mPosition;*/
-	/*std::cout << "EYE: " << eye.x << " " << eye.y << " " << eye.z << std::endl;
-	std::cout << "Center: " << center.x << " " << center.y << " " << center.z << std::endl;
-	std::cout << "Up: " << mUp.x << " " << mUp.y << " " << mUp.z << std::endl;*/
 }
 
 //Good orientation 
@@ -91,7 +79,7 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 		mPosition -= cameraSpeed * mUp;
 	}
 
-	std::cout << "Camera position: " << mPosition.x << " " << mPosition.y << " " << mPosition.z << std::endl;
+	//std::cout << "Camera position: " << mPosition.x << " " << mPosition.y << " " << mPosition.z << std::endl;
 
 	//glm::vec3 direction = this->position - this->targetPos;
 	if (!this->focus)
@@ -115,36 +103,18 @@ void Camera::calculatePointOnSphere(const double& startingX, const double& start
 {
 	mXOffset += (currentX - startingX);
 	mYOffset += currentY - startingY;
-	//mYOffset = 0;
-	
-	/*mXOffset = (int)mXOffset % (int)mWidth;
-	mYOffset = (int)mYOffset % (int)mHeight;*/
 
-	//mXOffset = alignOffset(mXOffset, mWidth);
-	//mYOffset = alignOffset(mYOffset, mHeight);
-	//mXOffset = (mYOffset - mHeight > 0) ? mYOffset - mHeight : mYOffset + mHeight ;
-	/*mXOffset = (int)mXOffset % (int)mWidth;
-	mXOffset = (int)mYOffset % (int)mHeight;*/
-	/*mXOffset = glm::clamp(mXOffset, 0.0f, mWidth);
-	mYOffset = glm::clamp(mYOffset, 0.0f, mHeight);*/
-	/*mXOffset += (currentX - startingX) ;
-	mYOffset += (currentY - startingY) ;*/
-
-	//std::cout << "X: " << mXOffset << " Y: " << mYOffset << std::endl;	
 	//angle around y-axis
 	//should be in range [0,2pi]
-	//std::cout << "RATIOX: " << mXOffset / mWidth << " RATIOY: " << mYOffset / mHeight << std::endl;
 	float theta = mXOffset / mWidth * glm::radians(360.0f) * mSensitivity;
+
 	//angle around x-axis
 	//should be in range [0,pi]
 	float phi = mYOffset / mHeight * glm::radians(180.0f) * mSensitivity;
-	//phi *= (int)mYOffset / (int)mHeight % 2 != 0 ? -1 : 1;
-	//std::cout << "Theta: " << theta << " Phi: " << phi << std::endl;
+
 	mPointOnSphere.x = mSphereRadius * glm::cos(theta) * glm::sin(phi);
 	mPointOnSphere.y = mSphereRadius * glm::cos(phi);
 	mPointOnSphere.z = mSphereRadius * glm::sin(theta) * glm::sin(phi);
-
-	std::cout << "X: " << mPointOnSphere.x << " Y: " << mPointOnSphere.y << " Z: " << mPointOnSphere.z << std::endl;
 }
 
 float Camera::alignOffset(float offset, float upBound)
@@ -155,10 +125,15 @@ float Camera::alignOffset(float offset, float upBound)
 }
 void Camera::updateCameraAxis()
 {
-
+	//RIGHT AXIS IS GETTING FLIPPED WHEN CAMERA IS UPSIDE DOWN
+	//IF IT DIDN'T GET FLIPPED, LEFT ARROW KEY WOULD MOVE CAMERA TO THE RIGHT
+	//AND RIGHT ARROW KEY WOULD MOVE CAMERA TO THE LEFT\
+	//THE PROBLEM IS THAT THERE IS SNAPPING WHEN CAMERA PASSES k*PI ANGLES BECASUE OF MIRRORING (FLIPPED RIGHT AXIS)
 	//vector pointing from A to B: B - A => center - eye
 	mForward = glm::normalize(-mPointOnSphere);
+	//std::cout << "FORWARD: " << msForward.x << " " << mForward.y << " " << mForward.z << std::endl;
 	mRight = glm::normalize(glm::cross(mForward, mWorldUp));
+	//std::cout << "RIGHT: " << mRight.x << " " << mRight.y << " " << mRight.z << std::endl;
 	mUp = glm::normalize(glm::cross(mRight, mForward));
 }
 
@@ -173,7 +148,6 @@ void Camera::UpdateViewportDimensions(const int& width, const int& height)
 	mWidth = (float)width;
 	mHeight = (float)height;
 
-	//std::cout << "RATIOX_FN: " << mXOffset / mWidth << " RATIOY_FN: " << mYOffset / mHeight << std::endl;
 	calculatePointOnSphere(0.0, 0.0, 0.0, 0.0);
 	updateCameraAxis();
 }

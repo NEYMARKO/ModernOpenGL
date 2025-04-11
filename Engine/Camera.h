@@ -8,6 +8,12 @@
 
 #include "Ray.h"
 
+/// <summary>
+/// Camera is moving on the surface of the sphere. It is oriented in a way to always 
+/// face the center of the sphere. Mouse position is being accumulated in offset variables 
+/// when right mouse button is pressed. Those values are used to calculate theta and phi angles
+/// to determine the position of the camera on the sphere.
+/// </summary>
 class Camera
 {
 	private:
@@ -51,19 +57,20 @@ class Camera
 		//Calculates cameraUp vector
 		void CalculateCameraUp(glm::vec3 upVector);
 		
-		//Initializes view and projection matrices and sends them to shader as uniforms
+		//Modifies view and projection matrices and passes them to shader as uniforms
 		void generateViewProjectionMatrices(Shader& shaderProgram);
 		
-		//Moves camera in all 4 directions and up/down
+		//Moves camera in all 3 axis
 		void Move(GLFWwindow* window, float deltaTime);
 
+		//Modifies fov to zoom in/out
 		void Zoom(double amount);
 		//Function for camera rotation
 		//Rotation starts after pressing right mouse and ends when mouse gets released
 		//By hovering mouse across screen (while right mouse is pressed), camera gets rotated
 		void Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY);
 
-		//Converts screen coordinates to world coordinates
+		//Transforms 2D pixel coordinates to 3D world coordinates
 		void ScreenToWorldCoordinates(const double mouseX, const double mouseY, glm::vec4& start, glm::vec3& direction);
 		//Updates width and height parameters of camera to match width and height of viewport
 		void UpdateViewportDimensions(const int& width, const int& height);
@@ -72,8 +79,11 @@ class Camera
 		//and going into direction of a camera
 		void Raycast(GLFWwindow* window, const double& mouseX, const double& mouseY);
 
+		//Calculates point on sphere based off of x and y mouse offsets accumulated
+		//through mouse movement
 		void calculatePointOnSphere(const double& startingX, const double& startingY, 
 			const double& currentX, const double& currentY);
+		//Updates camera local axis based off of the point on sphere the camera is currently on
 		void updateCameraAxis();
 		void RestartCameraParameters();
 
