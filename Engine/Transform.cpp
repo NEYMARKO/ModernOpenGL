@@ -8,12 +8,12 @@ void Transform::translate(const glm::vec3& translation)
 void Transform::rotate(const glm::vec3& axis, float angle)
 {
 	glm::quat rotation = glm::angleAxis(glm::radians(angle), axis);
-	mQuatRotation = rotation * mQuatRotation;
+	mRotation = rotation * mRotation;
 }
 
 void Transform::rotate(const glm::quat& rotation)
 {
-	mQuatRotation = glm::normalize(rotation * mQuatRotation);
+	mRotation = glm::normalize(rotation * mRotation);
 }
 
 void Transform::scale(const glm::vec3& scale)
@@ -32,6 +32,6 @@ void Transform::updateModelMatrix()
 	//m_s = glm::scale(m_r, scale) => m_s = m_r * S => m * T * R * S = T * R * S
 	mModelMatrix = glm::mat4(1.0f);
 	mModelMatrix = glm::translate(mModelMatrix, mPosition);
-	mModelMatrix *= glm::toMat4(mQuatRotation);
+	mModelMatrix *= glm::toMat4(mRotation);
 	mModelMatrix = glm::scale(mModelMatrix, mScale);
 }
