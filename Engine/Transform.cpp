@@ -1,24 +1,36 @@
 #include "Transform.h"
 
+
+Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale)
+	: mPosition{ position }, mRotation{ rotation }, mScale{ scale }
+{
+	//position, rotation and scale have changed, model matrix needs to be updated
+	mDirty = true;
+}
+
 void Transform::translate(const glm::vec3& translation)
 {
 	mPosition += translation;
+	mDirty = true;
 }
 
 void Transform::rotate(const glm::vec3& axis, float angle)
 {
 	glm::quat rotation = glm::angleAxis(glm::radians(angle), axis);
 	mRotation = rotation * mRotation;
+	mDirty = true;
 }
 
 void Transform::rotate(const glm::quat& rotation)
 {
 	mRotation = glm::normalize(rotation * mRotation);
+	mDirty = true;
 }
 
 void Transform::scale(const glm::vec3& scale)
 {
 	mScale += scale;
+	mDirty = true;
 }
 
 void Transform::updateModelMatrix()
@@ -34,4 +46,33 @@ void Transform::updateModelMatrix()
 	mModelMatrix = glm::translate(mModelMatrix, mPosition);
 	mModelMatrix *= glm::toMat4(mRotation);
 	mModelMatrix = glm::scale(mModelMatrix, mScale);
+	mDirty = false;
+}
+
+glm::vec3 Transform::getRightVector()
+{
+	if (mDirty)
+		updateModelMatrix();
+	return glm::normalize(glm::vec3(mModelMatrix[0]));
+}
+
+glm::vec3 Transform::getUpVector()
+{
+	if (mDirty)
+		updateModelMatrix();
+	return glm::normalize(glm::vec3(mModelMatrix[1]));
+}
+
+glm::vec3 Transform::getForwardVector()
+{
+	if (mDirty)
+		updateModelMatrix();
+	return glm::normalize(glm::vec3(mModelMatrix[2]));
+}
+
+glm::mat4 Transform::getModelMatrix()
+{
+	if (mDirty)
+		updateModelMatrix();
+	return mModelMatrix;
 }

@@ -13,10 +13,11 @@ private:
 
 	glm::mat4 mModelMatrix = glm::mat4(1.0f);
 
+	bool mDirty{ false };
+
 public:
-	Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale)
-		: mPosition(position), mRotation(rotation), mScale(scale) {
-	}
+	Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale);
+
 	void translate(const glm::vec3& translation);
 	void rotate(const glm::vec3& axis, float angle);
 	void rotate(const glm::quat& rotation);
@@ -28,15 +29,14 @@ public:
 
 	void updateModelMatrix();
 
-	glm::mat4 GetModelMatrix()
-	{
-		updateModelMatrix();
-		return mModelMatrix;
-	}
+	glm::mat4 getModelMatrix();
 
-	glm::vec3 getRightVector() { return glm::normalize(glm::vec3(mModelMatrix[0])); }
+	/*glm::vec3 getRightVector() { return glm::normalize(glm::vec3(mModelMatrix[0])); }
 	glm::vec3 getUpVector() { return glm::normalize(glm::vec3(mModelMatrix[1])); }
-	glm::vec3 getForwardVector() { return glm::normalize(glm::vec3(mModelMatrix[2]));}
+	glm::vec3 getForwardVector() { return glm::normalize(glm::vec3(mModelMatrix[2]));}*/
+	glm::vec3 getRightVector();
+	glm::vec3 getUpVector();
+	glm::vec3 getForwardVector();
 	glm::vec3 getPosition() { return mPosition; }
 	glm::vec3 getEulerRotation() { return glm::degrees(glm::eulerAngles(mRotation)); }
 	glm::quat getQuaternionRotation() { return mRotation; }	
