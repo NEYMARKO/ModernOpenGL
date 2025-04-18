@@ -1,5 +1,5 @@
 #include "Transform.h"
-
+#include "Object.h"
 
 Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale)
 	: mPosition{ position }, mRotation{ rotation }, mScale{ scale }
@@ -77,6 +77,11 @@ void Transform::updateModelMatrix()
 	mModelMatrix *= glm::toMat4(mRotation);
 	mModelMatrix = glm::scale(mModelMatrix, mScale);
 	mDirty = false;
+}
+
+void Transform::setParent(Object* parent)
+{
+	mParentObject = parent;
 }
 
 glm::vec3 Transform::getRightVector()

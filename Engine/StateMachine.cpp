@@ -1,14 +1,16 @@
+#include "Object.h"
+#include "Transform.h"
+#include "MeshRenderer.h"
 #include "StateMachine.h"
 #define GLFW_HAND_CURSOR 0x00036004
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define SELECTED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
-StateMachine::StateMachine(Mesh* mesh, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Mesh>>& objectsInScene)
-	: mObjectsInScene{ objectsInScene }, mMeshLoaders{ meshLoaders }
+StateMachine::StateMachine(Object* target, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene)
+	: mTarget{ target }, mObjectsInScene { objectsInScene }, mMeshLoaders{ meshLoaders }
 {
 	this->state = NOTHING;
 	this->subState = EMPTY;
-	this->target = mesh;
 	this->camera = camera;
 	this->mousePosX = this->camera->mWidth / 2;
 	this->mousePosY = this->camera->mHeight / 2;
@@ -48,7 +50,7 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 			break;
 		case GLFW_KEY_DELETE:
 			this->state = DELETE;
-			if (this->target) DeleteObject();
+			if (mTarget) DeleteObject();
 			break;
 		case GLFW_KEY_F:
 			this->state = FOCUS;
@@ -132,8 +134,9 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 			//object transformation has been completed
 			else if (this->state == GRAB || this->state == SCALE || this->state == ROTATE)
 			{
-				this->target->ChangeColor(DEFAULT_OBJECT_COLOR);
-				this->target = nullptr;
+				//this->target->ChangeColor(DEFAULT_OBJECT_COLOR);
+				mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+				mTarget = nullptr;
 				this->state = NOTHING;
 				this->subState = EMPTY;
 			}
@@ -148,12 +151,14 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 					//std::cout << "INSIDE OF OBJECTS IN SCENE " << std::endl;
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
-						if (mObjectsInScene[obj]->boundingBox->Intersects(camera, i))
+						if (mObjectsInScene[obj].get()->getComponent<MeshRenderer>()->
+							getMesh()->boundingBox->Intersects(camera, i))
 						{
-							this->mObjectsInScene[obj]->ChangeColor(SELECTED_OBJECT_COLOR);
-							pickedId = this->mObjectsInScene[obj]->GetID();
+							mObjectsInScene[obj].get()->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
+							pickedId = mObjectsInScene[obj].get()->getComponent<MeshRenderer>()
+								->getMesh()->GetID();
 							objectPicked = true;
-							this->target = mObjectsInScene[obj].get();
+							mTarget = mObjectsInScene[obj].get();
 							CalculateObjectPlane();
 							break;
 						}
@@ -162,11 +167,13 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 
 
 				//if not a single object was clicked on, reset target to nullptr
-				if (pickedId == -1) this->target = nullptr;
+				if (pickedId == -1) mTarget = nullptr;
 				//removing selective color if current click doesn't intersect with any of the objects
 				for (int i = 0; i < this->mObjectsInScene.size(); i++)
 				{
-					if (this->mObjectsInScene[i]->GetID() != pickedId) this->mObjectsInScene[i]->ChangeColor(DEFAULT_OBJECT_COLOR);
+					if (mObjectsInScene[i].get()->getComponent<MeshRenderer>()
+						->getMesh()->GetID() != pickedId) 
+						mObjectsInScene[i]->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
 				}
 			}
 			//std::cout << "AFTER ADD" << std::endl;
@@ -190,7 +197,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 	default:
 		break;
 	}
-	if (!this->target && this->state != ADD)
+	if (mTarget && this->state != ADD)
 	{
 		this->state = NOTHING;
 	}
@@ -199,7 +206,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 void StateMachine::CalculateObjectPlane()
 {
 	this->objectPlane.normal = -camera->GetCameraForward();
-	this->objectPlane.D = - glm::dot(this->objectPlane.normal, this->target->objectPos);
+	this->objectPlane.D = - glm::dot(this->objectPlane.normal, mTarget->getComponent<Transform>()->getPosition());
 }
 
 glm::vec3 StateMachine::CalculateIntersectionPoint()
@@ -212,9 +219,9 @@ glm::vec3 StateMachine::CalculateIntersectionPoint()
 }
 void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY)
 {
-	if (!this->target && !this->canRotateCamera) return;
+	if (mTarget && !this->canRotateCamera) return;
 
-	else if (this->target) camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);
+	else if (mTarget) camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);
 
 	else if (this->canRotateCamera)
 	{
@@ -241,7 +248,7 @@ void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mo
 void StateMachine::CheckTarget()
 {
 	//these states need to have target in order to be performed
-	if (this->target == nullptr && 
+	if (mTarget == nullptr && 
 		(this->state == GRAB || this->state == ROTATE ||
 		this->state == SCALE || this->state == DELETE))
 	{
@@ -260,30 +267,30 @@ void StateMachine::Grab()
 	glm::vec3 translationVector = CalculateIntersectionPoint();
 
 	float xValue, yValue, zValue;
-
+	glm::vec3 objectPos = mTarget->getComponent<Transform>()->getPosition();
 	switch (this->subState)
 	{
-	case X:
+	case X: 
 		xValue = (glm::vec3(1.0f, 0.0f, 0.0f) *
 			glm::length(translationVector) * glm::normalize(translationVector)).x;
-		translationVector = glm::vec3(xValue, this->target->objectPos.y, this->target->objectPos.z);
+		translationVector = glm::vec3(xValue, objectPos.y, objectPos.z);
 		break;
 	case Y:
 		yValue = (glm::vec3(0.0f, 1.0f, 0.0f) *
 			glm::length(translationVector) * glm::normalize(translationVector)).y;
-		translationVector = glm::vec3(this->target->objectPos.x, yValue, this->target->objectPos.z);
+		translationVector = glm::vec3(objectPos.x, yValue, objectPos.z);
 		break;
 	case Z:
 		zValue = (glm::vec3(0.0f, 0.0f, 1.0f) *
-			glm::length(translationVector) * (translationVector.y < this->target->objectPos.y ? -1.0f : 1.0f)).z;
-		translationVector = glm::vec3(this->target->objectPos.x, this->target->objectPos.y, zValue);
+			glm::length(translationVector) * (translationVector.y < objectPos.y ? -1.0f : 1.0f)).z;
+		translationVector = glm::vec3(objectPos.x, objectPos.y, zValue);
 		break;
 
 	default:
 		break;
 	}
 
-	this->target->Translate(translationVector);
+	mTarget->getComponent<Transform>()->translate(translationVector);
 
 }
 void StateMachine::Rotate()
@@ -294,8 +301,8 @@ void StateMachine::Rotate()
 void StateMachine::Scale()
 {
 	glm::vec3 translationVector = CalculateIntersectionPoint();
-	float scalingFactor = glm::distance(translationVector, this->target->objectPos);
-	this->target->Scale(scalingFactor);
+	float scalingFactor = glm::distance(translationVector, mTarget->getComponent<Transform>()->getPosition());
+	mTarget->getComponent<Transform>()->scale(scalingFactor);
 }
 
 void StateMachine::AddObject(Ray* ray)
@@ -318,7 +325,15 @@ void StateMachine::AddObject(Ray* ray)
 		std::cout << "MESH LOADER " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
 	}*/
 	std::cout << "VERTICES: " << meshLoaderObj->vertices.size() << std::endl;
-	auto obj = std::make_unique<Mesh>(mShaderProgram, mBoundingBoxShaderProgram, meshLoaderObj, (ray->GetRayStart() + ray->GetRayDirection() * 10.0f));
+	
+	glm::vec3 spawnPosition = (ray->GetRayStart() + ray->GetRayDirection() * 10.0f);
+	auto objectTransform = std::make_unique<Transform>(spawnPosition,
+		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	
+	auto objectRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShaderProgram, meshLoaderObj)), std::move(std::make_unique<Material>(mShaderProgram)));
+	
+	
+	auto obj = std::make_unique<Object>(std::move(objectTransform), std::move(objectRenderer));
 	/*std::cout << "AFTER NEW MESH" << std::endl;
 	std::cout << "BEFORE PUSH" << std::endl;*/
 	mObjectsInScene.push_back(std::move(obj));
@@ -369,16 +384,16 @@ void StateMachine::SortObjectsInScene()
 
 void StateMachine::QuickSort(const int& low, const int& high)
 {
-	if (low < high) {
+	/*if (low < high) {
 		int pi = Partition(low, high);
 		QuickSort(low, pi - 1);
 		QuickSort(pi + 1, high);
-	}
+	}*/
 }
 
 int StateMachine::Partition(const int& low, const int& high)
 {
-	float pivot = this->mObjectsInScene[high]->GetDistanceFromCamera();
+	/*float pivot = this->mObjectsInScene[high]->GetDistanceFromCamera();
 	int i = low - 1;
 	for (int j = low; j < high; j++) {
 		if (this->mObjectsInScene[j]->GetDistanceFromCamera() < pivot) {
@@ -387,7 +402,7 @@ int StateMachine::Partition(const int& low, const int& high)
 		}
 	}
 	Swap(i + 1, high);
-	return i + 1;
+	return i + 1;*/
 }
 
 void StateMachine::Swap(const int& firstPos, const int& secondPos)

@@ -39,9 +39,9 @@ void Scene::loadDefaultScene()
 	auto frogTransform = std::make_unique<Transform>(glm::vec3(-35.0f, 0.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 
-	auto templeRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &templeLoader)), std::make_unique<Material>(mObjectShader));
-	auto dragonRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &dragonLoader)), std::make_unique<Material>(mObjectShader));
-	auto frogRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &frogLoader)), std::make_unique<Material>(mObjectShader));
+	auto templeRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &templeLoader)), std::move(std::make_unique<Material>(mObjectShader)));
+	auto dragonRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &dragonLoader)), std::move(std::make_unique<Material>(mObjectShader)));
+	auto frogRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &frogLoader)), std::move(std::make_unique<Material>(mObjectShader)));
 
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer)));
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer)));
@@ -90,11 +90,12 @@ void Scene::renderLight()
 
 void Scene::renderObjects()
 {
-	//std::cout << "SCENE OBJECTS: " << mObjectsInScene.size() << std::endl;
-	for (int i = 0; i < mObjectsInScene.size(); i++)
+	//need to use constant reference to avoid copying elements of mObjectsInScene
+	//into obj
+	for (const std::unique_ptr<Object>& obj : mObjectsInScene)
 	{
-		if (mObjectsInScene[i]) 
-			mObjectsInScene[i].get()->getMeshRenderer()->draw(*mCamera, *mLightSource);
+		if (obj.get()) 
+			obj.get()->getComponent<MeshRenderer>()->draw(*mCamera, *mLightSource);
 	}
 
 	/*for (int i = 0; i < mMeshLoaders.size(); i++)

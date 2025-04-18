@@ -23,7 +23,6 @@ public:
 	void setParent(Object* parent) { mParentObject = parent; }
 	void removeParent() { mParentObject = nullptr; }
 	Object* getParent() const { return mParentObject; }
-	MeshRenderer* getMeshRenderer() const { return mMeshRenderer.get(); }
 	std::string getName() const { return mName; }
 	
 	template<typename T> void addComponent(std::unique_ptr<T> component) const;

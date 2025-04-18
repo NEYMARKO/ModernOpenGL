@@ -4,6 +4,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+class Object;
+
 class Transform
 {
 private:
@@ -11,6 +13,7 @@ private:
 	glm::quat mRotation;
 	glm::vec3 mScale;
 
+	Object* mParentObject{ nullptr };
 	glm::mat4 mModelMatrix = glm::mat4(1.0f);
 
 	bool mDirty{ false };
@@ -28,6 +31,8 @@ public:
 	void setScale(const glm::vec3& scale);
 	void setScale(float scale);
 	void updateModelMatrix();
+
+	void setParent(Object* parent);
 
 	glm::mat4 getModelMatrix();
 	glm::vec3 getRightVector();

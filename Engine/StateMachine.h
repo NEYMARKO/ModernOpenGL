@@ -4,6 +4,8 @@
 #include <memory>
 
 class Shader;
+class Object;
+
 enum State
 {
 	NOTHING,
@@ -47,12 +49,13 @@ class StateMachine
 		Shader* mBoundingBoxShaderProgram;
 
 		Camera* camera;
-		Mesh* target;
+		//Mesh* mTarget;
+		Object* mTarget;
 		State state;
 		SubState subState;
 		Plane objectPlane;
 
-		std::vector<std::unique_ptr<Mesh>>& mObjectsInScene;
+		std::vector<std::unique_ptr<Object>>& mObjectsInScene;
 		std::vector<std::unique_ptr<MeshLoader>>& mMeshLoaders;
 		bool followMouse = false;
 		bool canRotateCamera = false;
@@ -62,7 +65,7 @@ class StateMachine
 		glm::vec3 mouseDirectionWorld;
 
 	public:
-		StateMachine(Mesh* mesh, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Mesh>>& objectsInScene);
+		StateMachine(Object* target, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene);
 		
 		void AddShaderPrograms(Shader* shader, Shader* boxShader);
 		//Controls state that StateMachine is currently in. State changes on the press of a button

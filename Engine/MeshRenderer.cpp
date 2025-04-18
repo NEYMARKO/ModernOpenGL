@@ -18,6 +18,11 @@ void MeshRenderer::changeColor(const glm::vec3& color)
 	mMaterial.get()->setDiffuse(color);
 }
 
+void MeshRenderer::setParent(Object* parent)
+{
+	mParentObject = parent;
+}
+
 void MeshRenderer::draw(Camera& camera, Lighting& lighting)
 {
 	Shader* shaderProgram = mMaterial.get()->getShaderProgram();

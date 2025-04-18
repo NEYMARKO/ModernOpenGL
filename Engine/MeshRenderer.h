@@ -20,6 +20,8 @@ private:
 	std::unique_ptr<Mesh> mMesh;
 public:
 	MeshRenderer(Object* parentObject, std::unique_ptr<Mesh> mesh, std::unique_ptr<Material> material);
+	void setParent(Object* parent);
 	void changeColor(const glm::vec3& color);
+	Mesh* getMesh() { return mMesh.get(); }
 	void draw(Camera& camera, Lighting& lighting);
 };
