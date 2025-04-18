@@ -17,7 +17,7 @@ void Transform::translate(const glm::vec3& translation)
 void Transform::rotate(const glm::vec3& axis, float angle)
 {
 	glm::quat rotation = glm::angleAxis(glm::radians(angle), axis);
-	mRotation = rotation * mRotation;
+	mRotation = glm::normalize(rotation * mRotation);
 	mDirty = true;
 }
 
@@ -30,6 +30,36 @@ void Transform::rotate(const glm::quat& rotation)
 void Transform::scale(const glm::vec3& scale)
 {
 	mScale += scale;
+	mDirty = true;
+}
+
+void Transform::scale(float scale)
+{
+	mScale += glm::vec3(scale, scale, scale);
+	mDirty = true;
+}
+
+void Transform::setPosition(const glm::vec3& position)
+{
+	mPosition = position;
+	mDirty = true;
+}
+
+void Transform::setRotation(const glm::quat& rotation)
+{
+	mRotation = rotation;
+	mDirty = true;
+}
+
+void Transform::setScale(const glm::vec3& scale)
+{
+	mScale = scale;
+	mDirty = true;
+}
+
+void Transform::setScale(float scale)
+{
+	mScale = glm::vec3(scale, scale, scale);
 	mDirty = true;
 }
 

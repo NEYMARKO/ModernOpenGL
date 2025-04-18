@@ -18,8 +18,8 @@ private:
 	//Shader* mShaderProgram;
 	std::unique_ptr<Material> mMaterial;
 	std::unique_ptr<Mesh> mMesh;
-	//std::unique_ptr<Material> mMaterial;
 public:
 	MeshRenderer(Object* parentObject, std::unique_ptr<Mesh> mesh, std::unique_ptr<Material> material);
+	void changeColor(const glm::vec3& color);
 	void draw(Camera& camera, Lighting& lighting);
 };

@@ -22,18 +22,14 @@ public:
 	void rotate(const glm::vec3& axis, float angle);
 	void rotate(const glm::quat& rotation);
 	void scale(const glm::vec3& scale);
-
-	void setPosition(const glm::vec3& position) { mPosition = position; }
-	void setRotation(const glm::quat& rotation) { mRotation = rotation; }
-	void setScale(const glm::vec3& scale) { mScale = scale; }
-
+	void scale(float scale);
+	void setPosition(const glm::vec3& position);
+	void setRotation(const glm::quat& rotation);
+	void setScale(const glm::vec3& scale);
+	void setScale(float scale);
 	void updateModelMatrix();
 
 	glm::mat4 getModelMatrix();
-
-	/*glm::vec3 getRightVector() { return glm::normalize(glm::vec3(mModelMatrix[0])); }
-	glm::vec3 getUpVector() { return glm::normalize(glm::vec3(mModelMatrix[1])); }
-	glm::vec3 getForwardVector() { return glm::normalize(glm::vec3(mModelMatrix[2]));}*/
 	glm::vec3 getRightVector();
 	glm::vec3 getUpVector();
 	glm::vec3 getForwardVector();
