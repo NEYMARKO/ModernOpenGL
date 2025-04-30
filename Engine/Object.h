@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 class Transform;
 class MeshRenderer;
@@ -25,7 +26,25 @@ public:
 	Object* getParent() const { return mParentObject; }
 	std::string getName() const { return mName; }
 	
-	template<typename T> void addComponent(std::unique_ptr<T> component) const;
-	template<typename T> T* getComponent();
+	template <typename T>
+	void addComponent(std::unique_ptr<T> component) const
+	{
+		if (std::is_same<T, Transform>::value)
+			mTransform = std::move(component);
+		else if (std::is_same<T, MeshRenderer>::value)
+			mMeshRenderer = std::move(component);
+		else
+			throw std::runtime_error("Unsupported component type");
+	}
+
+	template<typename T>
+	T* getComponent()
+	{
+		if constexpr (std::is_same<T, Transform>::value)
+			return mTransform.get();
+		else if constexpr (std::is_same<T, MeshRenderer>::value)
+			return mMeshRenderer.get();
+		else return nullptr;
+	}
 
 };

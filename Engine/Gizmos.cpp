@@ -96,7 +96,8 @@ void Gizmos::RenderBoundingBox(BoundingBox* boundingBox)
 {
 	this->boundingBoxShader->Activate();
 
-	glm::mat4 model = boundingBox->GetParentMesh()->GetFinalMatrix();
+	//glm::mat4 model = boundingBox->GetParentMesh()->GetFinalMatrix();
+	glm::mat4 model = glm::mat4(1.0f);
 	this->boundingBoxShader->SetMat4("model", model);
 	this->boundingBoxShader->SetVec3("cameraPos", this->camera->GetCameraPosition());
 	this->boundingBoxShader->SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));

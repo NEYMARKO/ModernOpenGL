@@ -36,21 +36,21 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint,
 
 void KinematicChain::BackwardsPass()
 {
-	Joint* currentJoint = mChain[mChain.size() - 1].get();
+	//Joint* currentJoint = mChain[mChain.size() - 1].get();
 
-	currentJoint->SetTempPosition(mTarget->objectPos - (currentJoint->GetForwardVector() * currentJoint->GetSegmentLength()));
-	currentJoint = currentJoint->GetParent();
-	while (currentJoint->GetParent())
-	{
-		currentJoint->SetTempPosition(
-			currentJoint->GetChild()->GetTempPosition() + (
-				glm::normalize(currentJoint->GetPosition() - currentJoint->GetChild()->GetTempPosition()) * (currentJoint->GetSegmentLength() + DISTANCE_BETWEEN_JOINTS)
-				)
-		);
-		//no need to rotate every step, it is enough to rotate once in main loop before rendering
-		//currentJoint->RotateTowardsTarget(this->target->objectPos);
-		currentJoint = currentJoint->GetParent();
-	}
+	//currentJoint->SetTempPosition(mTarget->objectPos - (currentJoint->GetForwardVector() * currentJoint->GetSegmentLength()));
+	//currentJoint = currentJoint->GetParent();
+	//while (currentJoint->GetParent())
+	//{
+	//	currentJoint->SetTempPosition(
+	//		currentJoint->GetChild()->GetTempPosition() + (
+	//			glm::normalize(currentJoint->GetPosition() - currentJoint->GetChild()->GetTempPosition()) * (currentJoint->GetSegmentLength() + DISTANCE_BETWEEN_JOINTS)
+	//			)
+	//	);
+	//	//no need to rotate every step, it is enough to rotate once in main loop before rendering
+	//	//currentJoint->RotateTowardsTarget(this->target->objectPos);
+	//	currentJoint = currentJoint->GetParent();
+	//}
 }
 
 void KinematicChain::ForwardPass()
@@ -75,51 +75,54 @@ void KinematicChain::ForwardPass()
 
 void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 {
-	//Check if target is out of reach
-	if (targetOutOfReach())
-	{
-		//Position of start of the chain should never be changed
-		for (int i = 1; i < mChain.size(); i++)
-		{
-			mChain[i]->SetPosition(glm::normalize(mTarget->objectPos - mChainOrigin)
-				* (mChain[i]->GetSegmentLength() + DISTANCE_BETWEEN_JOINTS) * (float)i);
-		}
-		return;
-	}
+	////Check if target is out of reach
+	//if (targetOutOfReach())
+	//{
+	//	//Position of start of the chain should never be changed
+	//	for (int i = 1; i < mChain.size(); i++)
+	//	{
+	//		mChain[i]->SetPosition(glm::normalize(mTarget->objectPos - mChainOrigin)
+	//			* (mChain[i]->GetSegmentLength() + DISTANCE_BETWEEN_JOINTS) * (float)i);
+	//	}
+	//	return;
+	//}
 
-	//end of chain has reached the target
-	else if (ErrorTooSmall())
-	{
-		return;
-	}
-	//Shouldn't put i < numberOfIterations || ErrorTooSmall() BECAUSE IT WILL RUN INFINITELY SINCE ErrorTooSmall will always return true
-	for (int i = 0; (i < numberOfIterations && !ErrorTooSmall()); i++)
-	{
-		BackwardsPass();
+	////end of chain has reached the target
+	//else if (ErrorTooSmall())
+	//{
+	//	return;
+	//}
+	////Shouldn't put i < numberOfIterations || ErrorTooSmall() BECAUSE IT WILL RUN INFINITELY SINCE ErrorTooSmall will always return true
+	//for (int i = 0; (i < numberOfIterations && !ErrorTooSmall()); i++)
+	//{
+	//	BackwardsPass();
 
-		ForwardPass();
+	//	ForwardPass();
 
-		//TODO: See if joint surpasses constraint
-	}
+	//	//TODO: See if joint surpasses constraint
+	//}
 }
 
 bool KinematicChain::targetOutOfReach()
 {
-	float segmentLength = mChain[0]->GetSegmentLength();
-	return glm::distance(mChainOrigin, mTarget->objectPos) > (mChain.size() * (segmentLength + DISTANCE_BETWEEN_JOINTS) - DISTANCE_BETWEEN_JOINTS);
+	/*float segmentLength = mChain[0]->GetSegmentLength();
+	return glm::distance(mChainOrigin, mTarget->objectPos) > (mChain.size() * (segmentLength + DISTANCE_BETWEEN_JOINTS) - DISTANCE_BETWEEN_JOINTS);*/
+	return true;
 }
 
 glm::vec3 KinematicChain::CalculateNewJointPosition(Joint* joint, const float direction)
 {
-	return glm::normalize(joint->GetParent()->GetPosition() - mTarget->objectPos) * 
-		direction * joint->GetSegmentLength() + joint->GetPosition();
+	/*return glm::normalize(joint->GetParent()->GetPosition() - mTarget->objectPos) * 
+		direction * joint->GetSegmentLength() + joint->GetPosition();*/
+	return glm::vec3(0.0f,0.0f,0.0f);
 }
 
 
 bool KinematicChain::ErrorTooSmall()
 {
-	//return (glm::distance(this->chain[this->chain.size() - 1]->GetPosition(), this->target->GetPosition()) <= ERROR_MARGIN);
-	return (glm::distance(this->mChain[this->mChain.size() - 1]->GetJointEnd(), this->mTarget->GetPosition()) < ERROR_MARGIN);
+	////return (glm::distance(this->chain[this->chain.size() - 1]->GetPosition(), this->target->GetPosition()) <= ERROR_MARGIN);
+	//return (glm::distance(this->mChain[this->mChain.size() - 1]->GetJointEnd(), this->mTarget->GetPosition()) < ERROR_MARGIN);
+	return true;
 }
 
 

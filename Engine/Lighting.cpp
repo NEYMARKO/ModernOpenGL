@@ -26,7 +26,7 @@ void Lighting::Draw(/*Shader& boundingBoxShaderProgram, */Camera& camera)
 	//std::cout << "Drawing light" << std::endl;
 	mShaderProgram->Activate();
 
-	glm::mat4 model = mMesh->GetFinalMatrix();
+	glm::mat4 model = glm::mat4(1.0f);
 	mPosition = glm::vec3(model[3]);
 	mShaderProgram->SetMat4("model", model);
 	camera.generateViewProjectionMatrices(*mShaderProgram);

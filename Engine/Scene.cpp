@@ -8,6 +8,7 @@
 #include "MeshRenderer.h"
 #include "Object.h"
 
+
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, /*std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,*/ Shader* objectShader, Shader* boundingBoxShader) 
 	: mCamera{ camera }, mLightSource{ lightSource }, mObjectsInScene{ objectsInScene }, 
 	/*mMeshLoaders { meshLoaders },*/ mObjectShader{ objectShader }, mBoundingBoxShader{ boundingBoxShader }
@@ -94,6 +95,7 @@ void Scene::renderObjects()
 	//into obj
 	for (const std::unique_ptr<Object>& obj : mObjectsInScene)
 	{
+		std::cout << "RENDERING OBJECT!" << std::endl;
 		if (obj.get()) 
 			obj.get()->getComponent<MeshRenderer>()->draw(*mCamera, *mLightSource);
 	}

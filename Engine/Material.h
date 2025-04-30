@@ -14,7 +14,7 @@ private:
 	Shader* mShaderProgram;
 
 public:
-	Material(Shader* shaderProgram, glm::vec3 diffuse);
+	Material(Shader* shaderProgram, glm::vec3 diffuse = glm::vec3(1.0f, 1.0f, 1.0f));
 
 	Shader* getShaderProgram() { return mShaderProgram; }
 	//void setUniforms();

@@ -15,11 +15,13 @@ Joint::Joint(int id, float angleConstraint, Mesh* meshContainer) :
 
 void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
-	glm::vec3 directionToTarget = glm::normalize(targetPos - mPosition);
+	/*glm::vec3 directionToTarget = glm::normalize(targetPos - mPosition);
 	glm::quat rotationQuaternion = glm::rotation(mForward, directionToTarget);
 	mOrientation = glm::normalize(rotationQuaternion * mOrientation);
 	mForward = directionToTarget;
-	mMeshContainer->Rotate(mOrientation);
+	mMeshContainer->Rotate(mOrientation);*/
+	
+	
 	//if (this->parent)
 	//{
 	//	float currentAngle = glm::acos(glm::clamp(glm::dot(this->forward, this->parent->forward), -1.0f, 1.0f));

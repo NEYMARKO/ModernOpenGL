@@ -403,6 +403,7 @@ int StateMachine::Partition(const int& low, const int& high)
 	}
 	Swap(i + 1, high);
 	return i + 1;*/
+	return 1;
 }
 
 void StateMachine::Swap(const int& firstPos, const int& secondPos)

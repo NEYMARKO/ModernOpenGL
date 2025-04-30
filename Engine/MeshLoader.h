@@ -1,16 +1,11 @@
 #pragma once
-#include "Shader.h"
-#include "Camera.h"
+#include "Vertex.h"
+#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <vector>
 #include <memory>
-
-struct Vertex
-{
-	glm::vec3 position;
-	glm::vec3 normal;
-};
 
 class MeshLoader
 {

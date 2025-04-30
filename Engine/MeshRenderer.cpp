@@ -2,15 +2,13 @@
 #include "Lighting.h"
 #include "Object.h"
 #include "Transform.h"
-#include "Mesh.h"
-#include "Material.h"
 #include "MeshRenderer.h"
 
 MeshRenderer::MeshRenderer(Object* object, std::unique_ptr<Mesh> mesh, std::unique_ptr<Material> material)
 	: mParentObject{ object }, mMesh{ std::move(mesh) }, mMaterial{ std::move(material) }
 {
 	//mesh needs to be scaled to [-1,1] range
-	mParentObject->getComponent<Transform>()->setScale(mMesh.get()->scalingFactor);
+	//mParentObject->getComponent<Transform>()->setScale(mMesh.get()->scalingFactor);
 }
 
 void MeshRenderer::changeColor(const glm::vec3& color)
@@ -25,6 +23,7 @@ void MeshRenderer::setParent(Object* parent)
 
 void MeshRenderer::draw(Camera& camera, Lighting& lighting)
 {
+	std::cout << "PARENT OBJECT DOES " + std::string(mParentObject != nullptr ? "" : "NOT") + " EXIST!" << std::endl;
 	Shader* shaderProgram = mMaterial.get()->getShaderProgram();
 	shaderProgram->Activate();
 	shaderProgram->SetMat4("model", mParentObject->getComponent<Transform>()->getModelMatrix());

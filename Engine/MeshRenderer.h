@@ -1,11 +1,12 @@
 #pragma once
 #include <memory>
 
-class Mesh;
+#include "Material.h"
+#include "Mesh.h"
+
 class Camera;
 class Lighting;
 class Object;
-class Material;
 
 class MeshRenderer
 {

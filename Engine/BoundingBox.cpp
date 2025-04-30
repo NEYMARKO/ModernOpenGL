@@ -61,9 +61,9 @@ void BoundingBox::SetupBuffers()
 
 void BoundingBox::VerticesToWorld()
 {
-	glm::mat4 model = mParentMesh->GetFinalMatrix();
+	/*glm::mat4 model = mParentMesh->GetFinalMatrix();
 	this->mMinExtremes = glm::vec3(model * glm::vec4(this->mLocalMinExtremes, 1.0));
-	this->mMaxExtremes = glm::vec3(model * glm::vec4(this->mLocalMaxExtremes, 1.0));
+	this->mMaxExtremes = glm::vec3(model * glm::vec4(this->mLocalMaxExtremes, 1.0));*/
 }
 
 bool BoundingBox::Intersects(Camera& camera, float step)
@@ -82,7 +82,7 @@ bool BoundingBox::Intersects(Camera& camera, float step)
 
 void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 {
-	shaderProgram.Activate();
+	/*shaderProgram.Activate();
 	
 	glm::mat4 model = mParentMesh->GetFinalMatrix();
 	shaderProgram.SetMat4("model", model);
@@ -95,7 +95,7 @@ void BoundingBox::Draw(Shader& shaderProgram, Camera& camera)
 
 	glDrawElements(GL_LINES, mIndices.size(), GL_UNSIGNED_INT, 0);
 
-	mBoxVAO.Unbind();
+	mBoxVAO.Unbind();*/
 }
 
 glm::vec3 BoundingBox::GetMinExtremes()

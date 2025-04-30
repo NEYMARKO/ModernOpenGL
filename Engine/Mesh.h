@@ -4,16 +4,11 @@
 #include "EBO.h"
 #include "MeshLoader.h"
 #include "BoundingBox.h"
+#include "Vertex.h"
 #include <memory>
 
 class Shader;
 //class Lighting;
-
-struct Vertex
-{
-	glm::vec3 position;
-	glm::vec3 normal;
-};
 
 /// <summary>
 /// Container for mesh data. Contains information about buffers, vertices and indices.
