@@ -144,5 +144,6 @@ int main()
 	defaultShaderProgram.Delete();
 	lightingShaderProgram.Delete();
 	boundingBoxShaderProgram.Delete();
+	pointShader.Delete();
 	return 0;
 }

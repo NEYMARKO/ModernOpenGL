@@ -95,9 +95,10 @@ void Scene::renderObjects()
 	//into obj
 	for (const std::unique_ptr<Object>& obj : mObjectsInScene)
 	{
-		std::cout << "RENDERING OBJECT!" << std::endl;
 		if (obj.get()) 
 			obj.get()->getComponent<MeshRenderer>()->draw(*mCamera, *mLightSource);
+		Transform* t = obj.get()->getComponent<Transform>();
+		/*std::cout << "OBJ POS: " << t->getPosition().x << " " << t->getPosition().y << " " << t->getPosition().z << std::endl;*/
 	}
 
 	/*for (int i = 0; i < mMeshLoaders.size(); i++)

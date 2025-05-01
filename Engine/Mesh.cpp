@@ -52,4 +52,5 @@ void Mesh::transferLoadedMeshInfo(MeshLoader* meshLoader)
 {
 	mVertices = std::move(meshLoader->vertices);
 	mIndices = std::move(meshLoader->indices);
+	scalingFactor = meshLoader->scalingFactor;
 }

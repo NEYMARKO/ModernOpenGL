@@ -11,7 +11,7 @@ class Transform
 private:
 	glm::vec3 mPosition;
 	glm::quat mRotation;
-	glm::vec3 mScale;
+	glm::vec3 mScale = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	Object* mParentObject{ nullptr };
 	glm::mat4 mModelMatrix = glm::mat4(1.0f);
@@ -19,7 +19,7 @@ private:
 	bool mDirty{ false };
 
 public:
-	Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale);
+	Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f));
 
 	void translate(const glm::vec3& translation);
 	void rotate(const glm::vec3& axis, float angle);

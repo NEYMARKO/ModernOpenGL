@@ -74,6 +74,7 @@ void Transform::updateModelMatrix()
 	//m_s = glm::scale(m_r, scale) => m_s = m_r * S => m * T * R * S = T * R * S
 	mModelMatrix = glm::mat4(1.0f);
 	mModelMatrix = glm::translate(mModelMatrix, mPosition);
+	//mModelMatrix = glm::rotate(mModelMatrix, glm::radians(0.0f), glm::vec3(0.0, 0.0, 0.0));
 	mModelMatrix *= glm::toMat4(mRotation);
 	mModelMatrix = glm::scale(mModelMatrix, mScale);
 	mDirty = false;
