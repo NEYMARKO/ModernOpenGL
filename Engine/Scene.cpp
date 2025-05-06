@@ -54,7 +54,7 @@ void Scene::loadDefaultScene()
 	auto cube = std::make_unique<Mesh>(mBoundingBoxShader, &cubeLoader);
 	auto joint = std::make_unique<Mesh>(mBoundingBoxShader, &jointLoader);
 
-	auto cubeTransform = std::make_unique<Transform>(glm::vec3(0.0f, 0.0f, 0.0f), 
+	auto cubeTransform = std::make_unique<Transform>(glm::vec3(3.2f, 1.7f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto jointTransform = std::make_unique<Transform>(glm::vec3(-30.0f, 0.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -70,7 +70,7 @@ void Scene::loadDefaultScene()
 		std::move(jointTransform), std::move(jointRenderer)
 	));*/
 
-	m_ikChain = std::make_unique<KinematicChain>(7, 45.0f,
+	m_ikChain = std::make_unique<KinematicChain>(15, 45.0f,
 		glm::vec3(0.0f, 0.0f, 0.0f), mObjectsInScene.back()->getComponent<Transform>());
 	
 	m_ikChain.get()->setMeshRenderer(std::move(jointRenderer));

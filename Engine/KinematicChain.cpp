@@ -116,7 +116,7 @@ void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 void KinematicChain::moveTarget(float elapsedTime)
 {
 
-	float sphereRadius = 10.0f;
+	float sphereRadius = 7.5f;
 	float theta = elapsedTime * glm::radians(360.0f);
 
 	//angle around x-axis

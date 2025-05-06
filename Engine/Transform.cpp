@@ -79,11 +79,17 @@ void Transform::updateModelMatrix()
 	//m_t = glm::translate(m, pos) => m_t = m * T = I * T = T
 	//m_r = glm::rotate(m_t, angle, axis) => m_r = m_t * R => I * T * R = T * R 
 	//m_s = glm::scale(m_r, scale) => m_s = m_r * S => m * T * R * S = T * R * S
-	mModelMatrix = glm::mat4(1.0f);
-	mModelMatrix = glm::translate(mModelMatrix, mPosition);
-	//mModelMatrix = glm::rotate(mModelMatrix, glm::radians(0.0f), glm::vec3(0.0, 0.0, 0.0));
-	mModelMatrix *= glm::toMat4(mRotation);
-	mModelMatrix = glm::scale(mModelMatrix, mScale);
+	//mModelMatrix = glm::mat4(1.0f);
+	//mModelMatrix = glm::translate(mModelMatrix, mPosition);
+	////mModelMatrix = glm::rotate(mModelMatrix, glm::radians(0.0f), glm::vec3(0.0, 0.0, 0.0));
+	//mModelMatrix *= glm::toMat4(mRotation);
+	//mModelMatrix = glm::scale(mModelMatrix, mScale);
+
+
+	mModelMatrix = glm::translate(glm::mat4(1.0f), mPosition) *
+		glm::toMat4(mRotation) *
+		glm::scale(glm::mat4(1.0f), mScale);
+
 	mDirty = false;
 }
 
@@ -94,9 +100,10 @@ void Transform::setParent(Object* parent)
 
 glm::vec3 Transform::getRightVector()
 {
-	if (mDirty)
+	/*if (mDirty)
 		updateModelMatrix();
-	return glm::normalize(glm::vec3(mModelMatrix[0]));
+	return glm::normalize(glm::vec3(mModelMatrix[0]));*/
+	return mRotation * glm::vec3(1.0f, 0.0f, 0.0f);
 }
 
 glm::vec3 Transform::getUpVector()
@@ -108,9 +115,10 @@ glm::vec3 Transform::getUpVector()
 
 glm::vec3 Transform::getForwardVector()
 {
-	if (mDirty)
+	/*if (mDirty)
 		updateModelMatrix();
-	return glm::normalize(glm::vec3(mModelMatrix[2]));
+	return glm::normalize(-glm::vec3(mModelMatrix[2]));*/
+	return mRotation * glm::vec3(0.0f, 0.0f, -1.0f);
 }
 
 glm::mat4 Transform::getModelMatrix()

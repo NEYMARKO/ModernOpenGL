@@ -11,14 +11,22 @@ Joint::Joint(int id, float angleConstraint, float length/*, Mesh* meshContainer*
 	m_transform{ std::make_unique<Transform>() }
 
 {
+	//joint's length is scaled to 1.0f
+	//in meshloader it is visible that joint has xmin-xmax = 1.0f
+	//since x is his foward vector and needs to be 1.0f, model is uniformly scaled down by it's length
+	m_transform.get()->setScale(1 / 9.09666);
+	//m_transform.get()->setRotation(glm::quat(glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 
 void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
 	glm::vec3 directionToTarget = glm::normalize(targetPos - m_transform->getPosition());
-	glm::quat rotationQuaternion = glm::rotation(m_transform->getForwardVector(), directionToTarget);
-	
-	m_transform->rotate(glm::normalize(rotationQuaternion));
+	//glm::quat rotationQuaternion = glm::rotation(m_transform->getForwardVector(), directionToTarget);
+	//if (glm::length(directionToTarget) < 0.1f) return;
+	glm::quat rotationQuaternion = glm::rotation(-m_transform->getRightVector(), directionToTarget);
+	m_transform->rotate(rotationQuaternion);
+	glm::vec3 forward = m_transform->getForwardVector();
+	glm::vec3 trueForward = m_transform->getQuaternionRotation() * glm::vec3(0.0f, 0.0f, -1.0f);
 	/*mOrientation = glm::normalize(rotationQuaternion * mOrientation);
 	mForward = directionToTarget;
 	mMeshContainer->Rotate(mOrientation);*/
