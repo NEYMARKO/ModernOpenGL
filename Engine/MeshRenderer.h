@@ -24,5 +24,5 @@ public:
 	void setParent(Object* parent);
 	void changeColor(const glm::vec3& color);
 	Mesh* getMesh() { return mMesh.get(); }
-	void draw(Camera& camera, Lighting& lighting);
+	void draw(Camera& camera, Lighting& lighting, Transform* transform = nullptr);
 };

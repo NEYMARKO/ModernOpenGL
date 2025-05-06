@@ -19,6 +19,8 @@ private:
 	bool mDirty{ false };
 
 public:
+
+	Transform();
 	Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f));
 
 	void translate(const glm::vec3& translation);

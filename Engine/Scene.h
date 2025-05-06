@@ -3,6 +3,8 @@
 #include <vector>
 #include <memory>
 
+#include "KinematicChain.h"
+
 //Forward declaration
 class Shader;
 class Camera;
@@ -16,11 +18,14 @@ class Scene
 private:
 	//No need for cleanup if using smart pointers
 	std::vector<std::unique_ptr<Object>>& mObjectsInScene;
+	std::unique_ptr<KinematicChain> m_ikChain;
 	//std::vector<std::unique_ptr<MeshLoader>>& mMeshLoaders; 
 	Lighting* mLightSource;
 	Camera* mCamera;
 	Shader* mObjectShader;
 	Shader* mBoundingBoxShader;
+
+	float elapsedTime = 0.0f;
 
 public:
 	Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, /*std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,*/
@@ -31,6 +36,7 @@ public:
 	void renderLight();
 	//Renders all objects in scene
 	void renderObjects();
+	void renderIKChain();
 	//Adds object to scene
 	void addObject(std::unique_ptr<Object> object);
 	//Adds multiple objects to the scene

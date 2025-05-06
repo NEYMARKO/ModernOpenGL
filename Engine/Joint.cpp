@@ -1,23 +1,25 @@
+#include "Transform.h"
 #include "Joint.h"
+
 #define ERROR_MARGIN 0.5f
 #define DOT_PRODUCT_ALLOWED_ERROR 0.01f
-Joint::Joint(int id, float angleConstraint, Mesh* meshContainer) :
-	mID{ id }, mAngleConstraint{ angleConstraint }, 
-	mMeshContainer { meshContainer }, 
-	mParent{ nullptr }, mChild{ nullptr },
-	mLength{ std::max(
-		abs(mMeshContainer->boundingBox->GetMaxExtremes().z - mMeshContainer->boundingBox->GetMinExtremes().z),
-		abs(mMeshContainer->boundingBox->GetMaxExtremes().x - mMeshContainer->boundingBox->GetMinExtremes().x)
-	) }, mForward{ glm::vec3(-1.0f, 0.0f, 0.0f) }, mOrientation{ glm::quat(glm::radians(0.0f), mForward) }
+Joint::Joint(int id, float angleConstraint, float length/*, Mesh* meshContainer*/) :
+	m_id{ id }, mAngleConstraint{ angleConstraint }/*, 
+	mMeshContainer { meshContainer }*/, 
+	m_parent{ nullptr }, m_child{ nullptr },
+	m_length{ length }/*, mForward{ glm::vec3(-1.0f, 0.0f, 0.0f) }, mOrientation{ glm::quat(glm::radians(0.0f), mForward) }*/,
+	m_transform{ std::make_unique<Transform>() }
 
 {
 }
 
 void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
-	/*glm::vec3 directionToTarget = glm::normalize(targetPos - mPosition);
-	glm::quat rotationQuaternion = glm::rotation(mForward, directionToTarget);
-	mOrientation = glm::normalize(rotationQuaternion * mOrientation);
+	glm::vec3 directionToTarget = glm::normalize(targetPos - m_transform->getPosition());
+	glm::quat rotationQuaternion = glm::rotation(m_transform->getForwardVector(), directionToTarget);
+	
+	m_transform->rotate(glm::normalize(rotationQuaternion));
+	/*mOrientation = glm::normalize(rotationQuaternion * mOrientation);
 	mForward = directionToTarget;
 	mMeshContainer->Rotate(mOrientation);*/
 	
@@ -60,7 +62,8 @@ void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 
 bool Joint::CanRotate()
 {
-	float parentToChildAngle = glm::acos(glm::dot(mForward, mParent->GetForwardVector()));
+	float parentToChildAngle = glm::acos(glm::dot(m_transform->getForwardVector(), 
+		m_parent->getForwardVector()));
 
 	return abs(parentToChildAngle) < mAngleConstraint ? true : false;
 }
@@ -72,21 +75,47 @@ Joint::~Joint()
 
 void Joint::SetParent(Joint* parent)
 {
-	mParent = parent;
+	m_parent = parent;
 }
 
 void Joint::SetChild(Joint* child)
 {
-	mChild = child;
+	m_child = child;
 }
 
 void Joint::SetTempPosition(const glm::vec3& tempPosition)
 {
-	mTempPosition = tempPosition;
+	m_tempPosition = tempPosition;
 }
 
 void Joint::SetPosition(const glm::vec3& position)
 {
-	mPosition = position;
-	mJointEnd = mPosition + (mForward * mLength);
+	m_transform.get()->setPosition(position);
+	//mJointEnd = mPosition + (mForward * m_length);
+}
+
+glm::vec3 Joint::getPosition() 
+{ 
+	return m_transform->getPosition(); 
+};
+
+glm::vec3 Joint::getTempPosition() 
+{ 
+	return m_tempPosition; 
+};
+
+glm::vec3 Joint::getForwardVector() 
+{ 
+	return m_transform.get()->getForwardVector();
+};
+
+glm::vec3 Joint::getJointEnd() 
+{
+	return m_transform.get()->getPosition() +
+		m_transform.get()->getForwardVector() * m_length;
+};
+
+Transform* Joint::getTransform()
+{
+	return m_transform.get();
 }

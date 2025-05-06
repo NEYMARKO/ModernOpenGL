@@ -21,7 +21,7 @@ void MeshRenderer::setParent(Object* parent)
 	mParentObject = parent;
 }
 
-void MeshRenderer::draw(Camera& camera, Lighting& lighting)
+void MeshRenderer::draw(Camera& camera, Lighting& lighting, Transform* transform)
 {
 	//std::cout << "PARENT OBJECT DOES " + std::string(mParentObject != nullptr ? "" : "NOT") + " EXIST!" << std::endl;
 	Shader* shaderProgram = mMaterial.get()->getShaderProgram();
@@ -32,9 +32,10 @@ void MeshRenderer::draw(Camera& camera, Lighting& lighting)
 		return;
 	}
 
+	Transform* transformPtr = transform ? transform : mParentObject->getComponent<Transform>();
+	
 	shaderProgram->Activate();
-	shaderProgram->Activate();
-	shaderProgram->SetMat4("model", mParentObject->getComponent<Transform>()->getModelMatrix());
+	shaderProgram->SetMat4("model", transformPtr->getModelMatrix());
 	camera.generateViewProjectionMatrices(*shaderProgram);
 
 	shaderProgram->SetVec3("objectColor", mMaterial.get()->getDiffuse());

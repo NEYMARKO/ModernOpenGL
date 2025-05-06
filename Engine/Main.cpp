@@ -52,7 +52,7 @@ int main()
 	auto lightBulbObject = std::make_unique<Object>(std::move(lightBulbTransform), std::move(lightBulbRenderer));
 	scene.addObject(std::move(lightBulbObject));
 
-	MeshLoader cubeLoader("cubeFlat.txt");
+	/*MeshLoader cubeLoader("cubeFlat.txt");
 	MeshLoader jointLoader("joint4.txt");
 
 	auto cube = std::make_unique<Mesh>(&boundingBoxShaderProgram, &cubeLoader);
@@ -67,7 +67,7 @@ int main()
 	auto jointObject = std::make_unique<Object>(std::move(jointTransform), std::move(jointRenderer));
 	auto cubeObject = std::make_unique<Object>(std::move(cubeTransform), std::move(cubeRenderer));
 
-	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), jointObject->getComponent<MeshRenderer>()->getMesh(), cubeObject->getComponent<MeshRenderer>()->getMesh(), &gizmos);
+	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), jointObject->getComponent<MeshRenderer>()->getMesh(), cubeObject->getComponent<MeshRenderer>()->getMesh(), &gizmos);*/
 	//AKO SE OVO STAVI PRIJE DEFINICIJE IK CHAIN-A, DOLAZI DO PROBLEMA JER SU JOINT I CUBE MOVED pa su vrijednosti
 	//varijabli u ikchain nullptr
 	

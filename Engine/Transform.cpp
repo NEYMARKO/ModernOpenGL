@@ -1,6 +1,13 @@
 #include "Transform.h"
 #include "Object.h"
 
+Transform::Transform() :
+	mPosition{ 0.0f, 0.0f, 0.0f },
+	mRotation{ glm::quat() },
+	mScale{ 1.0f, 1.0f, 1.0f }
+{
+}
+
 Transform::Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale)
 	: mPosition{ position }, mRotation{ rotation }, mScale{ scale }
 {

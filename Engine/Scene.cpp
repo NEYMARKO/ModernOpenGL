@@ -7,7 +7,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include "Object.h"
-
+#include "Joint.h"
 
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, /*std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,*/ Shader* objectShader, Shader* boundingBoxShader) 
 	: mCamera{ camera }, mLightSource{ lightSource }, mObjectsInScene{ objectsInScene }, 
@@ -47,6 +47,33 @@ void Scene::loadDefaultScene()
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer)));
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer)));
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(frogTransform), std::move(frogRenderer)));
+	
+	MeshLoader cubeLoader("cubeFlat.txt");
+	MeshLoader jointLoader("joint4.txt");
+
+	auto cube = std::make_unique<Mesh>(mBoundingBoxShader, &cubeLoader);
+	auto joint = std::make_unique<Mesh>(mBoundingBoxShader, &jointLoader);
+
+	auto cubeTransform = std::make_unique<Transform>(glm::vec3(0.0f, 0.0f, 0.0f), 
+		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto jointTransform = std::make_unique<Transform>(glm::vec3(-30.0f, 0.0f, 0.0f), 
+		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	
+	auto jointRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(joint), std::make_unique<Material>(mObjectShader));
+	auto cubeRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(cube), 
+		std::make_unique<Material>(mObjectShader));
+	
+	mObjectsInScene.push_back(std::make_unique<Object>(
+		std::move(cubeTransform), std::move(cubeRenderer)
+	));
+	/*mObjectsInScene.push_back(std::make_unique<Object>(
+		std::move(jointTransform), std::move(jointRenderer)
+	));*/
+
+	m_ikChain = std::make_unique<KinematicChain>(7, 45.0f,
+		glm::vec3(0.0f, 0.0f, 0.0f), mObjectsInScene.back()->getComponent<Transform>());
+	
+	m_ikChain.get()->setMeshRenderer(std::move(jointRenderer));
 	/*for (int i = 0; i < mMeshLoaders.size(); i++)
 	{
 		std::cout << "MESH LOADER (SCENE) " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
@@ -82,6 +109,12 @@ void Scene::renderScene()
 
 	renderLight();
 	renderObjects();
+	
+	renderIKChain();
+
+	elapsedTime += 0.01f;
+
+	m_ikChain.get()->moveTarget(elapsedTime);
 }
 
 void Scene::renderLight()
@@ -95,9 +128,10 @@ void Scene::renderObjects()
 	//into obj
 	for (const std::unique_ptr<Object>& obj : mObjectsInScene)
 	{
-		if (obj.get()) 
-			obj.get()->getComponent<MeshRenderer>()->draw(*mCamera, *mLightSource);
-		Transform* t = obj.get()->getComponent<Transform>();
+		Object* object = obj.get();
+		if (object) 
+			object->getComponent<MeshRenderer>()->draw(*mCamera, *mLightSource);
+		//Transform* t = obj.get()->getComponent<Transform>();
 		/*std::cout << "OBJ POS: " << t->getPosition().x << " " << t->getPosition().y << " " << t->getPosition().z << std::endl;*/
 	}
 
@@ -108,6 +142,15 @@ void Scene::renderObjects()
 	}*/
 }
 
+void Scene::renderIKChain()
+{
+	m_ikChain.get()->simulate(10);
+	std::vector<Transform*>& jointTransforms = m_ikChain.get()->getJointsTransforms();
+	for (Transform* transform : jointTransforms)
+	{
+		m_ikChain.get()->getMeshRenderer()->draw(*mCamera, *mLightSource, transform);
+	}
+}
 void Scene::addObject(std::unique_ptr<Object> object)
 {
 	mObjectsInScene.push_back(std::move(object));
