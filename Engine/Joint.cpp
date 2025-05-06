@@ -1,6 +1,9 @@
 #include "Transform.h"
 #include "Joint.h"
 
+#include "glm/gtx/string_cast.hpp"
+#include <iostream>
+
 #define ERROR_MARGIN 0.5f
 #define DOT_PRODUCT_ALLOWED_ERROR 0.01f
 Joint::Joint(int id, float angleConstraint, float length/*, Mesh* meshContainer*/) :
@@ -23,7 +26,9 @@ void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 	glm::vec3 directionToTarget = glm::normalize(targetPos - m_transform->getPosition());
 	//glm::quat rotationQuaternion = glm::rotation(m_transform->getForwardVector(), directionToTarget);
 	//if (glm::length(directionToTarget) < 0.1f) return;
+	//std::cout << "DIRECTION TO TARGET: " << glm::to_string(directionToTarget) << std::endl;
 	glm::quat rotationQuaternion = glm::rotation(-m_transform->getRightVector(), directionToTarget);
+	//std::cout << "ROTATIOn quaternion: " << glm::to_string(rotationQuaternion) << std::endl;
 	m_transform->rotate(rotationQuaternion);
 	glm::vec3 forward = m_transform->getForwardVector();
 	glm::vec3 trueForward = m_transform->getQuaternionRotation() * glm::vec3(0.0f, 0.0f, -1.0f);
@@ -114,13 +119,15 @@ glm::vec3 Joint::getTempPosition()
 
 glm::vec3 Joint::getForwardVector() 
 { 
-	return m_transform.get()->getForwardVector();
+	return -m_transform.get()->getRightVector();
 };
 
 glm::vec3 Joint::getJointEnd() 
 {
-	return m_transform.get()->getPosition() +
-		m_transform.get()->getForwardVector() * m_length;
+	return m_transform.get()->getPosition() -
+		m_transform.get()->getRightVector() * m_length;
+	/*return m_transform.get()->getPosition() +
+		m_transform.get()->getForwardVector() * m_length;*/
 };
 
 Transform* Joint::getTransform()

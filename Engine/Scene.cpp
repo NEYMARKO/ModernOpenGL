@@ -70,7 +70,7 @@ void Scene::loadDefaultScene()
 		std::move(jointTransform), std::move(jointRenderer)
 	));*/
 
-	m_ikChain = std::make_unique<KinematicChain>(15, 45.0f,
+	m_ikChain = std::make_unique<KinematicChain>(14, 45.0f,
 		glm::vec3(0.0f, 0.0f, 0.0f), mObjectsInScene.back()->getComponent<Transform>());
 	
 	m_ikChain.get()->setMeshRenderer(std::move(jointRenderer));
