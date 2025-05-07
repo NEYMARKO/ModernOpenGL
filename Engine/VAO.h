@@ -1,5 +1,7 @@
 #pragma once
-#include "VBO.h"
+#include <glad/glad.h>
+
+class VBO;
 
 class VAO
 {

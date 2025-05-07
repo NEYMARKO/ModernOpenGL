@@ -6,7 +6,7 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtc/constants.hpp>
 
-#include "Ray.h"
+class Ray;
 
 /// <summary>
 /// Camera is moving on the surface of the sphere. It is oriented in a way to always 

@@ -1,7 +1,11 @@
 #pragma once
-#include "Mesh.h"
+#include "glm/glm.hpp"
+#include "VAO.h"
 
 class Shader;
+class Mesh;
+class Camera;
+
 class Lighting
 {
 private:

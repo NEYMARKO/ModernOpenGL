@@ -13,7 +13,9 @@
 #include "Object.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
+#include "MeshLoader.h"
 #include "Mesh.h"
+#include "Ray.h"
 
 int main()
 {
@@ -57,7 +59,7 @@ int main()
 
 	PhysicsWorld physicsWorld{};
 
-	while (!glfwWindowShouldClose(window.getGLFWWindow()))
+	while (!window.shouldClose())
 	{
 		scene.renderScene();
 

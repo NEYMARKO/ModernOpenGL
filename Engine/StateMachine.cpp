@@ -1,6 +1,11 @@
 #include "Object.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
+#include "Camera.h"
+#include "Shader.h"
+#include "Ray.h"
+#include "MeshLoader.h"
+#include "Mesh.h"
 #include "StateMachine.h"
 #define GLFW_HAND_CURSOR 0x00036004
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
@@ -14,12 +19,12 @@ StateMachine::StateMachine(Object* target, Camera* camera, std::vector<std::uniq
 	this->camera = camera;
 	this->mousePosX = this->camera->mWidth / 2;
 	this->mousePosY = this->camera->mHeight / 2;
-	std::cout << "MESH LOADERS IN CONSTRUCTOR: " << std::endl;
+	/*std::cout << "MESH LOADERS IN CONSTRUCTOR: " << std::endl;
 	std::cout << meshLoaders.size() << std::endl;
 	for (int i = 0; i < meshLoaders.size(); i++)
 	{
 		std::cout << "MESH LOADER " << i << " VERTICES: " << meshLoaders[i]->vertices.size() << std::endl;
-	}
+	}*/
 }
 
 void StateMachine::AddShaderPrograms(Shader* shader, Shader* boxShader)

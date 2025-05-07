@@ -75,6 +75,11 @@ void Window::alignCameraToWindow()
 	}
 }
 
+bool Window::shouldClose()
+{
+	return glfwWindowShouldClose(mWindow);
+}
+
 void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));

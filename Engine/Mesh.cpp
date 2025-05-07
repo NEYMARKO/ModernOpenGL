@@ -1,6 +1,7 @@
-#include "Mesh.h"
 #include "Shader.h"
-//#include "Lighting.h"
+#include "Vertex.h"
+#include "MeshLoader.h"
+#include "Mesh.h"
 
 Mesh::Mesh(Shader* boundingBoxShaderProgram, MeshLoader* meshLoader) : 
 	m_id{ s_idGenerator++ }, mVAO{ std::make_unique<VAO>() }, mBoundingBoxShaderProgram{boundingBoxShaderProgram}
@@ -32,11 +33,6 @@ void Mesh::setupBuffers()
 	mVBO->Unbind();
 	mEBO->Unbind();
 }
-
-//void Mesh::ChangeColor(const glm::vec3& color)
-//{
-//	this->color = color;
-//}
 
 float Mesh::GetDistanceFromCamera()
 {

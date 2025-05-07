@@ -1,8 +1,12 @@
 #pragma once
-#include "Camera.h"
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
+//#include "Camera.h"
+#include "glm/glm.hpp"
+
+class Shader;
+class Camera;
 class Mesh;
 
 class BoundingBox

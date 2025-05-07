@@ -2,8 +2,10 @@
 #include "VBO.h"
 #include "EBO.h"
 #include "VAO.h"
-#include "Shader.h"
-#include "Camera.h"
+#include "glm/glm.hpp"
+
+class Shader;
+class Camera;
 
 class Grid
 {

@@ -32,6 +32,7 @@ public:
 	void alignCameraToWindow();
 	//returns true if window was successfully loaded, otherwise returns false
 	bool loaded() { return mStatus == VALID; };
+	bool shouldClose();
 	int getWidth() { return mWidth; };
 	int getHeight() { return mHeight; };
 	GLFWwindow* getGLFWWindow() { return mWindow; };

@@ -1,3 +1,4 @@
+#include "Ray.h"
 #include "Camera.h"
 
 #define ANGLE_LOWER_BOUND 10

@@ -1,6 +1,12 @@
 #pragma once
-#include "Mesh.h"
+#include "VBO.h"
+#include "VAO.h"
 #include <unordered_map>
+
+class Camera;
+class Shader;
+class Ray;
+class BoundingBox;
 
 class Gizmos
 {

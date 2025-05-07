@@ -2,12 +2,14 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
-#include "MeshLoader.h"
 #include "BoundingBox.h"
-#include "Vertex.h"
-#include <memory>
 
+#include <memory>
+#include <vector>
+
+class Vertex;
 class Shader;
+class MeshLoader;
 //class Lighting;
 
 /// <summary>

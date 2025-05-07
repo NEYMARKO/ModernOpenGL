@@ -1,5 +1,9 @@
 #include "Mesh.h"
+#include "Camera.h"
+#include "Shader.h"
+#include "Ray.h"
 #include "BoundingBox.h"
+
 BoundingBox::BoundingBox(glm::vec3 minExtremes, glm::vec3 maxExtremes, Mesh* parentMesh) : 
 	mLocalMinExtremes{ minExtremes }, mLocalMaxExtremes{ maxExtremes }, mParentMesh{ parentMesh } 
 {

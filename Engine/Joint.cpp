@@ -1,9 +1,6 @@
 #include "Transform.h"
 #include "Joint.h"
 
-#include "glm/gtx/string_cast.hpp"
-#include <iostream>
-
 #define ERROR_MARGIN 0.5f
 #define DOT_PRODUCT_ALLOWED_ERROR 0.01f
 Joint::Joint(int id, float angleConstraint, float length/*, Mesh* meshContainer*/) :

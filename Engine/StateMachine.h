@@ -1,10 +1,12 @@
 #pragma once
-#include "Camera.h"
-#include "Mesh.h"
 #include <memory>
+#include <vector>
+#include <glm/glm.hpp>
 
+class Camera;
 class Shader;
 class Object;
+class MeshLoader;
 
 enum State
 {

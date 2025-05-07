@@ -1,5 +1,7 @@
-#include "Lighting.h"
 #include "Shader.h"
+#include "Camera.h"
+#include "Mesh.h"
+#include "Lighting.h"
 
 Lighting::Lighting(Shader* shaderProgram, Mesh* mesh, const glm::vec3& position, const glm::vec3& color) 
 	: mShaderProgram{ shaderProgram }, mMesh {mesh}, mPosition {position}, mColor {color}

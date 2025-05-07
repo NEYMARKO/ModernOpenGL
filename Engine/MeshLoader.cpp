@@ -128,7 +128,6 @@ void MeshLoader::CalculateScalingFactor()
     float ymax = maxExtremes[1];
     float zmax = maxExtremes[2];
 
-	std::cout << "xlength: " << xmax - xmin << std::endl;
     float firstComparison = std::max(1 / (xmax - xmin), 1 / (ymax - ymin));
     this->scalingFactor = std::max(firstComparison, 1 / (zmax - zmin));
 }

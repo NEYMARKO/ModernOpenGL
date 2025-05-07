@@ -1,5 +1,9 @@
-#include "Gizmos.h"
+#include "Camera.h"
+#include "Shader.h"
+#include "Ray.h"
+#include "BoundingBox.h"
 #include "PrintClass.h"
+#include "Gizmos.h"
 Gizmos::Gizmos(Camera* camera, Shader* meshShader, Shader* boundingBoxShader, Shader* pointShader)
 {
 	this->camera = camera;

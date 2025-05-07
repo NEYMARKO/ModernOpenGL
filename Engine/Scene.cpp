@@ -1,13 +1,12 @@
-#include "Shader.h"
-#include "Camera.h"
-//#include "Mesh.h"
 #include "MeshLoader.h"
-#include "Scene.h"
+#include "Mesh.h"
+#include "Camera.h"
+#include "Shader.h"
 #include "Lighting.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include "Object.h"
-#include "Joint.h"
+#include "Scene.h"
 
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, /*std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,*/ Shader* objectShader, Shader* boundingBoxShader) 
 	: mCamera{ camera }, mLightSource{ lightSource }, mObjectsInScene{ objectsInScene }, 
