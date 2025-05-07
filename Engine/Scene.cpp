@@ -20,14 +20,6 @@ void Scene::loadDefaultScene()
 {
 	//BLENDER: rotate around X for 270 (-90) degrees,	EXPORT: forward: -X, up: Z
 	//forward: -X, up: Z - file: joint.blend
-	//MeshLoader lightBulbLoader("lightBulb.txt");
-	//MeshLoader cubeLoader("cubeFlat.txt");
-	/*mMeshLoaders.push_back(std::move(std::make_unique<MeshLoader>("templeFlat.txt")));
-	mMeshLoaders.push_back(std::move(std::make_unique<MeshLoader>("dragonSmooth.txt")));
-	mMeshLoaders.push_back(std::move(std::make_unique<MeshLoader>("frogSmooth.txt")));
-	mMeshLoaders.push_back(std::move(std::make_unique<MeshLoader>("teddyFlat.txt")));
-	mMeshLoaders.push_back(std::move(std::make_unique<MeshLoader>("sphere.txt")));
-	mMeshLoaders.push_back(std::move(std::make_unique<MeshLoader>("cone.txt")));*/
 
 	MeshLoader templeLoader("templeFlat.txt");
 	MeshLoader dragonLoader("dragonSmooth.txt");
@@ -66,38 +58,11 @@ void Scene::loadDefaultScene()
 	mObjectsInScene.push_back(std::make_unique<Object>(
 		std::move(cubeTransform), std::move(cubeRenderer)
 	));
-	/*mObjectsInScene.push_back(std::make_unique<Object>(
-		std::move(jointTransform), std::move(jointRenderer)
-	));*/
 
 	m_ikChain = std::make_unique<KinematicChain>(14, 45.0f,
 		glm::vec3(0.0f, 0.0f, 0.0f), mObjectsInScene.back()->getComponent<Transform>());
 	
 	m_ikChain.get()->setMeshRenderer(std::move(jointRenderer));
-	/*for (int i = 0; i < mMeshLoaders.size(); i++)
-	{
-		std::cout << "MESH LOADER (SCENE) " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
-	}*/
-
-	/*mObjectsInScene.push_back(std::move(std::make_unique<Mesh>(mObjectShader, mBoundingBoxShader, 
-		mMeshLoaders[0].get(), glm::vec3(-5.0f, 4.0f, 0.0f))));
-	mObjectsInScene.push_back(std::move(std::make_unique<Mesh>(mObjectShader, mBoundingBoxShader, 
-		mMeshLoaders[1].get(), glm::vec3(5.0f, 4.0f, 0.0f))));
-	mObjectsInScene.push_back(std::move(std::make_unique<Mesh>(mObjectShader, mBoundingBoxShader,
-		mMeshLoaders[2].get(), glm::vec3(-35.0f, 0.0f, 0.0f))));*/
-	//Mesh* temple = new Mesh(mObjectShader, mBoundingBoxShader, &templeLoader, glm::vec3(-5.0f, 4.0f, 0.0f), id++);
-	//Mesh* dragon = new Mesh(mObjectShader, mBoundingBoxShader, &dragonLoader, glm::vec3(5.0f, 4.0f, 0.0f), id++);
-	//Mesh* cube = new Mesh(mObjectShader, mBoundingBoxShader, &cubeLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	//Mesh* sphere = new Mesh(mObjectShader, mBoundingBoxShader, &sphereLoader, glm::vec3(-35.0f, 0.0f, 0.0f), id++);
-	//Mesh* cone = new Mesh(&coneLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-	//Mesh* joint = new Mesh(mObjectShader, mBoundingBoxShader, &jointLoader, glm::vec3(0.0f, 0.0f, 0.0f), id++);
-
-	//mObjectsInScene.push_back(lightBulb);
-	//mObjectsInScene.push_back(dragon);
-	//mObjectsInScene.push_back(cube);
-	//mObjectsInScene.push_back(sphere);
-	//mObjectsInScene.push_back(temple);
-	//mObjectsInScene.push_back(joint);
 
 }
 
@@ -112,7 +77,7 @@ void Scene::renderScene()
 	
 	renderIKChain();
 
-	elapsedTime += 0.01f;
+	elapsedTime += 0.005f;
 
 	m_ikChain.get()->moveTarget(elapsedTime);
 }
@@ -131,15 +96,7 @@ void Scene::renderObjects()
 		Object* object = obj.get();
 		if (object) 
 			object->getComponent<MeshRenderer>()->draw(*mCamera, *mLightSource);
-		//Transform* t = obj.get()->getComponent<Transform>();
-		/*std::cout << "OBJ POS: " << t->getPosition().x << " " << t->getPosition().y << " " << t->getPosition().z << std::endl;*/
 	}
-
-	/*for (int i = 0; i < mMeshLoaders.size(); i++)
-	{
-		std::cout << "MESH LOADER (SCENE) " << i << " VERTICES: " << mMeshLoaders[i]->vertices.size() << std::endl;
-
-	}*/
 }
 
 void Scene::renderIKChain()

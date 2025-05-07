@@ -41,7 +41,7 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint,
 
 void KinematicChain::setMeshRenderer(std::unique_ptr<MeshRenderer> meshRenderer)
 {
-	m_meshRenderer = std::move(meshRenderer);
+	m_jointsMeshRenderer = std::move(meshRenderer);
 }
 
 void KinematicChain::BackwardsPass()
@@ -113,44 +113,6 @@ void KinematicChain::FabrikAlgorithm(const int numberOfIterations)
 	}
 }
 
-void KinematicChain::moveTarget(float elapsedTime)
-{
-
-	float sphereRadius = 7.5f;
-	float theta = elapsedTime * glm::radians(360.0f);
-
-	//angle around x-axis
-	//should be in range [0,pi]
-	float phi = elapsedTime * glm::radians(180.0f);
-
-	float x = sphereRadius * glm::cos(theta) * glm::sin(phi);
-	float y = sphereRadius * glm::cos(phi);
-	float z = sphereRadius * glm::sin(theta) * glm::sin(phi);
-
-	m_targetTransform->setPosition(glm::vec3(x, y, z));
-}
-
-bool KinematicChain::targetOutOfReach()
-{
-	float segmentLength = m_chain.front().get()->GetSegmentLength();
-	return glm::distance(m_chainOrigin, m_targetTransform->getPosition()) > (m_chain.size() * (segmentLength + DISTANCE_BETWEEN_JOINTS) - DISTANCE_BETWEEN_JOINTS);
-}
-
-glm::vec3 KinematicChain::CalculateNewJointPosition(Joint* joint, const float direction)
-{
-	return glm::normalize(joint->GetParent()->getPosition() - m_targetTransform->getPosition()) * 
-		direction * joint->GetSegmentLength() + joint->getPosition();
-}
-
-
-bool KinematicChain::ErrorTooSmall()
-{
-	//return (glm::distance(this->chain[this->chain.size() - 1]->GetPosition(), this->target->GetPosition()) <= ERROR_MARGIN);
-	return (glm::distance(m_chain.back()->getJointEnd(), m_targetTransform->getPosition()) < ERROR_MARGIN);
-	//return true;
-}
-
-
 void KinematicChain::simulate(const int steps)
 {
 	FabrikAlgorithm(steps);
@@ -165,6 +127,35 @@ void KinematicChain::simulate(const int steps)
 
 		joint->RotateTowardsTarget(jointTargetPos);
 	}
+}
+
+void KinematicChain::moveTarget(float elapsedTime)
+{
+
+	float sphereRadius = 5.75f;
+	float theta = elapsedTime * glm::radians(360.0f) * 1.5;
+
+	//angle around x-axis
+	//should be in range [0,pi]
+	float phi = elapsedTime * glm::radians(180.0f) * 4;
+
+	float x = sphereRadius * glm::cos(theta) * glm::sin(phi);
+	float y = sphereRadius * glm::cos(phi);
+	float z = sphereRadius * glm::sin(theta) * glm::sin(phi);
+
+	m_targetTransform->setPosition(glm::vec3(x, y, z));
+}
+
+bool KinematicChain::ErrorTooSmall()
+{
+	//return (glm::distance(this->chain[this->chain.size() - 1]->GetPosition(), this->target->GetPosition()) <= ERROR_MARGIN);
+	return (glm::distance(m_chain.back()->getJointEnd(), m_targetTransform->getPosition()) < ERROR_MARGIN);
+}
+
+bool KinematicChain::targetOutOfReach()
+{
+	float segmentLength = m_chain.front().get()->GetSegmentLength();
+	return glm::distance(m_chainOrigin, m_targetTransform->getPosition()) > (m_chain.size() * (segmentLength + DISTANCE_BETWEEN_JOINTS) - DISTANCE_BETWEEN_JOINTS);
 }
 
 glm::vec3 KinematicChain::getTargetPos()
@@ -184,7 +175,7 @@ std::vector<Transform*>& KinematicChain::getJointsTransforms()
 
 MeshRenderer* KinematicChain::getMeshRenderer()
 {
-	return m_meshRenderer.get();
+	return m_jointsMeshRenderer.get();
 }
 
 KinematicChain::~KinematicChain()

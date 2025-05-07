@@ -14,10 +14,10 @@ class KinematicChain
 		
 		std::vector<std::unique_ptr<Joint>> m_chain;
 		std::vector<Transform*> m_jointsTransforms;
+		std::unique_ptr<MeshRenderer> m_jointsMeshRenderer;
 
 		glm::vec3 m_chainOrigin;
 		Transform* m_targetTransform;
-		std::unique_ptr<MeshRenderer> m_meshRenderer;
 		float m_hardcodedLength = 1.0f;
 
 		static int inline mIDGenerator{};
@@ -32,23 +32,22 @@ class KinematicChain
 		
 		void setMeshRenderer(std::unique_ptr<MeshRenderer> meshRenderer);
 
-		void simulate(const int steps);
 
 		void BackwardsPass();
 		void ForwardPass();
 		void FabrikAlgorithm(const int numberOfIterations);
+		//runs FABRIK algorithm through "steps" iterations to determine positions of
+		//joints in the chain. After that, it rotates each joint towards its target
+		void simulate(const int steps);
 
 		void moveTarget(float elapsedTime);
 
-		glm::vec3 CalculateNewJointPosition(Joint* joint, const float direction);
-
-		//Returns true if distance between end of IK chain and target is smaller than defined ErrorMargin
+		//Returns true if distance between end of IK chain and target is smaller than defined ErrorMargin. Otherwise returns false
 		bool ErrorTooSmall();
 		bool targetOutOfReach();
 		glm::vec3 getTargetPos();
 		std::vector<std::unique_ptr<Joint>>* GetAllJoints() { return &m_chain; };
 		std::vector<Transform*>& getJointsTransforms();
 		MeshRenderer* getMeshRenderer();
-		//void simulate();
 		~KinematicChain();
 };

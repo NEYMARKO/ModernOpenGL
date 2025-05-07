@@ -52,29 +52,6 @@ int main()
 	auto lightBulbObject = std::make_unique<Object>(std::move(lightBulbTransform), std::move(lightBulbRenderer));
 	scene.addObject(std::move(lightBulbObject));
 
-	/*MeshLoader cubeLoader("cubeFlat.txt");
-	MeshLoader jointLoader("joint4.txt");
-
-	auto cube = std::make_unique<Mesh>(&boundingBoxShaderProgram, &cubeLoader);
-	auto joint = std::make_unique<Mesh>(&boundingBoxShaderProgram, &jointLoader);
-
-	auto jointTransform = std::make_unique<Transform>(glm::vec3(-30.0f, 0.0f, 0.0f), glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	auto cubeTransform = std::make_unique<Transform>(glm::vec3(0.0f, 0.0f, 0.0f), glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-
-	auto jointRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(joint), std::make_unique<Material>(&defaultShaderProgram));
-	auto cubeRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(cube), std::make_unique<Material>(&defaultShaderProgram));
-
-	auto jointObject = std::make_unique<Object>(std::move(jointTransform), std::move(jointRenderer));
-	auto cubeObject = std::make_unique<Object>(std::move(cubeTransform), std::move(cubeRenderer));
-
-	KinematicChain ikChain(7, 45.0f, glm::vec3(0.0f, 0.0f, 0.0f), jointObject->getComponent<MeshRenderer>()->getMesh(), cubeObject->getComponent<MeshRenderer>()->getMesh(), &gizmos);*/
-	//AKO SE OVO STAVI PRIJE DEFINICIJE IK CHAIN-A, DOLAZI DO PROBLEMA JER SU JOINT I CUBE MOVED pa su vrijednosti
-	//varijabli u ikchain nullptr
-	
-	/*scene.addObject(std::move(jointObject));
-	scene.addObject(std::move(cubeObject));*/
-
-
 	Mesh* jointTarget;
 	glm::vec3 jointTargetPosition;
 
@@ -91,23 +68,6 @@ int main()
 			camera.mRay->Draw(boundingBoxShaderProgram, camera);
 		}
 
-		//ikChain.FabrikAlgorithm(10);
-
-		//Move joint to it's new position and render it
-		
-		//std::vector<std::unique_ptr<Joint>>* joints = ikChain.GetAllJoints();
-		//for (int i = 0; i < joints->size(); i++)
-		//{
-		//	Joint* joint = (*joints)[i].get();
-		//	jointTargetPosition = (joint->GetChild() == nullptr ? ikChain.GetTarget()->GetPosition() : joint->GetChild()->GetPosition());
-		//	joint->GetMeshContainer()->Translate(joint->GetPosition());
-		//	joint->RotateTowardsTarget(jointTargetPosition);
-		//	std::string name = "j" + std::to_string(joint->GetID());
-		//	gizmos.UpdateLine(name, joint->GetPosition(), joint->GetForwardVector(), 4);
-		//	//gizmos.RenderBoundingBox(joint->GetMeshContainer()->boundingBox);
-		//	joint->GetMeshContainer()->Render(camera, light);
-		//	//joint->GetMeshContainer()->boundingBox->Draw(boundingBoxShaderProgram, camera);
-		//}
 		camera.Move(window.getGLFWWindow(), physicsWorld.getDeltaTime());
 
 		glfwSwapBuffers(window.getGLFWWindow());
