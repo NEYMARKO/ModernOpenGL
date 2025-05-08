@@ -23,5 +23,6 @@ void Object::addComponent(std::unique_ptr<Component> component)
 			throw std::runtime_error("Component already exists");
 	}
 	m_components.push_back(std::move(component));
+	m_components.back().get()->setParentObject(this);
 }
 

@@ -92,9 +92,9 @@ void Scene::renderObjects()
 	//into obj
 	for (const std::unique_ptr<Object>& obj : mObjectsInScene)
 	{
-		Object* object = obj.get();
-		if (object) 
-			object->getComponent<MeshRenderer>()->draw(*mCamera, *mLightSource);
+		if (Object* object = obj.get())
+			if (MeshRenderer* mr = object->getComponent<MeshRenderer>())
+				mr->draw(*mCamera, *mLightSource);
 	}
 }
 

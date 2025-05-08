@@ -5,7 +5,7 @@ class Object;
 class Component
 {
 private:
-	Object* mParentObject;
+	Object* mParentObject = nullptr;
 public:
 	Component() = default;
 	//Component(Object* parentObject) : mParentObject(parentObject) {}
