@@ -70,7 +70,7 @@ void BoundingBox::VerticesToWorld()
 	this->mMaxExtremes = glm::vec3(model * glm::vec4(this->mLocalMaxExtremes, 1.0));*/
 }
 
-bool BoundingBox::Intersects(Camera& camera, float step)
+bool BoundingBox::Intersects(Camera& camera, float step) const
 {
 	Ray* ray = camera.mRay;
 

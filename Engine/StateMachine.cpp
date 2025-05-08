@@ -157,7 +157,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
 					{
 						if (mObjectsInScene[obj].get()->getComponent<MeshRenderer>()->
-							getMesh()->boundingBox->Intersects(camera, i))
+							getMesh()->boundingBox.Intersects(camera, i))
 						{
 							mObjectsInScene[obj].get()->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
 							pickedId = mObjectsInScene[obj].get()->getComponent<MeshRenderer>()
@@ -368,10 +368,6 @@ void StateMachine::CloseWindow(GLFWwindow* window)
 	glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-//std::vector<std::unique_ptr<Mesh>> StateMachine::GetObjectsInScene()
-//{
-//	return mObjectsInScene;
-//}
 
 bool StateMachine::ShouldFollowMouse()
 {

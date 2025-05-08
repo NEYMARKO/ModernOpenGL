@@ -1,16 +1,17 @@
 #pragma once
+
+#include <memory>
+#include <vector>
+#include <glm/glm.hpp>
+
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
 #include "BoundingBox.h"
 
-#include <memory>
-#include <vector>
-
 class Vertex;
 class Shader;
 class MeshLoader;
-//class Lighting;
 
 /// <summary>
 /// Container for mesh data. Contains information about buffers, vertices and indices.
@@ -21,9 +22,9 @@ class Mesh
 	private:
 		static inline int s_idGenerator{};
 		int m_id{};
-		std::unique_ptr<VBO> mVBO;
-		std::unique_ptr<EBO> mEBO;
-		std::unique_ptr<VAO> mVAO;
+		VBO mVBO;
+		EBO mEBO;
+		VAO mVAO;
 
 		std::vector<Vertex> mVertices;
 		std::vector<unsigned int> mIndices;
@@ -34,19 +35,17 @@ class Mesh
 		void setupBuffers();
 
 	public:
-		std::unique_ptr<BoundingBox> boundingBox;
+		const BoundingBox& boundingBox;
 		float scalingFactor;
 
 		Mesh(Shader* boundingBoxShaderProgram, MeshLoader* meshLoader);
 		~Mesh();
+		void transferLoadedMeshInfo(MeshLoader* meshLoader);
 		int GetID();
 		float GetDistanceFromCamera();
-		VAO* getVAO() { return mVAO.get(); }
+		VAO* getVAO() { return &mVAO; }
 		std::vector<Vertex>* getVertices() { return &mVertices; }
 		std::vector<unsigned int>* getIndices() { return &mIndices; }
-		
-		//void ChangeColor(const glm::vec3& color);
 
-		void transferLoadedMeshInfo(MeshLoader* meshLoader);
 
 };

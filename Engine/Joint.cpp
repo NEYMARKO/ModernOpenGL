@@ -101,7 +101,7 @@ void Joint::SetTempPosition(const glm::vec3& tempPosition)
 void Joint::SetPosition(const glm::vec3& position)
 {
 	m_transform.get()->setPosition(position);
-	//mJointEnd = mPosition + (mForward * m_length);
+	//mJointEnd = m_position + (mForward * m_length);
 }
 
 glm::vec3 Joint::getPosition() 

@@ -7,7 +7,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed,
 	float sensitivity, int width, int height, 
 	const glm::vec3& worldUp)
 	:
-	mPosition { position }, mRotation { glm::quat(1.0f, 0.0f, 0.0f, 0.0f) }, 
+	m_position { position }, m_rotation { glm::quat(1.0f, 0.0f, 0.0f, 0.0f) }, 
 	mForward { glm::normalize(targetPos - position) },
 	mWorldUp { worldUp }, mWidth{ (float)width }, mHeight{ (float)height },
 	mLookAtPosition{ targetPos }, mSpeed{ speed }, mSensitivity{ sensitivity },
@@ -33,7 +33,7 @@ void Camera::generateViewProjectionMatrices(Shader& shaderProgram)
 		return;
 	}
 
-	view = glm::lookAt(mPosition + mPointOnSphere, mPosition, glm::vec3(0.0f, 1.0f, 0.0f));
+	view = glm::lookAt(m_position + mPointOnSphere, m_position, glm::vec3(0.0f, 1.0f, 0.0f));
 	projection = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
 
 	shaderProgram.SetMat4("view", view);
@@ -49,43 +49,43 @@ void Camera::Move(GLFWwindow* window, float deltaTime)
 	float cameraSpeed = mSpeed * deltaTime;
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		mPosition += cameraSpeed * mForward;
+		m_position += cameraSpeed * mForward;
 		/*std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;*/
 
 	}
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		mPosition -= cameraSpeed * mForward;
+		m_position -= cameraSpeed * mForward;
 		//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		mPosition += cameraSpeed * mRight;
+		m_position += cameraSpeed * mRight;
 		//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		mPosition -= cameraSpeed * mRight;
+		m_position -= cameraSpeed * mRight;
 		//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
 	{
-		mPosition += cameraSpeed * mUp;
+		m_position += cameraSpeed * mUp;
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
 	{
-		mPosition -= cameraSpeed * mUp;
+		m_position -= cameraSpeed * mUp;
 	}
 
-	//std::cout << "Camera position: " << mPosition.x << " " << mPosition.y << " " << mPosition.z << std::endl;
+	//std::cout << "Camera position: " << m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
 
 	//glm::vec3 direction = this->position - this->targetPos;
 	if (!this->focus)
 	{
-		mLookAtPosition = mForward + mPosition;
+		mLookAtPosition = mForward + m_position;
 	}
 }
 
@@ -180,7 +180,7 @@ void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, 
 	glm::vec4 rayEnd = glm::vec4(xNDC, yNDC, 1.0, 1.0);
 
 	glm::mat4 projectionMatrix = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
-	glm::mat4 viewMatrix = glm::lookAt(mPosition + mPointOnSphere, mPosition, mUp);
+	glm::mat4 viewMatrix = glm::lookAt(m_position + mPointOnSphere, m_position, mUp);
 
 	glm::mat4 invProjection = glm::inverse(projectionMatrix);
 	rayStart = invProjection * rayStart;
@@ -198,7 +198,7 @@ void Camera::ScreenToWorldCoordinates(const double mouseX, const double mouseY, 
 
 void Camera::RestartCameraParameters()
 {
-	mPosition = glm::vec3(0.0f, 0.0f, -7.5f);
+	m_position = glm::vec3(0.0f, 0.0f, -7.5f);
 	mForward = glm::vec3(0.0f, 0.0f, 1.0f);
 	mUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	mRight = glm::cross(mForward, mUp);

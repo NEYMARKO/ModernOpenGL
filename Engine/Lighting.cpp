@@ -4,7 +4,7 @@
 #include "Lighting.h"
 
 Lighting::Lighting(Shader* shaderProgram, Mesh* mesh, const glm::vec3& position, const glm::vec3& color) 
-	: mShaderProgram{ shaderProgram }, mMesh {mesh}, mPosition {position}, mColor {color}
+	: mShaderProgram{ shaderProgram }, mMesh {mesh}, m_position {position}, mColor {color}
 {
 }
 
@@ -15,7 +15,7 @@ Lighting::~Lighting()
 
 glm::vec3 Lighting::getPosition()
 {
-	return mPosition;
+	return m_position;
 }
 
 glm::vec3 Lighting::getColor()
@@ -29,7 +29,7 @@ void Lighting::Draw(/*Shader& boundingBoxShaderProgram, */Camera& camera)
 	mShaderProgram->Activate();
 
 	glm::mat4 model = glm::mat4(1.0f);
-	mPosition = glm::vec3(model[3]);
+	m_position = glm::vec3(model[3]);
 	mShaderProgram->SetMat4("model", model);
 	camera.generateViewProjectionMatrices(*mShaderProgram);
 

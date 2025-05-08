@@ -4,17 +4,16 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-class Object;
+#include "Component.h"
 
-class Transform
+class Transform : public Component
 {
 private:
-	glm::vec3 mPosition;
-	glm::quat mRotation;
-	glm::vec3 mScale = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 m_position;
+	glm::quat m_rotation;
+	glm::vec3 m_scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	Object* mParentObject{ nullptr };
-	glm::mat4 mModelMatrix = glm::mat4(1.0f);
+	glm::mat4 m_modelMatrix = glm::mat4(1.0f);
 
 	bool mDirty{ false };
 
@@ -34,14 +33,12 @@ public:
 	void setScale(float scale);
 	void updateModelMatrix();
 
-	void setParent(Object* parent);
-
 	glm::mat4 getModelMatrix();
 	glm::vec3 getRightVector();
 	glm::vec3 getUpVector();
 	glm::vec3 getForwardVector();
-	glm::vec3 getPosition() { return mPosition; }
-	glm::vec3 getEulerRotation() { return glm::degrees(glm::eulerAngles(mRotation)); }
-	glm::quat getQuaternionRotation() { return mRotation; }	
-	glm::vec3 getScale() { return mScale; }
+	glm::vec3 getPosition() { return m_position; }
+	glm::vec3 getEulerRotation() { return glm::degrees(glm::eulerAngles(m_rotation)); }
+	glm::quat getQuaternionRotation() { return m_rotation; }	
+	glm::vec3 getScale() { return m_scale; }
 };

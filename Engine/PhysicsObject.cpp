@@ -10,7 +10,7 @@ PhysicsObject::PhysicsObject(
 	CollisionShapeType collisionShapeType
 )
 	: mMass{ mass }, mRestitution{ restitution }, mRadius{ radius },
-	mPlaneNormal{ planeNormal }, mPosition{ position },
+	mPlaneNormal{ planeNormal }, m_position{ position },
 	mCollisionShape{ setCollisionShape(collisionShapeType) },
 	mInertia{ calculateInertia() },
 	mMotionState{
@@ -36,7 +36,7 @@ std::unique_ptr<btCollisionShape> PhysicsObject::setCollisionShape(CollisionShap
 		return std::make_unique<btSphereShape>(mRadius);
 	case CollisionShapeType::PLANE:
 		//std::cout << "PLANE NORMAL: " << mPlaneNormal.getX() << " " << mPlaneNormal.getY() << " " << mPlaneNormal.getZ() << std::endl;
-		return std::make_unique<btStaticPlaneShape>(mPlaneNormal, mPosition.getY());
+		return std::make_unique<btStaticPlaneShape>(mPlaneNormal, m_position.getY());
 	default:
 		return std::make_unique<btEmptyShape>();
 	}

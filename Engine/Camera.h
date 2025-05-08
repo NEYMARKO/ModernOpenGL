@@ -20,8 +20,8 @@ class Camera
 		float mFov = 45.0f;
 
 		// Center of the sphere on which the camera is moving
-		glm::vec3 mPosition;
-		glm::quat mRotation;
+		glm::vec3 m_position;
+		glm::quat m_rotation;
 
 		glm::vec3 mForward;
 		glm::vec3 mUp;
@@ -92,8 +92,8 @@ class Camera
 		glm::vec3 GetCameraForward() { return mForward; };
 		glm::vec3 GetCameraUp() { return mUp; };
 		glm::vec3 GetCameraRight() { return mRight; };
-		glm::vec3 GetCameraPosition() { return mPosition; };
-		glm::quat GetCameraRotation() { return mRotation; };
+		glm::vec3 GetCameraPosition() { return m_position; };
+		glm::quat GetCameraRotation() { return m_rotation; };
 
 		~Camera();
 };

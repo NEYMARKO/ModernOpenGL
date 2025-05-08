@@ -83,7 +83,6 @@ class StateMachine
 		void MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY);
 		
 		//Returns vector containing pointers to all objects in the scene
-		/*std::vector<std::unique_ptr<Mesh>> GetObjectsInScene();*/
 		//Checks if any object has been clicked on
 		void CheckTarget();
 		bool ShouldFollowMouse();

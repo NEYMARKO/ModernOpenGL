@@ -18,7 +18,7 @@ private:
 	btScalar mMass;
 	float mRestitution;
 	float mRadius;
-	btVector3 mPosition;
+	btVector3 m_position;
 	btVector3 mPlaneNormal;
 	std::unique_ptr<btCollisionShape> mCollisionShape;
 	//Must be defined after collisionShape because it is using collision

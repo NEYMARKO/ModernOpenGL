@@ -11,7 +11,7 @@ class Lighting
 private:
 	Shader* mShaderProgram;
 	Mesh* mMesh;
-	glm::vec3 mPosition;
+	glm::vec3 m_position;
 	glm::vec3 mColor;
 	float mSpecularStrength;
 public:

@@ -4,34 +4,34 @@
 #include "Mesh.h"
 
 Mesh::Mesh(Shader* boundingBoxShaderProgram, MeshLoader* meshLoader) : 
-	m_id{ s_idGenerator++ }, mVAO{ std::make_unique<VAO>() }, mBoundingBoxShaderProgram{boundingBoxShaderProgram}
+	m_id{ s_idGenerator++ }, mVAO{ VAO() }, mBoundingBoxShaderProgram{boundingBoxShaderProgram},
+	boundingBox { BoundingBox(meshLoader->minExtremes, meshLoader->maxExtremes, this) }
 {
 	transferLoadedMeshInfo(meshLoader);
 	setupBuffers();
-	boundingBox = std::make_unique<BoundingBox>(meshLoader->minExtremes, meshLoader->maxExtremes, this);
 }
 
 Mesh::~Mesh()
 {
-	mVAO.get()->Delete();
-	mVBO.get()->Delete();
-	mEBO.get()->Delete();
+	mVAO.Delete();
+	mVBO.Delete();
+	mEBO.Delete();
 
 	std::cout << "DESTROYED MESH: " << m_id << std::endl;
 }
 
 void Mesh::setupBuffers()
 {
-	mVAO->Bind();
-	mVBO = std::make_unique<VBO>(mVertices);
-	mEBO = std::make_unique<EBO>(mIndices);
+	mVAO.Bind();
+	mVBO = VBO(mVertices);
+	mEBO = EBO(mIndices);
 
-	mVAO->LinkVBO(*(mVBO.get()), 0, 3, sizeof(Vertex), 0);
-	mVAO->LinkVBO(*(mVBO.get()), 1, 3, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+	mVAO.LinkVBO(mVBO, 0, 3, sizeof(Vertex), 0);
+	mVAO.LinkVBO(mVBO, 1, 3, sizeof(Vertex), (void*)offsetof(Vertex, normal));
 
-	mVAO->Unbind();
-	mVBO->Unbind();
-	mEBO->Unbind();
+	mVAO.Unbind();
+	mVBO.Unbind();
+	mEBO.Unbind();
 }
 
 float Mesh::GetDistanceFromCamera()

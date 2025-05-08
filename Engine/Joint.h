@@ -23,7 +23,7 @@ class Joint
 		Joint* m_child;
 		//glm::vec3 mForward;
 		//glm::quat mOrientation;
-		//glm::vec3 mPosition;
+		//glm::vec3 m_position;
 		//glm::vec3 mJointEnd;
 		//glm::vec3 mTempPosition;
 		//glm::vec3 mUp;

@@ -4,6 +4,7 @@
 #include <vector>
 #include <stdexcept>
 
+class Component;
 class Transform;
 class MeshRenderer;
 
@@ -13,6 +14,7 @@ private:
 
 	std::unique_ptr<Transform> mTransform;
 	std::unique_ptr<MeshRenderer> mMeshRenderer;
+	std::vector<std::unique_ptr<Component>> m_components;
 	std::vector<std::unique_ptr<Object>> mChildren;
 	Object* mParentObject;
 	std::string mName;
@@ -25,17 +27,8 @@ public:
 	void removeParent() { mParentObject = nullptr; }
 	Object* getParent() const { return mParentObject; }
 	std::string getName() const { return mName; }
-	
-	template <typename T>
-	void addComponent(std::unique_ptr<T> component) const
-	{
-		if (std::is_same<T, Transform>::value)
-			mTransform = std::move(component);
-		else if (std::is_same<T, MeshRenderer>::value)
-			mMeshRenderer = std::move(component);
-		else
-			throw std::runtime_error("Unsupported component type");
-	}
+
+	void addComponent(std::unique_ptr<Component> component);
 
 	template<typename T>
 	T* getComponent()
@@ -44,7 +37,15 @@ public:
 			return mTransform.get();
 		else if constexpr (std::is_same<T, MeshRenderer>::value)
 			return mMeshRenderer.get();
-		else return nullptr;
+
+		for (auto& component : m_components)
+		{
+			if (auto* casted = dynamic_cast<T*>(component.get()))
+			{
+				return casted;
+			}
+		}
+		return nullptr;
 	}
 
 };

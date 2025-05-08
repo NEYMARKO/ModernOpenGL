@@ -3,12 +3,13 @@
 
 #include "Material.h"
 #include "Mesh.h"
+#include "Component.h"
 
 class Camera;
 class Lighting;
 class Object;
 
-class MeshRenderer
+class MeshRenderer : public Component
 {
 private:
 

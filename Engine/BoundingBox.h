@@ -34,7 +34,7 @@ class BoundingBox
 		//Translates box bounds (extremes) to world space and checks intersection with ray in world space
 		void VerticesToWorld();
 		//Checks if ray intersects with bounding box in world space
-		bool Intersects(Camera& camera, float step);
+		bool Intersects(Camera& camera, float step) const;
 		//Used for updating BoundingBox bounds when Mesh is transformed
 		void UpdateBounds(const glm::mat4& transformationMatrix);
 		//Draws BoundingBox around Mesh
