@@ -107,6 +107,15 @@ glm::vec3 Transform::getForwardVector()
 	return m_rotation * glm::vec3(0.0f, 0.0f, -1.0f);
 }
 
+btQuaternion Transform::getBulletQuat()
+{
+	return btQuaternion(m_rotation.x,
+		m_rotation.y,
+		m_rotation.z,
+		m_rotation.w
+	);
+}
+
 glm::mat4 Transform::getModelMatrix()
 {
 	if (mDirty)

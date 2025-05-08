@@ -3,7 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/quaternion.hpp>
-
+#include <btBulletDynamicsCommon.h>
 #include "Component.h"
 
 class Transform : public Component
@@ -38,7 +38,16 @@ public:
 	glm::vec3 getUpVector();
 	glm::vec3 getForwardVector();
 	glm::vec3 getPosition() { return m_position; }
+	btVector3 getBulletPosition()
+	{
+		return btVector3(m_position.x, m_position.y, m_position.z);
+	}
 	glm::vec3 getEulerRotation() { return glm::degrees(glm::eulerAngles(m_rotation)); }
 	glm::quat getQuaternionRotation() { return m_rotation; }	
+	btQuaternion getBulletQuat();
+	glm::quat bulletToGlmQuat(const btQuaternion& quat)
+	{
+		return glm::quat(quat.getW(), quat.getX(), quat.getY(), quat.getZ());
+	}
 	glm::vec3 getScale() { return m_scale; }
 };

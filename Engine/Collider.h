@@ -25,4 +25,6 @@ public:
 	{
 		m_collisionShape = std::move(colliderShape);
 	}
+
+	btCollisionShape* getCollisionShape() { return m_collisionShape.get(); }
 };
