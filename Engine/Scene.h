@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "KinematicChain.h"
+#include "RigidBodyRegistry.h"
 
 //Forward declaration
 class Shader;
@@ -26,6 +27,8 @@ private:
 	Shader* mBoundingBoxShader;
 
 	float elapsedTime = 0.0f;
+
+	RigidBodyRegistry m_rigidBodyRegistry;
 
 public:
 	Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, /*std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,*/

@@ -2,6 +2,7 @@
 #include "RigidBody.h"
 #include "Transform.h"
 #include "Object.h"
+#include "RigidBodyRegistry.h"
 #include "PhysicsWorld.h"
 
 PhysicsWorld::PhysicsWorld() :
@@ -51,19 +52,27 @@ void PhysicsWorld::loadDefaultSimulation()
 	//addObjectToWorld(std::move(p3));
 }
 
+void PhysicsWorld::fixedUpdate()
+{
+	updateDeltaTime();
+
+	simulate();
+
+	handleHangingRigidBodies();
+}
+
 void PhysicsWorld::updateDeltaTime()
 {
-	mDeltaTime = mCurrentFrame - mLastFrame;
+	m_currentFrame = static_cast<float>(glfwGetTime());
+	mDeltaTime = m_currentFrame - mLastFrame;
 	if (mDeltaTime > 10 * mFixedTimeStep)
 		mDeltaTime = 10 * mFixedTimeStep;
+	mLastFrame = m_currentFrame;
+
 }
 
 void PhysicsWorld::simulate()
 {
-	mCurrentFrame = static_cast<float>(glfwGetTime());
-	updateDeltaTime();
-	mLastFrame = mCurrentFrame;
-
 	mAccumulator += mDeltaTime;
 	while (mAccumulator >= mFixedTimeStep)
 	{
@@ -89,6 +98,18 @@ void PhysicsWorld::updateObjectsTransform()
 	}
 }
 
+void PhysicsWorld::handleHangingRigidBodies()
+{
+	//if (!RigidBodyRegistry::pendingForWorld(1)) return;
+	while (RigidBodyRegistry::pendingForWorld(1))
+	{
+		RigidBody* rb = RigidBodyRegistry::getFromQueue(1);
+		if (rb)
+		{
+			addObjectToWorld(rb);
+		}
+	}
+}
 void PhysicsWorld::addObjectToWorld(RigidBody* rbComponent)
 {
 	if (!rbComponent)

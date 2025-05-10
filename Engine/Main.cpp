@@ -75,7 +75,7 @@ int main()
 		glfwSwapBuffers(window.getGLFWWindow());
 		glfwPollEvents();
 
-		physicsWorld.simulate();
+		physicsWorld.fixedUpdate();
 
 		//btRigidBody* spherePhysicsObject = (*physicsWorld.getPhysicsObjects())[1].get()->getRigidBody();
 		//btRigidBody* spherePhysicsObject = btRigidBody::upcast(physicsWorld.getDynamicsWorld()->getCollisionObjectArray()[1]);

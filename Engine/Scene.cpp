@@ -6,6 +6,8 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include "Object.h"
+#include "SphereCollider.h"
+#include "RigidBody.h"
 #include "Scene.h"
 
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, /*std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,*/ Shader* objectShader, Shader* boundingBoxShader) 
@@ -26,7 +28,7 @@ void Scene::loadDefaultScene()
 
 	auto templeTransform = std::make_unique<Transform>(glm::vec3(-5.0f, 4.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	auto dragonTransform = std::make_unique<Transform>(glm::vec3(5.0f, 4.0f, 0.0f), 
+	auto dragonTransform = std::make_unique<Transform>(glm::vec3(5.0f, 50.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto frogTransform = std::make_unique<Transform>(glm::vec3(-35.0f, 0.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -37,8 +39,15 @@ void Scene::loadDefaultScene()
 
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer)));
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer)));
+	
+	auto dragonCollider = std::make_unique<SphereCollider>(1.0f);
+	mObjectsInScene.back()->addComponent(std::move(dragonCollider));
+	auto dragonRigidBody = std::make_unique<RigidBody>(1.0f, 0.8f);
+	mObjectsInScene.back()->addComponent(std::move(dragonRigidBody));
+	
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(frogTransform), std::move(frogRenderer)));
 	
+
 	MeshLoader cubeLoader("cubeFlat.txt");
 	MeshLoader jointLoader("joint4.txt");
 

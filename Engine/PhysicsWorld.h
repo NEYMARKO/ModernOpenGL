@@ -20,7 +20,7 @@ private:
 	std::vector<RigidBody*> m_rigidBodies;
 
 	float mLastFrame{};
-	float mCurrentFrame{};
+	float m_currentFrame{};
 	float mDeltaTime{};
 	float mAccumulator{0.0f};
 	const float mFixedTimeStep{ 1 / 60.f };
@@ -30,6 +30,8 @@ public:
 	~PhysicsWorld();
 
 	void loadDefaultSimulation();
+	
+	void fixedUpdate();
 	// Updates duration between current and last frame
 	// In case of stuter sets delta time to max allowed delay
 	void updateDeltaTime();
@@ -38,6 +40,7 @@ public:
 	void simulate();
 	void addObjectToWorld(RigidBody* rbComponent);
 	void updateObjectsTransform();
+	void handleHangingRigidBodies();
 	float getDeltaTime() { return mDeltaTime; }
 	//std::vector<std::unique_ptr<PhysicsObject>>* getPhysicsObjects() { return &m_rigidBodies; };
 	btDiscreteDynamicsWorld* getDynamicsWorld() { return mDynamicsWorld; }
