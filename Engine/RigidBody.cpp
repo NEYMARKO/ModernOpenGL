@@ -11,6 +11,9 @@ RigidBody::RigidBody(float mass, float restitution)
 
 void RigidBody::finalizeRigidBody()
 {
+	//preventing multiple initializations
+	if (m_rigidBody) return;
+
 	Object* parentObject = getParentObject();
 
 	if (!parentObject) throw std::runtime_error("Parent object is null");

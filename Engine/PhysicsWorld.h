@@ -5,6 +5,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <memory>
 
+class RigidBody;
 class PhysicsObject;
 
 class PhysicsWorld
@@ -16,7 +17,7 @@ private:
 	btSequentialImpulseConstraintSolver* mSolver;
 	btDiscreteDynamicsWorld* mDynamicsWorld;
 
-	std::vector<std::unique_ptr<PhysicsObject>> mPhysicsObjects;
+	std::vector<RigidBody*> m_rigidBodies;
 
 	float mLastFrame{};
 	float mCurrentFrame{};
@@ -35,8 +36,9 @@ public:
 	// Starts dynamic's world simulation
 	// In case of previous delay, simulates multiple steps until simulation catches up
 	void simulate();
-	void addObjectToWorld(std::unique_ptr<PhysicsObject> object);
+	void addObjectToWorld(RigidBody* rbComponent);
+	void updateObjectsTransform();
 	float getDeltaTime() { return mDeltaTime; }
-	std::vector<std::unique_ptr<PhysicsObject>>* getPhysicsObjects() { return &mPhysicsObjects; };
+	//std::vector<std::unique_ptr<PhysicsObject>>* getPhysicsObjects() { return &m_rigidBodies; };
 	btDiscreteDynamicsWorld* getDynamicsWorld() { return mDynamicsWorld; }
 };

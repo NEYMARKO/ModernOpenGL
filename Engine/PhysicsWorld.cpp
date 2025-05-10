@@ -1,4 +1,7 @@
 #include "PhysicsObject.h"
+#include "RigidBody.h"
+#include "Transform.h"
+#include "Object.h"
 #include "PhysicsWorld.h"
 
 PhysicsWorld::PhysicsWorld() :
@@ -19,7 +22,7 @@ PhysicsWorld::~PhysicsWorld()
 	}
 
 	// Only reference to unique pointers - destructor will be called
-	mPhysicsObjects.clear();
+	m_rigidBodies.clear();
 
 	// Delete bullet world setup
 	delete mDynamicsWorld;
@@ -31,21 +34,21 @@ PhysicsWorld::~PhysicsWorld()
 
 void PhysicsWorld::loadDefaultSimulation()
 {
-	auto p1{ std::make_unique<PhysicsObject>(0.0f, 0.8f, 0.0f, 
-		btVector3(0.0f, 0.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
-		btVector3(0.0f, 1.0f, 0.0f), CollisionShapeType::PLANE) };
-	//p1.get()->setRestitution(0.8f);
-	addObjectToWorld(std::move(p1));
-	auto p2{ std::make_unique<PhysicsObject>(0.2f, 0.8f, 1.0f,
-		btVector3(0.0f, 50.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
-		 btVector3(0.0f, 0.0f, 0.0f), CollisionShapeType::SPHERE) };
-	//p2.get()->setRestitution(0.8f);
-	addObjectToWorld(std::move(p2));
-	auto p3{ std::make_unique<PhysicsObject>(0.5f, 0.8f, 1.0f,
-		btVector3(0.0f, 70.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
-		 btVector3(0.0f, 0.0f, 0.0f), CollisionShapeType::SPHERE) };;
-	//p3.get()->setRestitution(0.2f);
-	addObjectToWorld(std::move(p3));
+	//auto p1{ std::make_unique<PhysicsObject>(0.0f, 0.8f, 0.0f, 
+	//	btVector3(0.0f, 0.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
+	//	btVector3(0.0f, 1.0f, 0.0f), CollisionShapeType::PLANE) };
+	////p1.get()->setRestitution(0.8f);
+	//addObjectToWorld(std::move(p1));
+	//auto p2{ std::make_unique<PhysicsObject>(0.2f, 0.8f, 1.0f,
+	//	btVector3(0.0f, 50.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
+	//	 btVector3(0.0f, 0.0f, 0.0f), CollisionShapeType::SPHERE) };
+	////p2.get()->setRestitution(0.8f);
+	//addObjectToWorld(std::move(p2));
+	//auto p3{ std::make_unique<PhysicsObject>(0.5f, 0.8f, 1.0f,
+	//	btVector3(0.0f, 70.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
+	//	 btVector3(0.0f, 0.0f, 0.0f), CollisionShapeType::SPHERE) };;
+	////p3.get()->setRestitution(0.2f);
+	//addObjectToWorld(std::move(p3));
 }
 
 void PhysicsWorld::updateDeltaTime()
@@ -67,11 +70,29 @@ void PhysicsWorld::simulate()
 		int steps = mDynamicsWorld->stepSimulation(mFixedTimeStep, 10);
 		mAccumulator -= mFixedTimeStep;
 	}
+
+	updateObjectsTransform();
 }
 
-void PhysicsWorld::addObjectToWorld(std::unique_ptr<PhysicsObject> object)
+void PhysicsWorld::updateObjectsTransform()
 {
-	mPhysicsObjects.push_back(std::move(object));
-	//if (!object) std::cout << "Object is nullptr" << std::endl;
-	mDynamicsWorld->addRigidBody(mPhysicsObjects.back().get()->getRigidBody());
+	for (RigidBody* rb : m_rigidBodies)
+	{
+		Object* parentObject = rb->getParentObject();
+		Transform* t = parentObject->getComponent<Transform>();
+		t->setPosition(t->bulletToGlmVec3(
+			rb->getRigidBody()->getCenterOfMassPosition()
+		));
+		t->setRotation(t->bulletToGlmQuat(
+			rb->getRigidBody()->getOrientation()
+		));
+	}
+}
+
+void PhysicsWorld::addObjectToWorld(RigidBody* rbComponent)
+{
+	if (!rbComponent)
+		throw std::runtime_error("RigidBody is null");
+	m_rigidBodies.push_back(rbComponent);
+	mDynamicsWorld->addRigidBody(rbComponent->getRigidBody());
 }

@@ -7,7 +7,7 @@
 
 class Collider;
 
-class RigidBody : Component
+class RigidBody : public Component
 {
 private:
 	Collider* m_collider;

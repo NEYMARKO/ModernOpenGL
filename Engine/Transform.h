@@ -42,6 +42,10 @@ public:
 	{
 		return btVector3(m_position.x, m_position.y, m_position.z);
 	}
+	glm::vec3 bulletToGlmVec3(const btVector3& vec)
+	{
+		return glm::vec3(vec.getX(), vec.getY(), vec.getZ());
+	}
 	glm::vec3 getEulerRotation() { return glm::degrees(glm::eulerAngles(m_rotation)); }
 	glm::quat getQuaternionRotation() { return m_rotation; }	
 	btQuaternion getBulletQuat();
