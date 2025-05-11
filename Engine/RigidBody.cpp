@@ -31,6 +31,8 @@ void RigidBody::finalizeRigidBody()
 	m_rigidBodyCI = btRigidBody::btRigidBodyConstructionInfo(
 		m_mass, m_motionState.get(), m_collider->getCollisionShape(), m_inertia);
 	m_rigidBody = std::make_unique<btRigidBody>(m_rigidBodyCI);
+
+	setRestitution(m_restitution);
 }
 
 btVector3 RigidBody::calculateInertia()

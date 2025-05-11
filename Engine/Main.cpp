@@ -54,9 +54,6 @@ int main()
 	auto lightBulbObject = std::make_unique<Object>(std::move(lightBulbTransform), std::move(lightBulbRenderer));
 	scene.addObject(std::move(lightBulbObject));
 
-	Mesh* jointTarget;
-	glm::vec3 jointTargetPosition;
-
 	PhysicsWorld physicsWorld{};
 
 	while (!window.shouldClose())
@@ -76,31 +73,6 @@ int main()
 		glfwPollEvents();
 
 		physicsWorld.fixedUpdate();
-
-		//btRigidBody* spherePhysicsObject = (*physicsWorld.getPhysicsObjects())[1].get()->getRigidBody();
-		//btRigidBody* spherePhysicsObject = btRigidBody::upcast(physicsWorld.getDynamicsWorld()->getCollisionObjectArray()[1]);
-		//btRigidBody* spherePhysicsObject2 = btRigidBody::upcast(physicsWorld.getDynamicsWorld()->getCollisionObjectArray()[2]);
-
-		//////std::cout << "IS SPHERE: " << spherePhysicsObject->checkIfSphere() << std::endl;
-		////// Get updated object position
-		//btTransform transform;
-		//spherePhysicsObject->getMotionState()->getWorldTransform(transform);
-		//btVector3 pos = transform.getOrigin();
-
-		//btTransform transform2;
-		//spherePhysicsObject2->getMotionState()->getWorldTransform(transform2);
-		//btVector3 pos2 = transform2.getOrigin();
-		////std::cout << "Sphere Pos: " << pos.getX() << ", " << pos.getY() << ", " << pos.getZ() << std::endl;
-		//glm::vec3 newPos = glm::vec3(pos.getX(), pos.getY(), pos.getZ());
-		//glm::vec3 newPos2 = glm::vec3(pos2.getX(), pos2.getY(), pos2.getZ());
-		//objectsInScene[2]->getComponent<Transform>()->setPosition(newPos);
-		//Transform* t1 = objectsInScene[1]->getComponent<Transform>();
-
-		//t1->setPosition(newPos2);
-
-		/*std::cout << "OBJECT2 POS: " << t1->getPosition().x << ", " << t1->getPosition().y << ", " << t1->getPosition().z << std::endl;*/
-		/*btVector3 vel = spherePhysicsObject->getRigidBody()->getLinearVelocity();
-		std::cout << "Velocity after sim: " << vel.getX() << ", " << vel.getY() << ", " << vel.getZ() << std::endl;*/
 	}
 
 	defaultShaderProgram.Delete();

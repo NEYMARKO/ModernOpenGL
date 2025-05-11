@@ -7,6 +7,7 @@
 #include "MeshRenderer.h"
 #include "Object.h"
 #include "SphereCollider.h"
+#include "PlaneCollider.h"
 #include "RigidBody.h"
 #include "Scene.h"
 
@@ -25,17 +26,21 @@ void Scene::loadDefaultScene()
 	MeshLoader templeLoader("templeFlat.txt");
 	MeshLoader dragonLoader("dragonSmooth.txt");
 	MeshLoader frogLoader("frogSmooth.txt");
+	MeshLoader floorLoader("planeFlat.txt");
 
 	auto templeTransform = std::make_unique<Transform>(glm::vec3(-5.0f, 4.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto dragonTransform = std::make_unique<Transform>(glm::vec3(5.0f, 50.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	auto frogTransform = std::make_unique<Transform>(glm::vec3(-35.0f, 0.0f, 0.0f), 
+	auto frogTransform = std::make_unique<Transform>(glm::vec3(5.0f, 35.0f, 0.0f), 
+		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto floorTransform = std::make_unique<Transform>(glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	auto templeRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &templeLoader)), std::move(std::make_unique<Material>(mObjectShader)));
 	auto dragonRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &dragonLoader)), std::move(std::make_unique<Material>(mObjectShader)));
 	auto frogRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &frogLoader)), std::move(std::make_unique<Material>(mObjectShader)));
+	auto floorRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &floorLoader)), std::move(std::make_unique<Material>(mObjectShader)));
 
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer)));
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer)));
@@ -47,6 +52,18 @@ void Scene::loadDefaultScene()
 	
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(frogTransform), std::move(frogRenderer)));
 	
+	auto frogCollider = std::make_unique<SphereCollider>(1.0f);
+	mObjectsInScene.back()->addComponent(std::move(frogCollider));
+	auto frogRigidBody = std::make_unique<RigidBody>(0.3f, 0.8f);
+	mObjectsInScene.back()->addComponent(std::move(frogRigidBody));
+
+	mObjectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform), std::move(floorRenderer)));
+
+	Transform* floorTransformPtr = mObjectsInScene.back()->getComponent<Transform>();
+	auto floorCollider = std::make_unique<PlaneCollider>(floorTransformPtr->glmToBulletVec3(glm::vec3(0.0f, 1.0f, 0.0f)), 0.0f);
+	mObjectsInScene.back()->addComponent(std::move(floorCollider));
+	auto floorRigidBody = std::make_unique<RigidBody>(0.0f, 0.8f);
+	mObjectsInScene.back()->addComponent(std::move(floorRigidBody));
 
 	MeshLoader cubeLoader("cubeFlat.txt");
 	MeshLoader jointLoader("joint4.txt");
