@@ -16,6 +16,8 @@ public:
 	Shader();
 	// Constructor that build the Shader Program from 2 different shaders
 	Shader(const char* vertexFile, const char* fragmentFile);
+
+	~Shader();
 	// Checks for shaders linking errors
 	void checkCompileErrors(GLuint shader, std::string shaderType);
 	// Checks for shader program linking errors

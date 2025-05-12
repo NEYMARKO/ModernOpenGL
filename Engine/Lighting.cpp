@@ -4,7 +4,7 @@
 #include "Lighting.h"
 
 Lighting::Lighting(Shader* shaderProgram, Mesh* mesh, const glm::vec3& position, const glm::vec3& color) 
-	: mShaderProgram{ shaderProgram }, mMesh {mesh}, m_position {position}, mColor {color}
+	: mShaderProgram{ shaderProgram }, m_mesh {mesh}, m_position {position}, mColor {color}
 {
 }
 

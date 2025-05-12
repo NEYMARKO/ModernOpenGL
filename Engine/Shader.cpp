@@ -61,6 +61,11 @@ Shader::Shader(const char* vertexFile, const char* fragmentFile)
 
 }
 
+Shader::~Shader()
+{
+	Delete();
+}
+
 void Shader::checkCompileErrors (GLuint shader, std::string shaderType)
 {
 	int success;
@@ -96,6 +101,7 @@ void Shader::Activate()
 void Shader::Delete()
 {
 	glDeleteProgram(ID);
+	std::cout << "DELETED SHADER PROGRAM: " << ID << std::endl;
 }
 
 void Shader::SetFloat(const std::string& name, const float value)

@@ -34,7 +34,7 @@ void Scene::loadDefaultScene()
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto frogTransform = std::make_unique<Transform>(glm::vec3(5.0f, 35.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	auto floorTransform = std::make_unique<Transform>(glm::vec3(0.0f, 0.0f, 0.0f),
+	auto floorTransform = std::make_unique<Transform>(glm::vec3(0.0f, -4.0f, 0.0f),
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	auto templeRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &templeLoader)), std::move(std::make_unique<Material>(mObjectShader)));

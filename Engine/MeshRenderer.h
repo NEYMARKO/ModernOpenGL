@@ -18,12 +18,12 @@ private:
 	//MeshRenderer is going to be deleted when Object is deleted anyways
 	Object* mParentObject;
 	//Shader* mShaderProgram;
-	std::unique_ptr<Material> mMaterial;
-	std::unique_ptr<Mesh> mMesh;
+	std::unique_ptr<Material> m_material;
+	std::unique_ptr<Mesh> m_mesh;
 public:
 	MeshRenderer(Object* parentObject, std::unique_ptr<Mesh> mesh, std::unique_ptr<Material> material);
 	void setParent(Object* parent);
 	void changeColor(const glm::vec3& color);
-	Mesh* getMesh() { return mMesh.get(); }
+	Mesh* getMesh() { return m_mesh.get(); }
 	void draw(Camera& camera, Lighting& lighting, Transform* transform = nullptr);
 };

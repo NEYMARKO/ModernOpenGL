@@ -8,7 +8,6 @@
 #include "Window.h"
 #include "Scene.h"
 #include <memory>
-#include "PhysicsObject.h"
 #include "PhysicsWorld.h"
 #include "Object.h"
 #include "Transform.h"
@@ -75,9 +74,9 @@ int main()
 		physicsWorld.fixedUpdate();
 	}
 
-	defaultShaderProgram.Delete();
-	lightingShaderProgram.Delete();
-	boundingBoxShaderProgram.Delete();
-	pointShader.Delete();
+	//defaultShaderProgram.Delete();
+	//lightingShaderProgram.Delete();
+	//boundingBoxShaderProgram.Delete();
+	//pointShader.Delete();
 	return 0;
 }

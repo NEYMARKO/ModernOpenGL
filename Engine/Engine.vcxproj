@@ -154,10 +154,10 @@
     <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="PhysicsObject.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="PrintClass.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodyRegistry.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -180,6 +180,8 @@
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="Grab.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SortingAlgorithms.h" />
     <ClInclude Include="RigidBodyRegistry.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="Joint.h" />
@@ -190,7 +192,6 @@
     <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="PhysicsObject.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="PlaneCollider.h" />
     <ClInclude Include="PrintClass.h" />

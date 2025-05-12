@@ -1,4 +1,3 @@
-#include "PhysicsObject.h"
 #include "RigidBody.h"
 #include "Transform.h"
 #include "Object.h"
@@ -35,21 +34,6 @@ PhysicsWorld::~PhysicsWorld()
 
 void PhysicsWorld::loadDefaultSimulation()
 {
-	//auto p1{ std::make_unique<PhysicsObject>(0.0f, 0.8f, 0.0f, 
-	//	btVector3(0.0f, 0.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
-	//	btVector3(0.0f, 1.0f, 0.0f), CollisionShapeType::PLANE) };
-	////p1.get()->setRestitution(0.8f);
-	//addObjectToWorld(std::move(p1));
-	//auto p2{ std::make_unique<PhysicsObject>(0.2f, 0.8f, 1.0f,
-	//	btVector3(0.0f, 50.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
-	//	 btVector3(0.0f, 0.0f, 0.0f), CollisionShapeType::SPHERE) };
-	////p2.get()->setRestitution(0.8f);
-	//addObjectToWorld(std::move(p2));
-	//auto p3{ std::make_unique<PhysicsObject>(0.5f, 0.8f, 1.0f,
-	//	btVector3(0.0f, 70.0f, 0.0f), btQuaternion(0.0f, 0.0f, 0.0f, 1.0f),
-	//	 btVector3(0.0f, 0.0f, 0.0f), CollisionShapeType::SPHERE) };;
-	////p3.get()->setRestitution(0.2f);
-	//addObjectToWorld(std::move(p3));
 }
 
 void PhysicsWorld::fixedUpdate()

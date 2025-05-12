@@ -36,10 +36,10 @@ void MeshLoader::SplitLine(std::string& line, std::vector<glm::vec3>& normalVect
     std::stringstream lineStream(line);
     std::string word;
 
+    glm::vec3 vec3(1.0f, 1.0f, 1.0f);
     if (state == "v " || state == "vn")
     {
         Vertex v;
-        glm::vec3 vec3(1.0f, 1.0f, 1.0f);
         int pos = 0;
         while (std::getline(lineStream, word, ' '))
         {
@@ -128,8 +128,15 @@ void MeshLoader::CalculateScalingFactor()
     float ymax = maxExtremes[1];
     float zmax = maxExtremes[2];
 
-    float firstComparison = std::max(1 / (xmax - xmin), 1 / (ymax - ymin));
-    this->scalingFactor = std::max(firstComparison, 1 / (zmax - zmin));
+	float xScale = (xmax - xmin) == 0 ? 1 : 1 / (xmax - xmin);
+    float yScale = (ymax - ymin) == 0 ? 1 : 1 / (ymax - ymin);
+    float zScale = (zmax - zmin) == 0 ? 1 : 1 / (zmax - zmin);
+
+    float firstComparison = std::max(xScale, yScale);
+    this->scalingFactor = std::max(firstComparison, zScale);
+
+    //std::cout << "ScalingFactor: " << scalingFactor << std::endl;
+
 }
 
 MeshLoader::~MeshLoader()
