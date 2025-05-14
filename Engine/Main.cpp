@@ -14,6 +14,7 @@
 #include "MeshRenderer.h"
 #include "MeshLoader.h"
 #include "Mesh.h"
+#include "Material.h"
 #include "Ray.h"
 
 int main()
@@ -40,13 +41,18 @@ int main()
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
 
-	auto lightBulbTransform = std::make_unique<Transform>(glm::vec3(-5.0f, 4.0f, 0.0f), glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	
-	auto lightBulb = std::make_unique<Mesh>(&boundingBoxShaderProgram, &lightBulbLoader);
-	
-	auto lightBulbRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(lightBulb), std::make_unique<Material>(&defaultShaderProgram));
+	ResourceManager<Mesh> m_meshResourceManager;
+	ResourceManager<Material> m_materialResourceManager;
+	ResourceManager<Shader> m_shaderResourceManager;
 
-	Lighting light(&lightingShaderProgram, lightBulb.get(), glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto lightBulbTransform = Transform(glm::vec3(-5.0f, 4.0f, 0.0f), glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	
+	auto lightBulb = ResourceManager<Mesh>::addResource("lightBulb", std::make_unique<Mesh>(&boundingBoxShaderProgram, &lightBulbLoader));
+	
+	auto lightBulbMaterial = ResourceManager<Material>::addResource("lightBulb", std::make_unique<Material>(&defaultShaderProgram));
+
+	auto lightBulbRenderer = MeshRenderer(lightBulb, lightBulbMaterial);
+	Lighting light(&lightingShaderProgram, lightBulb, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	Scene scene{&camera, &light, objectsInScene, /*meshLoaders,*/ &defaultShaderProgram, &boundingBoxShaderProgram};
 	

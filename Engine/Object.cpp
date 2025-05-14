@@ -1,5 +1,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
+#include "Mesh.h"
+#include "Material.h"
 #include "RigidBody.h"
 #include "Collider.h"
 #include "Component.h"
@@ -8,12 +10,13 @@
 #include "RigidBodyRegistry.h"
 #include "Object.h"
 
-Object::Object(std::unique_ptr<Transform> transform, std::unique_ptr<MeshRenderer> meshRenderer, Object* parent)
-	: mTransform{ std::move(transform) }, mMeshRenderer{ std::move(meshRenderer) }, mParentObject{ parent }
+
+Object::Object(Transform&& transform, MeshRenderer&& meshRenderer, Object* parent)
+	: m_transform{ std::move(transform) }, m_meshRenderer{ std::move(meshRenderer) }, m_parentObject{ parent }
 {
-	mTransform.get()->setParentObject(this);
-	mMeshRenderer.get()->setParent(this);
-	mTransform.get()->setScale(mMeshRenderer.get()->getMesh()->scalingFactor);
+	m_transform.setParentObject(this);
+	m_meshRenderer.setParentObject(this);
+	m_transform.setScale(m_meshRenderer.getMesh()->scalingFactor);
 }
 
 void Object::addComponent(std::unique_ptr<Component> component)

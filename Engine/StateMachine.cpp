@@ -6,6 +6,8 @@
 #include "Ray.h"
 #include "MeshLoader.h"
 #include "Mesh.h"
+#include "ResourceManager.h"
+#include "Material.h"
 #include "StateMachine.h"
 #define GLFW_HAND_CURSOR 0x00036004
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
@@ -332,10 +334,10 @@ void StateMachine::AddObject(Ray* ray)
 	std::cout << "VERTICES: " << meshLoaderObj->vertices.size() << std::endl;
 	
 	glm::vec3 spawnPosition = (ray->GetRayStart() + ray->GetRayDirection() * 10.0f);
-	auto objectTransform = std::make_unique<Transform>(spawnPosition,
+	auto objectTransform = Transform(spawnPosition,
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	
-	auto objectRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShaderProgram, meshLoaderObj)), std::move(std::make_unique<Material>(mShaderProgram)));
+	auto objectRenderer = MeshRenderer(ResourceManager<Mesh>::addResource("ob1", std::make_unique<Mesh>(mBoundingBoxShaderProgram, meshLoaderObj)), ResourceManager<Material>::addResource("ob1", std::make_unique<Material>(mShaderProgram)));
 	
 	
 	auto obj = std::make_unique<Object>(std::move(objectTransform), std::move(objectRenderer));

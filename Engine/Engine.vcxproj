@@ -157,7 +157,6 @@
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="PrintClass.cpp" />
     <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodyRegistry.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -177,6 +176,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="Grab.h" />
     <ClInclude Include="Grid.h" />

@@ -5,6 +5,7 @@
 
 #include "KinematicChain.h"
 #include "RigidBodyRegistry.h"
+#include "ResourceManager.h"
 
 //Forward declaration
 class Shader;

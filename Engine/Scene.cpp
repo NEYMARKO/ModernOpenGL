@@ -28,19 +28,29 @@ void Scene::loadDefaultScene()
 	MeshLoader frogLoader("frogSmooth.txt");
 	MeshLoader floorLoader("planeFlat.txt");
 
-	auto templeTransform = std::make_unique<Transform>(glm::vec3(-5.0f, 4.0f, 0.0f), 
+	auto templeTransform = Transform(glm::vec3(-5.0f, 4.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	auto dragonTransform = std::make_unique<Transform>(glm::vec3(5.0f, 50.0f, 0.0f), 
+	auto dragonTransform = Transform(glm::vec3(5.0f, 50.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	auto frogTransform = std::make_unique<Transform>(glm::vec3(5.0f, 35.0f, 0.0f), 
+	auto frogTransform = Transform(glm::vec3(5.0f, 35.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	auto floorTransform = std::make_unique<Transform>(glm::vec3(0.0f, -4.0f, 0.0f),
+	auto floorTransform = Transform(glm::vec3(0.0f, -4.0f, 0.0f),
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 
-	auto templeRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &templeLoader)), std::move(std::make_unique<Material>(mObjectShader)));
-	auto dragonRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &dragonLoader)), std::move(std::make_unique<Material>(mObjectShader)));
-	auto frogRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &frogLoader)), std::move(std::make_unique<Material>(mObjectShader)));
-	auto floorRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(std::make_unique<Mesh>(mBoundingBoxShader, &floorLoader)), std::move(std::make_unique<Material>(mObjectShader)));
+	auto templeMesh = ResourceManager<Mesh>::addResource("temple", std::make_unique<Mesh>(mBoundingBoxShader, &templeLoader));
+	auto dragonMesh = ResourceManager<Mesh>::addResource("dragom", std::make_unique<Mesh>(mBoundingBoxShader, &dragonLoader));
+	auto frogMesh = ResourceManager<Mesh>::addResource("frog", std::make_unique<Mesh>(mBoundingBoxShader, &frogLoader));
+	auto floorMesh = ResourceManager<Mesh>::addResource("floor", std::make_unique<Mesh>(mBoundingBoxShader, &floorLoader));
+
+	auto templeMaterial = ResourceManager<Material>::addResource("temple", std::make_unique<Material>(mObjectShader));
+	auto dragonMaterial = ResourceManager<Material>::addResource("dragon", std::make_unique<Material>(mObjectShader));
+	auto frogMaterial = ResourceManager<Material>::addResource("frog", std::make_unique<Material>(mObjectShader));
+	auto floorMaterial = ResourceManager<Material>::addResource("floor", std::make_unique<Material>(mObjectShader));
+
+	auto templeRenderer = MeshRenderer(templeMesh, templeMaterial);
+	auto dragonRenderer = MeshRenderer(dragonMesh, dragonMaterial);
+	auto frogRenderer = MeshRenderer(frogMesh, frogMaterial);
+	auto floorRenderer = MeshRenderer(floorMesh, floorMaterial);
 
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer)));
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer)));
@@ -68,17 +78,19 @@ void Scene::loadDefaultScene()
 	MeshLoader cubeLoader("cubeFlat.txt");
 	MeshLoader jointLoader("joint4.txt");
 
-	auto cube = std::make_unique<Mesh>(mBoundingBoxShader, &cubeLoader);
-	auto joint = std::make_unique<Mesh>(mBoundingBoxShader, &jointLoader);
+	auto cubeTransform = Transform(glm::vec3(3.2f, 1.7f, 0.0f), 
+		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto jointTransform = Transform(glm::vec3(-30.0f, 0.0f, 0.0f), 
+		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 
-	auto cubeTransform = std::make_unique<Transform>(glm::vec3(3.2f, 1.7f, 0.0f), 
-		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	auto jointTransform = std::make_unique<Transform>(glm::vec3(-30.0f, 0.0f, 0.0f), 
-		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	
-	auto jointRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(joint), std::make_unique<Material>(mObjectShader));
-	auto cubeRenderer = std::make_unique<MeshRenderer>(nullptr, std::move(cube), 
-		std::make_unique<Material>(mObjectShader));
+	auto cubeMesh = ResourceManager<Mesh>::addResource("cube", std::make_unique<Mesh>(mBoundingBoxShader, &cubeLoader));
+	auto jointMesh = ResourceManager<Mesh>::addResource("joint", std::make_unique<Mesh>(mBoundingBoxShader, &jointLoader));
+
+	auto cubeMaterial = ResourceManager<Material>::addResource("cube", std::make_unique<Material>(mObjectShader));
+	auto jointMaterial = ResourceManager<Material>::addResource("joint", std::make_unique<Material>(mObjectShader));
+
+	auto jointRenderer = std::make_unique<MeshRenderer>(jointMesh, jointMaterial);
+	auto cubeRenderer = MeshRenderer(cubeMesh, cubeMaterial);
 	
 	mObjectsInScene.push_back(std::make_unique<Object>(
 		std::move(cubeTransform), std::move(cubeRenderer)

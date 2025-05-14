@@ -4,28 +4,29 @@
 #include <vector>
 #include <stdexcept>
 
+#include "Transform.h"
+#include "MeshRenderer.h"
+
 class Component;
-class Transform;
-class MeshRenderer;
 
 class Object
 {
 private:
 
-	std::unique_ptr<Transform> mTransform;
-	std::unique_ptr<MeshRenderer> mMeshRenderer;
+	Transform m_transform;
+	MeshRenderer m_meshRenderer;
 	std::vector<std::unique_ptr<Component>> m_components;
 	std::vector<std::unique_ptr<Object>> mChildren;
-	Object* mParentObject;
+	Object* m_parentObject;
 	std::string mName;
 
 public:
-	Object(std::unique_ptr<Transform> transform, std::unique_ptr<MeshRenderer> meshRenderer, Object* parent = nullptr);
+	Object(Transform&& transform, MeshRenderer&& meshRenderer, Object* parent = nullptr);
 
 	void setName(const std::string& name) { mName = name; }
-	void setParent(Object* parent) { mParentObject = parent; }
-	void removeParent() { mParentObject = nullptr; }
-	Object* getParent() const { return mParentObject; }
+	void setParent(Object* parent) { m_parentObject = parent; }
+	void removeParent() { m_parentObject = nullptr; }
+	Object* getParent() const { return m_parentObject; }
 	std::string getName() const { return mName; }
 
 	void addComponent(std::unique_ptr<Component> component);
@@ -34,9 +35,9 @@ public:
 	T* getComponent()
 	{
 		if constexpr (std::is_same<T, Transform>::value)
-			return mTransform.get();
+			return &m_transform;
 		else if constexpr (std::is_same<T, MeshRenderer>::value)
-			return mMeshRenderer.get();
+			return &m_meshRenderer;
 
 		for (auto& component : m_components)
 		{

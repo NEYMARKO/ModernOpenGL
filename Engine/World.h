@@ -13,14 +13,19 @@ private:
 	Scene m_scene;
 	PhysicsWorld m_physicsWorld;
 	RigidBodyRegistry m_rigidBodyRegistry;
-	ResourceManager m_resourceManager;
+	ResourceManager<Mesh> m_meshResourceManager;
+	ResourceManager<Material> m_materialResourceManager;
+	ResourceManager<Shader> m_shaderResourceManager;
 public:
 	const glm::vec3 mGravity{ 0.0f, -9.81f, 0.0f };
-	const glm::vec3 up{ 0.0f, 1.0f, 0.0f };
-	const glm::vec3 forward{ 0.0f, 0.0f, -1.0f };
-	const glm::vec3 right{ 1.0f, 0.0f, 0.0f };
+	static const glm::vec3 up;
+	static const glm::vec3 forward;
+	static const glm::vec3 right;
 
 	World() = default;
 	void init();
 	void tick();
 };
+
+//World::up = glm::vec3(0.0f, 1.0f, 0.0f);
+//World::forward
