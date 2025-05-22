@@ -18,16 +18,17 @@ private:
 	std::vector<std::unique_ptr<Component>> m_components;
 	std::vector<std::unique_ptr<Object>> mChildren;
 	Object* m_parentObject;
-	std::string mName;
+	std::string m_name;
 
 public:
-	Object(Transform&& transform, MeshRenderer&& meshRenderer, Object* parent = nullptr);
+	Object(Transform&& transform, MeshRenderer&& meshRenderer, 
+		const std::string& name = "object", Object* parent = nullptr);
 
-	void setName(const std::string& name) { mName = name; }
+	void setName(const std::string& name) { m_name = name; }
 	void setParent(Object* parent) { m_parentObject = parent; }
 	void removeParent() { m_parentObject = nullptr; }
 	Object* getParent() const { return m_parentObject; }
-	std::string getName() const { return mName; }
+	std::string getName() const { return m_name; }
 
 	void addComponent(std::unique_ptr<Component> component);
 

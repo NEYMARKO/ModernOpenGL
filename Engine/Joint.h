@@ -6,7 +6,6 @@
 #include <memory>
 
 class Transform;
-//#include "Transform.h"
 
 class Joint
 {
@@ -14,19 +13,10 @@ class Joint
 
 		std::unique_ptr<Transform> m_transform;
 		glm::vec3 m_tempPosition;
-		//Transform* m_tempTransform;
-		//Transform* m_parentTransform;
-		//Transform* m_childTransform;
 		int m_id;
 		float mAngleConstraint;
 		Joint* m_parent;
 		Joint* m_child;
-		//glm::vec3 mForward;
-		//glm::quat mOrientation;
-		//glm::vec3 m_position;
-		//glm::vec3 mJointEnd;
-		//glm::vec3 mTempPosition;
-		//glm::vec3 mUp;
 		float m_length;
 
 	public:
@@ -55,6 +45,5 @@ class Joint
 		glm::vec3 getForwardVector();
 		glm::vec3 getJointEnd();
 		Transform* getTransform();
-		/*Mesh* GetMeshContainer() { return mMeshContainer; };*/
 		~Joint();
 };

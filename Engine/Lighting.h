@@ -1,6 +1,7 @@
 #pragma once
 #include "glm/glm.hpp"
 #include "VAO.h"
+#include "EmptyObject.h"
 
 class Shader;
 class Mesh;

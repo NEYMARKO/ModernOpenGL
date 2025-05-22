@@ -8,13 +8,15 @@
 #include "Mesh.h"
 #include "ResourceManager.h"
 #include "Material.h"
+#include "PhysicsWorld.h"
 #include "StateMachine.h"
 #define GLFW_HAND_CURSOR 0x00036004
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define SELECTED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
-StateMachine::StateMachine(Object* target, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene)
-	: mTarget{ target }, mObjectsInScene { objectsInScene }, mMeshLoaders{ meshLoaders }
+StateMachine::StateMachine(Object* target, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene, PhysicsWorld* physicsWorld)
+	: mTarget{ target }, mObjectsInScene { objectsInScene }, mMeshLoaders{ meshLoaders },
+	m_physicsWorld { physicsWorld }
 {
 	this->state = NOTHING;
 	this->subState = EMPTY;
@@ -153,6 +155,21 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 				int pickedId = -1;
 				//SortObjectsInScene();
 				//std::cout << "OBJ IN SCENE SIZE: " << mObjectsInScene.size() << std::endl;
+				
+				glm::vec3 rs = ray->GetRayStart();
+				glm::vec3 rdir = ray->GetRayDirection();
+				btVector3 rayFrom(rs.x, rs.y, rs.z);
+				btVector3 rayTo = rayFrom + btVector3(rdir.x, rdir.y, rdir.z) * 
+					ray->GetRayLength();
+
+				btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom, rayTo);
+				m_physicsWorld->getDynamicsWorld()->rayTest(rayFrom, rayTo, rayCallback);
+				if (rayCallback.hasHit())
+				{
+					btRigidBody* hit = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
+					Object* obj = static_cast<Object*>(hit->getUserPointer());
+					std::cout << "HIT OBJECT: " << obj->getName() << "\n";
+				}
 				for (int obj = 0; obj < this->mObjectsInScene.size() && !objectPicked; obj++)
 				{
 					//std::cout << "INSIDE OF OBJECTS IN SCENE " << std::endl;

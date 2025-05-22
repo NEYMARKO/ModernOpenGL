@@ -1,8 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string_view>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "OpenGLIncludes.h"
 
 class Camera;
 class StateMachine;
@@ -18,7 +17,7 @@ class Window
 private:
 	int mWidth;
 	int mHeight;
-	std::string_view mName;
+	std::string_view m_name;
 	Status mStatus {NONE};
 	GLFWwindow* mWindow;
 	Camera* mCamera;

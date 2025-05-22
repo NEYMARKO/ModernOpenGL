@@ -9,8 +9,8 @@
 #include "SphereCollider.h"
 #include "PlaneCollider.h"
 #include "RigidBody.h"
+#include <string>
 #include "Scene.h"
-
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, /*std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,*/ Shader* objectShader, Shader* boundingBoxShader) 
 	: mCamera{ camera }, mLightSource{ lightSource }, mObjectsInScene{ objectsInScene }, 
 	/*mMeshLoaders { meshLoaders },*/ mObjectShader{ objectShader }, mBoundingBoxShader{ boundingBoxShader }
@@ -52,22 +52,22 @@ void Scene::loadDefaultScene()
 	auto frogRenderer = MeshRenderer(frogMesh, frogMaterial);
 	auto floorRenderer = MeshRenderer(floorMesh, floorMaterial);
 
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer)));
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer)));
+	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer), "temple"));
+	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer), "dragon"));
 	
 	auto dragonCollider = std::make_unique<SphereCollider>(1.0f);
 	mObjectsInScene.back()->addComponent(std::move(dragonCollider));
 	auto dragonRigidBody = std::make_unique<RigidBody>(1.0f, 0.8f);
 	mObjectsInScene.back()->addComponent(std::move(dragonRigidBody));
 	
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(frogTransform), std::move(frogRenderer)));
+	mObjectsInScene.push_back(std::make_unique<Object>(std::move(frogTransform), std::move(frogRenderer), "frog"));
 	
 	auto frogCollider = std::make_unique<SphereCollider>(1.0f);
 	mObjectsInScene.back()->addComponent(std::move(frogCollider));
 	auto frogRigidBody = std::make_unique<RigidBody>(0.3f, 0.8f);
 	mObjectsInScene.back()->addComponent(std::move(frogRigidBody));
 
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform), std::move(floorRenderer)));
+	mObjectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform), std::move(floorRenderer), "floor"));
 
 	Transform* floorTransformPtr = mObjectsInScene.back()->getComponent<Transform>();
 	auto floorCollider = std::make_unique<PlaneCollider>(floorTransformPtr->glmToBulletVec3(glm::vec3(0.0f, 1.0f, 0.0f)), 0.0f);
@@ -93,7 +93,7 @@ void Scene::loadDefaultScene()
 	auto cubeRenderer = MeshRenderer(cubeMesh, cubeMaterial);
 	
 	mObjectsInScene.push_back(std::make_unique<Object>(
-		std::move(cubeTransform), std::move(cubeRenderer)
+		std::move(cubeTransform), std::move(cubeRenderer), "cube"
 	));
 
 	m_ikChain = std::make_unique<KinematicChain>(14, 45.0f,

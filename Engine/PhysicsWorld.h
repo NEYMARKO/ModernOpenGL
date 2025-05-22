@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <GLFW/glfw3.h>
 #include <btBulletDynamicsCommon.h>
 #include <memory>
+#include "OpenGLIncludes.h"
 
 class RigidBody;
 class PhysicsObject;

@@ -2,8 +2,6 @@
 #include "Lighting.h"
 #include "StateMachine.h"
 #include "Grid.h"
-#include "Joint.h"
-#include "KinematicChain.h"
 #include "Gizmos.h"
 #include "Window.h"
 #include "Scene.h"
@@ -32,8 +30,10 @@ int main()
 	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
 	Shader pointShader("point.vert", "point.frag");
 	
+	PhysicsWorld physicsWorld{};
+
 	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
-	StateMachine stateMachine(nullptr, &camera, meshLoaders, objectsInScene);
+	StateMachine stateMachine(nullptr, &camera, meshLoaders, objectsInScene, &physicsWorld);
 	stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
 	window.addStateMachine(&stateMachine);
 	
@@ -59,7 +59,6 @@ int main()
 	auto lightBulbObject = std::make_unique<Object>(std::move(lightBulbTransform), std::move(lightBulbRenderer));
 	scene.addObject(std::move(lightBulbObject));
 
-	PhysicsWorld physicsWorld{};
 
 	while (!window.shouldClose())
 	{

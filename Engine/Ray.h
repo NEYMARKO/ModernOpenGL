@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <glad/glad.h>
+#include "OpenGLIncludes.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "VAO.h"

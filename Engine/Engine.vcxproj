@@ -144,6 +144,7 @@
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="GrabState.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Joint.cpp" />
     <ClCompile Include="KinematicChain.cpp" />
@@ -165,6 +166,7 @@
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TransformState.cpp" />
     <ClCompile Include="VAO.cpp" />
     <ClCompile Include="VBO.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -178,11 +180,14 @@
     <ClInclude Include="EBO.h" />
     <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="Gizmos.h" />
-    <ClInclude Include="Grab.h" />
+    <ClInclude Include="GrabState.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="OpenGLIncludes.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SortingAlgorithms.h" />
     <ClInclude Include="RigidBodyRegistry.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="TransformState.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="Joint.h" />
     <ClInclude Include="KinematicChain.h" />

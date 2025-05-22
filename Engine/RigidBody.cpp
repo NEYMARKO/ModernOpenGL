@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "RigidBody.h"
+#include <stdexcept>
 
 RigidBody::RigidBody(float mass, float restitution)
 	: m_mass{ mass }, m_restitution{ restitution },
@@ -32,6 +33,10 @@ void RigidBody::finalizeRigidBody()
 		m_mass, m_motionState.get(), m_collider->getCollisionShape(), m_inertia);
 	m_rigidBody = std::make_unique<btRigidBody>(m_rigidBodyCI);
 
+	//allows you to store object pointer in rigidbody - that way you can retrive
+	//information about object (if for example rigidbody was hit with a ray, you can retrive
+	//information about object to which that rigidbody belongs to)
+	m_rigidBody->setUserPointer(parentObject);
 	setRestitution(m_restitution);
 }
 

@@ -7,6 +7,7 @@ class Camera;
 class Shader;
 class Object;
 class MeshLoader;
+class PhysicsWorld;
 
 enum State
 {
@@ -56,6 +57,7 @@ class StateMachine
 		State state;
 		SubState subState;
 		Plane objectPlane;
+		PhysicsWorld* m_physicsWorld;
 
 		std::vector<std::unique_ptr<Object>>& mObjectsInScene;
 		std::vector<std::unique_ptr<MeshLoader>>& mMeshLoaders;
@@ -67,7 +69,8 @@ class StateMachine
 		glm::vec3 mouseDirectionWorld;
 
 	public:
-		StateMachine(Object* target, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene);
+		StateMachine(Object* target, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene,
+			PhysicsWorld* physicsWorld);
 		
 		void AddShaderPrograms(Shader* shader, Shader* boxShader);
 		//Controls state that StateMachine is currently in. State changes on the press of a button

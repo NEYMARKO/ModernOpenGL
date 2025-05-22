@@ -11,8 +11,10 @@
 #include "Object.h"
 
 
-Object::Object(Transform&& transform, MeshRenderer&& meshRenderer, Object* parent)
-	: m_transform{ std::move(transform) }, m_meshRenderer{ std::move(meshRenderer) }, m_parentObject{ parent }
+Object::Object(Transform&& transform, MeshRenderer&& meshRenderer, 
+	const std::string& name, Object* parent)
+	: m_transform{ std::move(transform) }, m_meshRenderer{ std::move(meshRenderer) }, 
+	m_parentObject{ parent }, m_name { name }
 {
 	m_transform.setParentObject(this);
 	m_meshRenderer.setParentObject(this);

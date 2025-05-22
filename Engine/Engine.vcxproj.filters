@@ -111,6 +111,12 @@
     <ClCompile Include="RigidBodyRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TransformState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GrabState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoundingBox.h">
@@ -120,9 +126,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Grid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Grab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EBO.h">
@@ -222,6 +225,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EmptyObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLIncludes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GrabState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
