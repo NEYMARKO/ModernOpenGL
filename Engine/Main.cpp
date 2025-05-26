@@ -14,7 +14,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Ray.h"
-
+#include "BulletGizmos.h"
 int main()
 {
 	std::vector<std::unique_ptr<Object>> objectsInScene;
@@ -32,6 +32,7 @@ int main()
 	
 	PhysicsWorld physicsWorld{};
 
+	BulletGizmos bulletGizmos(&physicsWorld);
 	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
 	StateMachine stateMachine(nullptr, &camera, meshLoaders, objectsInScene, &physicsWorld);
 	stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
@@ -45,6 +46,7 @@ int main()
 	ResourceManager<Material> m_materialResourceManager;
 	ResourceManager<Shader> m_shaderResourceManager;
 
+	ResourceManager<Shader>::addResource("gizmos", std::make_unique<Shader>("gizmos.vert", "gizmos.frag"));
 	auto lightBulbTransform = Transform(glm::vec3(-5.0f, 4.0f, 0.0f), glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	
 	auto lightBulb = ResourceManager<Mesh>::addResource("lightBulb", std::make_unique<Mesh>(&boundingBoxShaderProgram, &lightBulbLoader));
@@ -62,8 +64,11 @@ int main()
 
 	while (!window.shouldClose())
 	{
+		//bulletGizmos.updateBufferContent();
 		scene.renderScene();
 
+		bulletGizmos.updateBufferContent();
+		bulletGizmos.renderColliders(&camera);
 		grid.Draw(boundingBoxShaderProgram, camera);
 		
 		if (camera.mRay != nullptr)

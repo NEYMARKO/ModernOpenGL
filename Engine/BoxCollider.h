@@ -13,6 +13,11 @@ public:
 		assignColliderShape(std::make_unique<btBoxShape>(btVector3(size, size, size)));
 	}
 
+	BoxCollider(float dimX, float dimY, float dimZ)
+	{
+		assignColliderShape(std::make_unique<btBoxShape>(btVector3(dimX, dimY, dimZ)));
+	}
+
 	void setSize(float size) { m_size = size; }
 	float getSize() const { return m_size; }
 };

@@ -169,35 +169,18 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 					btRigidBody* hit = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
 					Object* obj = static_cast<Object*>(hit->getUserPointer());
 					std::cout << "HIT OBJECT: " << obj->getName() << "\n";
+					//remove green color (that suggests object is selected) from old selection
+					if (mTarget && mTarget != obj)
+						mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+					obj->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
+					mTarget = obj;
 				}
-				for (int obj = 0; obj < this->mObjectsInScene.size() && !objectPicked; obj++)
+				//ray missed every object in the scene
+				else
 				{
-					//std::cout << "INSIDE OF OBJECTS IN SCENE " << std::endl;
-					for (float i = 0; i < ray->GetRayLength(); i += 0.25)
-					{
-						if (mObjectsInScene[obj].get()->getComponent<MeshRenderer>()->
-							getMesh()->boundingBox.Intersects(camera, i))
-						{
-							mObjectsInScene[obj].get()->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
-							pickedId = mObjectsInScene[obj].get()->getComponent<MeshRenderer>()
-								->getMesh()->GetID();
-							objectPicked = true;
-							mTarget = mObjectsInScene[obj].get();
-							CalculateObjectPlane();
-							break;
-						}
-					}
-				}
-
-
-				//if not a single object was clicked on, reset target to nullptr
-				if (pickedId == -1) mTarget = nullptr;
-				//removing selective color if current click doesn't intersect with any of the objects
-				for (int i = 0; i < this->mObjectsInScene.size(); i++)
-				{
-					if (mObjectsInScene[i].get()->getComponent<MeshRenderer>()
-						->getMesh()->GetID() != pickedId) 
-						mObjectsInScene[i]->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+					if (mTarget) 
+						mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+					mTarget = nullptr;
 				}
 			}
 			//std::cout << "AFTER ADD" << std::endl;
@@ -207,6 +190,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 	case GLFW_MOUSE_BUTTON_RIGHT:
 		if (action == GLFW_PRESS)
 		{
+			//std::cout << "SHOULD ROTATE CAMERA \n";
 			this->canRotateCamera = true;
 			glfwGetCursorPos(window, &this->mousePosX, &this->mousePosY);
 			GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
@@ -247,7 +231,7 @@ void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mo
 
 	else if (mTarget) camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);
 
-	else if (this->canRotateCamera)
+	if (this->canRotateCamera)
 	{
 		this->camera->Rotate(window, this->mousePosX, this->mousePosY, mouseX, mouseY);
 		this->mousePosX = mouseX;

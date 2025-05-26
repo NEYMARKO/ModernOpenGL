@@ -7,7 +7,7 @@
 #include "MeshRenderer.h"
 #include "Object.h"
 #include "SphereCollider.h"
-#include "PlaneCollider.h"
+#include "BoxCollider.h"
 #include "RigidBody.h"
 #include <string>
 #include "Scene.h"
@@ -70,7 +70,7 @@ void Scene::loadDefaultScene()
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform), std::move(floorRenderer), "floor"));
 
 	Transform* floorTransformPtr = mObjectsInScene.back()->getComponent<Transform>();
-	auto floorCollider = std::make_unique<PlaneCollider>(floorTransformPtr->glmToBulletVec3(glm::vec3(0.0f, 1.0f, 0.0f)), 0.0f);
+	auto floorCollider = std::make_unique<BoxCollider>(20.0f, 0.05f, 20.0f);
 	mObjectsInScene.back()->addComponent(std::move(floorCollider));
 	auto floorRigidBody = std::make_unique<RigidBody>(0.0f, 0.8f);
 	mObjectsInScene.back()->addComponent(std::move(floorRigidBody));

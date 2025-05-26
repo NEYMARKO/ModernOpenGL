@@ -5187,7 +5187,7 @@ GLFWAPI GLFWjoystickfun glfwSetJoystickCallback(GLFWjoystickfun callback);
  *  internal list with any gamepad mappings it finds.  This string may
  *  contain either a single gamepad mapping or many mappings separated by
  *  newlines.  The parser supports the full format of the `gamecontrollerdb.txt`
- *  source file including empty lines and comments.
+ *  source file including empty m_lines and comments.
  *
  *  See @ref gamepad_mapping for a description of the format.
  *

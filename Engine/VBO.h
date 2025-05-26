@@ -10,11 +10,19 @@ struct Vertex;
 class VBO
 {
 	public:
+		size_t m_maxCapacity;
 		GLuint ID;
 		//This needs to exist because of declaration of VBO in private spectar of Mesh and BoundingBox
 		VBO();
+		VBO(size_t capacity);
 		VBO(const std::vector<glm::vec3>& verticesPositions);
 		VBO(const std::vector<Vertex>& vertices);
+		//returns size of storage occupied by VBO in bytes - needs to be divided
+		//with type of elements that it is holding (for example: Vertex or glm::vec3)
+		//to determine number of elements that are being stored. Example of usage:
+		//int numberOfElements = vbo.getSizeInBytes() / sizeof(Vertex) if vbo is storing Vertex
+		//objects
+		int getSizeInBytes();
 		//Used for binding buffer which is associated to this object
 		void Bind();
 		//Used for binding buffer which is associated to this object

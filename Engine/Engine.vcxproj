@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="BulletGizmos.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="EBO.cpp" />
@@ -174,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="BulletGizmos.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
@@ -182,6 +184,7 @@
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="GrabState.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="MyBulletDebugDrawer.h" />
     <ClInclude Include="OpenGLIncludes.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SortingAlgorithms.h" />
@@ -235,6 +238,8 @@
     <None Include="borderBox.vert" />
     <None Include="default.frag" />
     <None Include="default.vert" />
+    <None Include="gizmos.frag" />
+    <None Include="gizmos.vert" />
     <None Include="lighting.frag" />
     <None Include="lighting.vert" />
     <None Include="point.frag" />

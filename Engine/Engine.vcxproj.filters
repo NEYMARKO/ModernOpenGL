@@ -117,6 +117,9 @@
     <ClCompile Include="GrabState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BulletGizmos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoundingBox.h">
@@ -239,6 +242,12 @@
     <ClInclude Include="GrabState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyBulletDebugDrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletGizmos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cone.txt">
@@ -310,6 +319,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="lighting.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="gizmos.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="gizmos.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
