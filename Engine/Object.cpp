@@ -13,11 +13,13 @@
 
 Object::Object(Transform&& transform, MeshRenderer&& meshRenderer, 
 	const std::string& name, Object* parent)
-	: m_transform{ std::move(transform) }, m_meshRenderer{ std::move(meshRenderer) }, 
+	: m_transform{ std::move(transform) }, m_meshRenderer{ std::move(meshRenderer) },
+	m_editorCollider { m_meshRenderer.getMesh()->m_minimums, m_meshRenderer.getMesh()->m_maximums },
 	m_parentObject{ parent }, m_name { name }
 {
 	m_transform.setParentObject(this);
 	m_meshRenderer.setParentObject(this);
+	m_editorCollider.setParent(this);
 	m_transform.setScale(m_meshRenderer.getMesh()->scalingFactor);
 }
 

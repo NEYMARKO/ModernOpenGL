@@ -17,6 +17,7 @@ class VBO
 		VBO(size_t capacity);
 		VBO(const std::vector<glm::vec3>& verticesPositions);
 		VBO(const std::vector<Vertex>& vertices);
+		//~VBO();
 		//returns size of storage occupied by VBO in bytes - needs to be divided
 		//with type of elements that it is holding (for example: Vertex or glm::vec3)
 		//to determine number of elements that are being stored. Example of usage:

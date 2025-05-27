@@ -6,6 +6,7 @@
 
 #include "Transform.h"
 #include "MeshRenderer.h"
+#include "EditorCollider.h"
 
 class Component;
 
@@ -15,6 +16,7 @@ private:
 
 	Transform m_transform;
 	MeshRenderer m_meshRenderer;
+	EditorCollider m_editorCollider;
 	std::vector<std::unique_ptr<Component>> m_components;
 	std::vector<std::unique_ptr<Object>> mChildren;
 	Object* m_parentObject;
@@ -29,7 +31,7 @@ public:
 	void removeParent() { m_parentObject = nullptr; }
 	Object* getParent() const { return m_parentObject; }
 	std::string getName() const { return m_name; }
-
+	EditorCollider* getEditorCollider() { return &m_editorCollider; };
 	void addComponent(std::unique_ptr<Component> component);
 
 	template<typename T>
@@ -39,7 +41,6 @@ public:
 			return &m_transform;
 		else if constexpr (std::is_same<T, MeshRenderer>::value)
 			return &m_meshRenderer;
-
 		for (auto& component : m_components)
 		{
 			if (auto* casted = dynamic_cast<T*>(component.get()))

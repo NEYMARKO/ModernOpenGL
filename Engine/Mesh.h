@@ -35,6 +35,9 @@ class Mesh
 		void setupBuffers();
 
 	public:
+		glm::vec3 m_minimums;
+		glm::vec3 m_maximums;
+
 		const BoundingBox& boundingBox;
 		float scalingFactor;
 

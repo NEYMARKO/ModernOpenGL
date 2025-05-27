@@ -31,6 +31,8 @@ void BulletGizmos::updateBufferContent()
 {
 	if (!m_physicsWorld)
 		return;
+
+	//clear info about lines from the previous frame
 	m_bulletDebugDrawer.resetLines();
 	m_physicsWorld->getDynamicsWorld()->debugDrawWorld();
 	const std::vector<glm::vec3>& lines = *m_bulletDebugDrawer.getLinesPoints();
@@ -39,7 +41,10 @@ void BulletGizmos::updateBufferContent()
 	//initialized
 	if ((m_VBO.m_maxCapacity / sizeof(glm::vec3)) < lines.size())
 	{
+		size_t currentCapacity = m_VBO.m_maxCapacity;
 		m_VBO.Delete();
+
+		//make another VBO that has increased capacity
 		m_VBO = VBO(1.5 * m_VBO.m_maxCapacity);
 
 		m_VAO.LinkVBO(m_VBO, 0, 3, sizeof(glm::vec3), 0);
@@ -48,20 +53,17 @@ void BulletGizmos::updateBufferContent()
 		m_VBO.Unbind();
 		std::cout << "RESIZED VBO" << '\n';
 	}
-	else
-	{
-		m_VBO.Bind();
-		void* ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-		memcpy(ptr, lines.data(), lines.size() * sizeof(glm::vec3));
-		glUnmapBuffer(GL_ARRAY_BUFFER);
-		m_VBO.Unbind();
-	}
-	//VBO has already been fed this information. It can get deleted
+	m_VBO.Bind();
+	void* ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	memcpy(ptr, lines.data(), lines.size() * sizeof(glm::vec3));
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+	m_VBO.Unbind();
 }
 
 void BulletGizmos::renderColliders(Camera* camera)
 {
-	
+	//bullet already returns information in world space, and the color of the line
+	//is hard coded in fragment shader => no need for model matrix or line color uniforms
 	if (!m_shaderProgram)
 		m_shaderProgram = ResourceManager<Shader>::getResource("gizmos");
 	//it will call overriden version of drawLine function (MyBulletDebugDrawer::drawLine)

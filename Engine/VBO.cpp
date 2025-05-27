@@ -49,3 +49,8 @@ void VBO::Delete()
 {
 	glDeleteBuffers(1, &ID);
 }
+
+//VBO::~VBO()
+//{
+//	Delete();
+//}

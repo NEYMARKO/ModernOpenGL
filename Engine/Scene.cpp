@@ -32,13 +32,15 @@ void Scene::loadDefaultScene()
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto dragonTransform = Transform(glm::vec3(5.0f, 50.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto dragonTransform2 = Transform(glm::vec3(-2.0f, 3.0f, 0.0f),
+		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto frogTransform = Transform(glm::vec3(5.0f, 35.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto floorTransform = Transform(glm::vec3(0.0f, -4.0f, 0.0f),
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	auto templeMesh = ResourceManager<Mesh>::addResource("temple", std::make_unique<Mesh>(mBoundingBoxShader, &templeLoader));
-	auto dragonMesh = ResourceManager<Mesh>::addResource("dragom", std::make_unique<Mesh>(mBoundingBoxShader, &dragonLoader));
+	auto dragonMesh = ResourceManager<Mesh>::addResource("dragon", std::make_unique<Mesh>(mBoundingBoxShader, &dragonLoader));
 	auto frogMesh = ResourceManager<Mesh>::addResource("frog", std::make_unique<Mesh>(mBoundingBoxShader, &frogLoader));
 	auto floorMesh = ResourceManager<Mesh>::addResource("floor", std::make_unique<Mesh>(mBoundingBoxShader, &floorLoader));
 
@@ -49,10 +51,12 @@ void Scene::loadDefaultScene()
 
 	auto templeRenderer = MeshRenderer(templeMesh, templeMaterial);
 	auto dragonRenderer = MeshRenderer(dragonMesh, dragonMaterial);
+	auto dragonRenderer2 = MeshRenderer(dragonMesh, dragonMaterial);
 	auto frogRenderer = MeshRenderer(frogMesh, frogMaterial);
 	auto floorRenderer = MeshRenderer(floorMesh, floorMaterial);
 
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer), "temple"));
+	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform2), std::move(dragonRenderer2), "dragon_near_temple"));
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer), "dragon"));
 	
 	auto dragonCollider = std::make_unique<SphereCollider>(1.0f);

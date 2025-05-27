@@ -49,4 +49,7 @@ void Mesh::transferLoadedMeshInfo(MeshLoader* meshLoader)
 	mVertices = std::move(meshLoader->vertices);
 	mIndices = std::move(meshLoader->indices);
 	scalingFactor = meshLoader->scalingFactor;
+
+	m_minimums = meshLoader->minExtremes;
+	m_maximums = meshLoader->maxExtremes;
 }

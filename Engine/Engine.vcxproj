@@ -143,6 +143,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="EBO.cpp" />
+    <ClCompile Include="EditorCollider.cpp" />
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="GrabState.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EBO.h" />
+    <ClInclude Include="EditorCollider.h" />
     <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="GrabState.h" />
