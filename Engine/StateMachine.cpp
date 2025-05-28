@@ -161,87 +161,65 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 				glm::vec3 rs = ray->GetRayStart();
 				glm::vec3 rdir = ray->GetRayDirection();
 				std::vector<Object*> intersected;
-				std::cout << "SIZE: " << intersected.size() << '\n';
 				for (const auto& object : mObjectsInScene)
 				{
 					if (object.get()->getEditorCollider()->intersects(rs, rdir))
 						intersected.emplace_back(object.get());
 				}
 
-				/*std::sort(intersected.begin(),
-					intersected.end(),
-					[rs](Object* obj1, Object* obj2)
+				//sorts objects first by layer (starting from those that have higher priority layer)
+				//and by distance (those closer to ray start have advantage)
+				std::sort(intersected.begin(), intersected.end(),
+					[&rs](Object* obj1, Object* obj2)
 					{
+						int layer1 = obj1->getEditorCollider()->getLayer();
+						int layer2 = obj2->getEditorCollider()->getLayer();
+
+						float distance1 = glm::distance(
+							obj1->getComponent<Transform>()->getPosition(), rs);
+						float distance2 = glm::distance(
+							obj2->getComponent<Transform>()->getPosition(), rs);
+
+						if (layer1 > layer2)
+							return true;
+						else if (layer1 < layer2)
+							return false;
+						else
+						{
+							if (distance1 <= distance2)
+								return true;
+							else
+								return false;
+						}
 						return 
 							glm::distance(obj1->getComponent<Transform>()->getPosition(), rs)
 							< glm::distance(obj2->getComponent<Transform>()->getPosition(), rs);
 					}
-				);*/
-				//ray missed all targets
-				if (intersected.size() == 0)
+				);
+
+				std::cout << "SORTED HITS (by priority descending):" << '\n';
+				for (const auto* obj : intersected)
+				{
+					std::cout << obj->getName() << '\n';
+				}
+				if (intersected.size() > 0)
+				{
+					if (mTarget && mTarget != intersected[0])
+						mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+					mTarget = intersected[0];
+					mTarget->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
+				}
+				else
 				{
 					if (mTarget)
 						mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
 					mTarget = nullptr;
 				}
-				else if (intersected.size() == 1)
-				{
-					if (mTarget)
-						mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
-					mTarget = intersected[0];
-				}
-				else if (intersected.size() > 1)
-				{
-					if (mTarget)
-						mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
-					float leastDistance = glm::distance(intersected.back()->
-						getComponent<Transform>()->getPosition(), rs);
-					intersected.pop_back();
-					std::cout << "ALL HIT OBJECTS: " << '\n';
-					for (Object* obj : intersected)
-					{
-						std::cout << obj->getName() << '\n';
-						float currentDistance = glm::distance(
-							obj->getComponent<Transform>()->getPosition(),
-							rs);
-						if (currentDistance < leastDistance)
-						{
-							leastDistance = currentDistance;
-							mTarget = obj;
-						}
-					}
-					std::cout << '\n';
-					//mTarget->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
-				}
+
 
 				if (mTarget)
 					std::cout << "HIT: " << mTarget->getName() << '\n';
-				//btVector3 rayFrom(rs.x, rs.y, rs.z);
-				//btVector3 rayTo = rayFrom + btVector3(rdir.x, rdir.y, rdir.z) * 
-				//	ray->GetRayLength();
-
-				//btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom, rayTo);
-				//m_physicsWorld->getDynamicsWorld()->rayTest(rayFrom, rayTo, rayCallback);
-				//if (rayCallback.hasHit())
-				//{
-				//	btRigidBody* hit = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
-				//	Object* obj = static_cast<Object*>(hit->getUserPointer());
-				//	std::cout << "HIT OBJECT: " << obj->getName() << "\n";
-				//	//remove green color (that suggests object is selected) from old selection
-				//	if (mTarget && mTarget != obj)
-				//		mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
-				//	obj->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
-				//	mTarget = obj;
-				//}
-				////ray missed every object in the scene
-				//else
-				//{
-				//	if (mTarget) 
-				//		mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
-				//	mTarget = nullptr;
-				//}
 			}
-			//std::cout << "AFTER ADD" << std::endl;
 		}
 		break;
 

@@ -30,9 +30,13 @@ void Scene::loadDefaultScene()
 
 	auto templeTransform = Transform(glm::vec3(-5.0f, 4.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto templeTransform2 = Transform(glm::vec3(-5.0f, 4.0f, -2.0f),
+		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto dragonTransform = Transform(glm::vec3(5.0f, 50.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto dragonTransform2 = Transform(glm::vec3(-2.0f, 3.0f, 0.0f),
+		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto dragonTransform3 = Transform(glm::vec3(-5.0f, 4.0f, 2.5f),
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto frogTransform = Transform(glm::vec3(5.0f, 35.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
@@ -50,13 +54,17 @@ void Scene::loadDefaultScene()
 	auto floorMaterial = ResourceManager<Material>::addResource("floor", std::make_unique<Material>(mObjectShader));
 
 	auto templeRenderer = MeshRenderer(templeMesh, templeMaterial);
+	auto templeRenderer2 = MeshRenderer(templeMesh, templeMaterial);
 	auto dragonRenderer = MeshRenderer(dragonMesh, dragonMaterial);
 	auto dragonRenderer2 = MeshRenderer(dragonMesh, dragonMaterial);
+	auto dragonRenderer3 = MeshRenderer(dragonMesh, dragonMaterial);
 	auto frogRenderer = MeshRenderer(frogMesh, frogMaterial);
 	auto floorRenderer = MeshRenderer(floorMesh, floorMaterial);
 
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer), "temple"));
+	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform2), std::move(templeRenderer2), "temple_behind"));
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform2), std::move(dragonRenderer2), "dragon_near_temple"));
+	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform3), std::move(dragonRenderer3), "dragon_infront_temple"));
 	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer), "dragon"));
 	
 	auto dragonCollider = std::make_unique<SphereCollider>(1.0f);
