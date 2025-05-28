@@ -1,125 +1,77 @@
 #include "Camera.h"
 #include "Shader.h"
-#include "Ray.h"
-#include "BoundingBox.h"
-#include "PrintClass.h"
+#include "EditorCollider.h"
+#include "ResourceManager.h"
 #include "Gizmos.h"
-Gizmos::Gizmos(Camera* camera, Shader* meshShader, Shader* boundingBoxShader, Shader* pointShader)
+
+Gizmos::Gizmos(Camera* camera, size_t bufferCapacity) :
+	m_camera{ camera }, 
+	m_VBO{ bufferCapacity }
 {
-	this->camera = camera;
-	this->meshShader = meshShader;
-	this->boundingBoxShader = boundingBoxShader;
-	this->pointShader = pointShader;
+	m_edgePoints.reserve(24 * 30 * sizeof(glm::vec3));
+	
+	m_VAO.Bind();
+	m_VAO.LinkVBO(m_VBO, 0, 3, sizeof(glm::vec3), 0);
+
+	m_VAO.Unbind();
+	m_VBO.Unbind();
 }
 
-void Gizmos::AddPoint(const glm::vec3& position)
+void Gizmos::addEditorCollider(EditorCollider* editorCollider)
 {
-	this->pointsPositions.push_back(position);
-	//SetupPointsBuffer();
+	m_editorColliders.emplace_back(editorCollider);
+	updateBufferContent();
 }
-void Gizmos::SetupPointsBuffer()
+//TODO: somehow connect points to bounding volume they belong to - it doesn't make sense
+//to update whole buffer if only one bounding volume is changed - just update the part of the
+//buffer in which those changed points are stored in
+void Gizmos::updateBufferContent()
 {
-	this->pointsVAOBuffer.Bind();
-	this->pointsVBOBuffer = VBO(this->pointsPositions);
+	repopulateVolumesPoints();
 
-	this->pointsVAOBuffer.LinkVBO(this->pointsVBOBuffer, 0, 3, sizeof(glm::vec3), 0);
-
-	this->pointsVAOBuffer.Unbind();
-	this->pointsVBOBuffer.Unbind();
+	m_VBO.Bind();
+	void* ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	memcpy(ptr, m_edgePoints.data(),
+		m_edgePoints.size() * sizeof(glm::vec3));
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+	m_VBO.Unbind();
 }
 
-void Gizmos::UpdatePoints(const std::vector<glm::vec3>& positions)
+void Gizmos::repopulateVolumesPoints()
 {
-	this->pointsPositions = positions;
-
-	/*for (glm::vec3 point : positions)
+	m_edgePoints.clear();
+	for (auto* eCollider : m_editorColliders)
 	{
-		PrintClass::PrintVec3(point);
-	}*/
-	this->pointsVBOBuffer.Delete();
-	SetupPointsBuffer();
-}
-void Gizmos::RenderPoints(float radius)
-{
-	this->pointShader->Activate();
-
-	glm::mat4 model = glm::mat4(1.0f);
-	this->pointShader->SetMat4("model", model);
-
-	this->camera->generateViewProjectionMatrices(*(this->boundingBoxShader));
-
-	glDisable(GL_DEPTH_TEST);
-	this->pointsVAOBuffer.Bind();
-
-	glDrawArrays(GL_POINTS, 0, this->pointsPositions.size());
-
-	this->pointsVAOBuffer.Unbind();
-	glEnable(GL_DEPTH_TEST);
-}
-void Gizmos::AddRay(std::string name, const glm::vec3& startPos, const glm::vec3& direction, int length)
-{
-	Ray* newRay = new Ray(startPos, direction, length);
-	this->raysInTheScene.insert({name, newRay});
-}
-
-//position is getting fetched from world space => no need for converting
-void Gizmos::RenderLine(Ray* ray, glm::vec3& color)
-{
-
-	this->boundingBoxShader->Activate();
-
-	glLineWidth(15.0f);
-	//Coordinates are already converted to world space in Raycast function
-	glm::mat4 model = glm::mat4(1.0f);
-
-	this->boundingBoxShader->SetMat4("model", model);
-	this->camera->generateViewProjectionMatrices(*(this->boundingBoxShader));
-
-	this->boundingBoxShader->SetVec3("lineColor", color);
-
-	ray->GetRayVAO()->Bind();
-	glDrawElements(GL_LINES, ray->GetRayIndices()->size(), GL_UNSIGNED_INT, 0);
-	ray->GetRayVAO()->Bind();
-}
-
-void Gizmos::RenderAllLines(glm::vec3& color)
-{
-	/*std::cout << "NUMBER OF LINES: " << this->raysInTheScene.size() << std::endl;*/
-	for (auto ray : this->raysInTheScene)
-	{
-		/*std::cout << "NAME: " << ray.first << std::endl;*/
-		RenderLine(ray.second, color);
+		m_edgePoints.insert(m_edgePoints.end(), 
+			eCollider->m_edges.begin(), eCollider->m_edges.end());
 	}
+	//current number of points is greater than what VBO can store (not enough allocated VBO storage)
+	if ((m_VBO.m_storageCapacity / sizeof(glm::vec3)) < m_edgePoints.size())
+		expandBuffer();
 }
 
-void Gizmos::UpdateLine(std::string& name, const glm::vec3& startPos, const glm::vec3& direction, int length)
+void Gizmos::expandBuffer()
 {
-	this->raysInTheScene[name] = new Ray(startPos, direction, length);
-}
-void Gizmos::RenderBoundingBox(BoundingBox* boundingBox)
-{
-	this->boundingBoxShader->Activate();
+	size_t currentCapacity = m_VBO.m_storageCapacity;
+	
+	m_VBO.Delete();
+	m_VBO = VBO(2 * currentCapacity);
+	
+	m_VAO.Bind();
+	m_VAO.LinkVBO(m_VBO, 0, 3, sizeof(glm::vec3), 0);
+	m_VAO.Unbind();
 
-	//glm::mat4 model = boundingBox->GetParentMesh()->GetFinalMatrix();
-	glm::mat4 model = glm::mat4(1.0f);
-	this->boundingBoxShader->SetMat4("model", model);
-	this->boundingBoxShader->SetVec3("cameraPos", this->camera->GetCameraPosition());
-	this->boundingBoxShader->SetVec3("lineColor", glm::vec3(0.0f, 1.0f, 0.0f));
-
-	this->camera->generateViewProjectionMatrices(*(this->boundingBoxShader));
-
-	boundingBox->GetBoundingBoxVAO()->Bind();
-
-	glDrawElements(GL_LINES, boundingBox->GetIndices()->size(), GL_UNSIGNED_INT, 0);
-
-	boundingBox->GetBoundingBoxVAO()->Unbind();
+	m_VBO.Unbind();
 }
 
-Gizmos::~Gizmos()
+void Gizmos::renderBoundingVolumes()
 {
-	for (auto elem : this->raysInTheScene)
-	{
-		delete elem.second;
-	}
-	this->raysInTheScene.clear();
+	if (!m_shader)
+		m_shader = ResourceManager<Shader>::getResource("gizmos");
+	m_shader->Activate();
+	m_camera->generateViewProjectionMatrices(*m_shader);
+
+	m_VAO.Bind();
+	glDrawArrays(GL_LINES, 0, m_edgePoints.size());
+	m_VAO.Unbind();
 }

@@ -5,25 +5,28 @@ VBO::VBO()
 
 }
 
-VBO::VBO(size_t capacity) : m_maxCapacity { capacity }
+VBO::VBO(size_t capacity) : m_storageCapacity { capacity }
 {
 	glGenBuffers(1, &ID);
 	glBindBuffer(GL_ARRAY_BUFFER, ID);
 	glBufferData(GL_ARRAY_BUFFER, capacity, nullptr, GL_STATIC_DRAW);
 }
 
-VBO::VBO(const std::vector<glm::vec3>& verticesPositions)
+VBO::VBO(const std::vector<glm::vec3>& verticesPositions) :
+	m_storageCapacity { verticesPositions.size() * sizeof(glm::vec3) }
 {
 	glGenBuffers(1, &ID);
 	glBindBuffer(GL_ARRAY_BUFFER, ID);
 	glBufferData(GL_ARRAY_BUFFER, verticesPositions.size() * sizeof(glm::vec3), &verticesPositions[0], GL_STATIC_DRAW);
 }
 
-VBO::VBO(const std::vector<Vertex>& vertices)
+VBO::VBO(const std::vector<Vertex>& vertices) :
+	m_storageCapacity{ vertices.size() * sizeof(Vertex) }
 {
 	glGenBuffers(1, &ID);
 	glBindBuffer(GL_ARRAY_BUFFER, ID);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+	
 }
 
 int VBO::getSizeInBytes()

@@ -1,34 +1,29 @@
 #pragma once
+#include <vector>
+#include <glm/glm.hpp>
 #include "VBO.h"
 #include "VAO.h"
-#include <unordered_map>
 
 class Camera;
 class Shader;
-class Ray;
-class BoundingBox;
+class EditorCollider;
 
 class Gizmos
 {
 	private:
-		Camera* camera;
-		Shader* meshShader;
-		Shader* boundingBoxShader;
-		Shader* pointShader;
-		std::unordered_map<std::string, Ray*> raysInTheScene;
-		std::vector<glm::vec3> pointsPositions;
-		VBO pointsVBOBuffer;
-		VAO pointsVAOBuffer;
+		Camera* m_camera;
+		Shader* m_shader;
+		VAO m_VAO;
+		VBO m_VBO;
+		std::vector<glm::vec3> m_edgePoints;
+		std::vector<EditorCollider*> m_editorColliders;
+
+		void expandBuffer();
+		void repopulateVolumesPoints();
 	public:
-		Gizmos(Camera* camera, Shader* meshShader, Shader* boundingBoxShader, Shader* pointShader);
-		~Gizmos();
-		void AddRay(std::string name, const glm::vec3& startPos, const glm::vec3& direction, int length);
-		void AddPoint(const glm::vec3& position);
-		void SetupPointsBuffer();
-		void UpdatePoints(const std::vector<glm::vec3>& pointsPositions);
-		void RenderPoints(float radius);
-		void RenderLine(Ray* ray, glm::vec3& color);
-		void RenderAllLines(glm::vec3& color);
-		void UpdateLine(std::string& name, const glm::vec3& startPos, const glm::vec3& direction, int length);
-		void RenderBoundingBox(BoundingBox* boundingBox);
+		Gizmos(Camera* camera, size_t bufferCapacity = 480 * sizeof(glm::vec3));
+		~Gizmos() = default;
+		void updateBufferContent();
+		void renderBoundingVolumes();
+		void addEditorCollider(EditorCollider* editorCollider);
 };

@@ -39,13 +39,13 @@ void BulletGizmos::updateBufferContent()
 	if (lines.size() == 0) return;
 	//VBO's can't handle store more information - new VBO with more capacity has to be
 	//initialized
-	if ((m_VBO.m_maxCapacity / sizeof(glm::vec3)) < lines.size())
+	if ((m_VBO.m_storageCapacity / sizeof(glm::vec3)) < lines.size())
 	{
-		size_t currentCapacity = m_VBO.m_maxCapacity;
+		size_t currentCapacity = m_VBO.m_storageCapacity;
 		m_VBO.Delete();
 
 		//make another VBO that has increased capacity
-		m_VBO = VBO(1.5 * m_VBO.m_maxCapacity);
+		m_VBO = VBO(1.5 * m_VBO.m_storageCapacity);
 
 		m_VAO.LinkVBO(m_VBO, 0, 3, sizeof(glm::vec3), 0);
 

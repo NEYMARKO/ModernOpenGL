@@ -14,7 +14,8 @@ enum Layer
 struct EditorCollider
 {
 	Object* m_parent;
-	std::array<glm::vec3, 8> m_boundingPoints;
+	std::array<glm::vec3, 8> m_vertices;
+	std::array<glm::vec3, 24> m_edges;
 	glm::vec3 m_min;
 	glm::vec3 m_max;
 	Layer m_layer{ DEFAULT };

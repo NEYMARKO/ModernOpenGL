@@ -10,7 +10,7 @@ struct Vertex;
 class VBO
 {
 	public:
-		size_t m_maxCapacity;
+		size_t m_storageCapacity;
 		GLuint ID;
 		//This needs to exist because of declaration of VBO in private spectar of Mesh and BoundingBox
 		VBO();

@@ -1,6 +1,5 @@
 #include "Joint.h"
 //#include "Mesh.h"
-//#include "Gizmos.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include "KinematicChain.h"
@@ -10,33 +9,24 @@
 
 KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, 
 	const glm::vec3& chainStartPos/*, Mesh* meshContainer, Mesh* target*/,
-	Transform* targetTransform/*,
-	Gizmos* gizmos*/)
+	Transform* targetTransform)
 	:
 	m_chainOrigin{ chainStartPos }, m_targetTransform{ targetTransform }
 {
 	m_chain.push_back(std::make_unique<Joint>(m_id, angleConstraint, m_hardcodedLength/*, meshContainer*/));
 	m_chain[0]->SetPosition(m_chainOrigin);
 	m_chain[0]->SetTempPosition(m_chainOrigin);
-	/*std::string name = "j" + std::to_string(m_id);
-	gizmos->AddRay(name, this->mChain[0]->GetPosition(), this->mChain[0]->GetForwardVector(), 10);*/
 	for (int i = 1; i < numberOfJoints; i++)
 	{
 		m_chain.push_back(std::make_unique<Joint>(m_id, angleConstraint, m_hardcodedLength));
-		//creating offset between joints
-		//this->chain[i]->SetPosition(this->chainStartPos + glm::vec3(DISTANCE_BETWEEN_JOINTS, 0.0f, 0.0f) * this->chain[i]->GetSegmentLength() * (float) i);
+
 		m_chain[i]->SetPosition(m_chainOrigin + (glm::vec3(-DISTANCE_BETWEEN_JOINTS, 0.0f, 0.0f) *
 			m_chain[i]->GetSegmentLength()  * (float)i));
 		
 		m_chain[i]->SetParent(m_chain[i - 1].get());
 		m_chain[i - 1]->SetChild(m_chain[i].get());
 		
-		//std::string name = "j" + std::to_string(m_id);
-		//std::cout << "ID: " << id << " NAME: " << name << std::endl;
-		/*gizmos->AddRay(name, this->mChain[i]->GetPosition(), this->mChain[i]->GetForwardVector(), 10);
-		gizmos->AddPoint(this->mChain[i]->GetPosition());*/
 	}
-	//gizmos->SetupPointsBuffer();
 }
 
 void KinematicChain::setMeshRenderer(std::unique_ptr<MeshRenderer> meshRenderer)

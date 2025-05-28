@@ -6,7 +6,6 @@
 class Joint;
 class Transform;
 class MeshRenderer;
-//class Gizmos;
 
 class KinematicChain
 {
@@ -27,8 +26,7 @@ class KinematicChain
 
 		KinematicChain(int numberOfJoints, float angleConstraint, 
 			const glm::vec3& chainStartPos/*, Mesh* meshContainer, Mesh* target*/,
-			Transform* targetTransform/*,
-			Gizmos* gizmos*/);
+			Transform* targetTransform);
 		
 		void setMeshRenderer(std::unique_ptr<MeshRenderer> meshRenderer);
 

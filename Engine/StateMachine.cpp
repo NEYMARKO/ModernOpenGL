@@ -12,6 +12,7 @@
 #include "PhysicsWorld.h"
 #include "EditorCollider.h"
 #include "StateMachine.h"
+#include "glm/gtx/string_cast.hpp"
 #define GLFW_HAND_CURSOR 0x00036004
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define SELECTED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
@@ -45,6 +46,7 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 		switch (key)
 		{
 		case GLFW_KEY_G:
+			std::cout << "PRESSED GRAB" << '\n';
 			this->state = GRAB;
 			break;
 		case GLFW_KEY_R:
@@ -145,6 +147,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 			//object transformation has been completed
 			else if (this->state == GRAB || this->state == SCALE || this->state == ROTATE)
 			{
+				if (!mTarget) return;
 				//this->target->ChangeColor(DEFAULT_OBJECT_COLOR);
 				mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
 				mTarget = nullptr;
@@ -208,6 +211,7 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera& camera, int button, in
 						mTarget->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
 					mTarget = intersected[0];
 					mTarget->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
+					CalculateObjectPlane();
 				}
 				else
 				{
@@ -251,21 +255,28 @@ void StateMachine::CalculateObjectPlane()
 {
 	this->objectPlane.normal = -camera->GetCameraForward();
 	this->objectPlane.D = - glm::dot(this->objectPlane.normal, mTarget->getComponent<Transform>()->getPosition());
+
+	//std::cout << "PLANE NORMAL: " << glm::to_string(objectPlane.normal) << '\n';
+	//std::cout << "D: " << objectPlane.D << '\n';
 }
 
 glm::vec3 StateMachine::CalculateIntersectionPoint()
 {
 	float t;
 
+	/*std::cout << "MOUSE START WORLD: " << glm::to_string(mouseStartWorld) << '\n';
+	std::cout << "MOUSE DIRECTION WORLD: " << glm::to_string(mouseDirectionWorld) << '\n';*/
 	t = (-glm::dot(this->objectPlane.normal, glm::vec3(this->mouseStartWorld)) - this->objectPlane.D) / glm::dot(this->objectPlane.normal, this->mouseDirectionWorld);
 	return glm::vec3(this->mouseStartWorld) + this->mouseDirectionWorld * t;
 
 }
 void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY)
 {
-	if (mTarget && !this->canRotateCamera) return;
+	/*if (mTarget && !this->canRotateCamera) return;
 
-	else if (mTarget) camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);
+	else if (mTarget) camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);*/
+
+	if (mTarget) camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);
 
 	if (this->canRotateCamera)
 	{
@@ -277,6 +288,7 @@ void StateMachine::MouseMove(GLFWwindow* window, Camera& camera, const double mo
 	switch (this->state)
 	{
 	case GRAB:
+		//std::cout << "SHOULD CHANGE TO GRAB" << '\n';
 		Grab();
 		break;
 	case ROTATE:
@@ -308,8 +320,10 @@ void StateMachine::CheckTarget()
 
 void StateMachine::Grab()
 {
+	//std::cout << "IN GRAB" << '\n';
 	glm::vec3 translationVector = CalculateIntersectionPoint();
-
+	/*std::cout << "TRANSLATION VECTOR: (" << translationVector.x << ", " <<
+		translationVector.y << ", " << translationVector.z << ")" << '\n';*/
 	float xValue, yValue, zValue;
 	glm::vec3 objectPos = mTarget->getComponent<Transform>()->getPosition();
 	switch (this->subState)
@@ -334,7 +348,7 @@ void StateMachine::Grab()
 		break;
 	}
 
-	mTarget->getComponent<Transform>()->translate(translationVector);
+	mTarget->getComponent<Transform>()->setPosition(translationVector);
 
 }
 void StateMachine::Rotate()
@@ -346,7 +360,7 @@ void StateMachine::Scale()
 {
 	glm::vec3 translationVector = CalculateIntersectionPoint();
 	float scalingFactor = glm::distance(translationVector, mTarget->getComponent<Transform>()->getPosition());
-	mTarget->getComponent<Transform>()->scale(scalingFactor);
+	mTarget->getComponent<Transform>()->setScale(scalingFactor);
 }
 
 void StateMachine::AddObject(Ray* ray)

@@ -33,7 +33,7 @@ int main()
 	PhysicsWorld physicsWorld{};
 
 	BulletGizmos bulletGizmos(&physicsWorld);
-	Gizmos gizmos(&camera, &defaultShaderProgram, &boundingBoxShaderProgram, &pointShader);
+	
 	StateMachine stateMachine(nullptr, &camera, meshLoaders, objectsInScene, &physicsWorld);
 	stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
 	window.addStateMachine(&stateMachine);
@@ -57,7 +57,13 @@ int main()
 	Lighting light(&lightingShaderProgram, lightBulb, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	Scene scene{&camera, &light, objectsInScene, /*meshLoaders,*/ &defaultShaderProgram, &boundingBoxShaderProgram};
-	
+	Gizmos gizmos(&camera);
+
+	for (auto& obj : objectsInScene)
+	{
+		std::cout << "OBJECT: " << obj.get()->getName() << '\n';
+		gizmos.addEditorCollider(obj.get()->getEditorCollider());
+	}
 	auto lightBulbObject = std::make_unique<Object>(std::move(lightBulbTransform), std::move(lightBulbRenderer));
 	scene.addObject(std::move(lightBulbObject));
 
@@ -66,7 +72,7 @@ int main()
 	{
 		//bulletGizmos.updateBufferContent();
 		scene.renderScene();
-
+		gizmos.renderBoundingVolumes();
 		bulletGizmos.updateBufferContent();
 		bulletGizmos.renderColliders(&camera);
 		grid.Draw(boundingBoxShaderProgram, camera);
