@@ -17,8 +17,8 @@
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define SELECTED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
-StateMachine::StateMachine(Object* target, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene, PhysicsWorld* physicsWorld)
-	: mTarget{ target }, mObjectsInScene { objectsInScene }, mMeshLoaders{ meshLoaders },
+StateMachine::StateMachine(Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene, PhysicsWorld* physicsWorld)
+	: mTarget{ nullptr }, mObjectsInScene { objectsInScene }, mMeshLoaders{ meshLoaders },
 	m_physicsWorld { physicsWorld }
 {
 	this->state = NOTHING;
@@ -26,18 +26,11 @@ StateMachine::StateMachine(Object* target, Camera* camera, std::vector<std::uniq
 	this->camera = camera;
 	this->mousePosX = this->camera->mWidth / 2;
 	this->mousePosY = this->camera->mHeight / 2;
-	/*std::cout << "MESH LOADERS IN CONSTRUCTOR: " << std::endl;
-	std::cout << meshLoaders.size() << std::endl;
-	for (int i = 0; i < meshLoaders.size(); i++)
-	{
-		std::cout << "MESH LOADER " << i << " VERTICES: " << meshLoaders[i]->vertices.size() << std::endl;
-	}*/
 }
 
 void StateMachine::AddShaderPrograms(Shader* shader, Shader* boxShader)
 {
 	mShaderProgram = shader;
-	mBoundingBoxShaderProgram = boxShader;
 }
 void StateMachine::ChangeState(GLFWwindow* window, const int key, const int action, Camera& camera)
 {
@@ -46,7 +39,6 @@ void StateMachine::ChangeState(GLFWwindow* window, const int key, const int acti
 		switch (key)
 		{
 		case GLFW_KEY_G:
-			std::cout << "PRESSED GRAB" << '\n';
 			this->state = GRAB;
 			break;
 		case GLFW_KEY_R:
@@ -255,17 +247,12 @@ void StateMachine::CalculateObjectPlane()
 {
 	this->objectPlane.normal = -camera->GetCameraForward();
 	this->objectPlane.D = - glm::dot(this->objectPlane.normal, mTarget->getComponent<Transform>()->getPosition());
-
-	//std::cout << "PLANE NORMAL: " << glm::to_string(objectPlane.normal) << '\n';
-	//std::cout << "D: " << objectPlane.D << '\n';
 }
 
 glm::vec3 StateMachine::CalculateIntersectionPoint()
 {
 	float t;
 
-	/*std::cout << "MOUSE START WORLD: " << glm::to_string(mouseStartWorld) << '\n';
-	std::cout << "MOUSE DIRECTION WORLD: " << glm::to_string(mouseDirectionWorld) << '\n';*/
 	t = (-glm::dot(this->objectPlane.normal, glm::vec3(this->mouseStartWorld)) - this->objectPlane.D) / glm::dot(this->objectPlane.normal, this->mouseDirectionWorld);
 	return glm::vec3(this->mouseStartWorld) + this->mouseDirectionWorld * t;
 
@@ -320,10 +307,7 @@ void StateMachine::CheckTarget()
 
 void StateMachine::Grab()
 {
-	//std::cout << "IN GRAB" << '\n';
 	glm::vec3 translationVector = CalculateIntersectionPoint();
-	/*std::cout << "TRANSLATION VECTOR: (" << translationVector.x << ", " <<
-		translationVector.y << ", " << translationVector.z << ")" << '\n';*/
 	float xValue, yValue, zValue;
 	glm::vec3 objectPos = mTarget->getComponent<Transform>()->getPosition();
 	switch (this->subState)
@@ -388,7 +372,7 @@ void StateMachine::AddObject(Ray* ray)
 	auto objectTransform = Transform(spawnPosition,
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	
-	auto objectRenderer = MeshRenderer(ResourceManager<Mesh>::addResource("ob1", std::make_unique<Mesh>(mBoundingBoxShaderProgram, meshLoaderObj)), ResourceManager<Material>::addResource("ob1", std::make_unique<Material>(mShaderProgram)));
+	auto objectRenderer = MeshRenderer(ResourceManager<Mesh>::addResource("ob1", std::make_unique<Mesh>(meshLoaderObj)), ResourceManager<Material>::addResource("ob1", std::make_unique<Material>(mShaderProgram)));
 	
 	
 	auto obj = std::make_unique<Object>(std::move(objectTransform), std::move(objectRenderer));
@@ -427,42 +411,3 @@ bool StateMachine::ShouldFollowMouse()
 	return this->followMouse;
 }
 
-void StateMachine::SortObjectsInScene()
-{
-	/*for (Mesh* mesh : this->mObjectsInScene)
-	{
-		mesh->CalculateDistanceFromCamera(this->camera);
-	}
-	QuickSort(0, this->mObjectsInScene.size() - 1);*/
-}
-
-void StateMachine::QuickSort(const int& low, const int& high)
-{
-	/*if (low < high) {
-		int pi = Partition(low, high);
-		QuickSort(low, pi - 1);
-		QuickSort(pi + 1, high);
-	}*/
-}
-
-int StateMachine::Partition(const int& low, const int& high)
-{
-	/*float pivot = this->mObjectsInScene[high]->GetDistanceFromCamera();
-	int i = low - 1;
-	for (int j = low; j < high; j++) {
-		if (this->mObjectsInScene[j]->GetDistanceFromCamera() < pivot) {
-			i++;
-			Swap(i, j);
-		}
-	}
-	Swap(i + 1, high);
-	return i + 1;*/
-	return 1;
-}
-
-void StateMachine::Swap(const int& firstPos, const int& secondPos)
-{
-	/*Mesh* temp = this->mObjectsInScene[firstPos];
-	this->mObjectsInScene[firstPos] = this->mObjectsInScene[secondPos];
-	this->mObjectsInScene[secondPos] = temp;*/
-}

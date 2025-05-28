@@ -2,6 +2,9 @@
 
 class Object;
 
+/// <summary>
+/// Able to attach to Object and render in GUI 
+/// </summary>
 class Component
 {
 private:

@@ -3,11 +3,10 @@
 
 #define ERROR_MARGIN 0.5f
 #define DOT_PRODUCT_ALLOWED_ERROR 0.01f
-Joint::Joint(int id, float angleConstraint, float length/*, Mesh* meshContainer*/) :
-	m_id{ id }, mAngleConstraint{ angleConstraint }/*, 
-	mMeshContainer { meshContainer }*/, 
+Joint::Joint(int id, float angleConstraint, float length) :
+	m_id{ id }, mAngleConstraint{ angleConstraint },
 	m_parent{ nullptr }, m_child{ nullptr },
-	m_length{ length }/*, mForward{ glm::vec3(-1.0f, 0.0f, 0.0f) }, mOrientation{ glm::quat(glm::radians(0.0f), mForward) }*/,
+	m_length{ length },
 	m_transform{ std::make_unique<Transform>() }
 
 {

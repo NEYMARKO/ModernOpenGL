@@ -47,12 +47,9 @@ struct Plane
 class StateMachine
 {
 	private:
-
 		Shader* mShaderProgram;
-		Shader* mBoundingBoxShaderProgram;
 
 		Camera* camera;
-		//Mesh* mTarget;
 		Object* mTarget;
 		State state;
 		SubState subState;
@@ -69,7 +66,7 @@ class StateMachine
 		glm::vec3 mouseDirectionWorld;
 
 	public:
-		StateMachine(Object* target, Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene,
+		StateMachine(Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene,
 			PhysicsWorld* physicsWorld);
 		
 		void AddShaderPrograms(Shader* shader, Shader* boxShader);
@@ -92,11 +89,6 @@ class StateMachine
 		void Grab();
 		void Rotate();
 		void Scale();
-
-		void SortObjectsInScene();
-		void QuickSort(const int& low, const int& high);
-		int Partition(const int& low, const int& high);
-		void Swap(const int& firstPos, const int& secondPos);
 
 		//Adds object to scene at the position of the click
 		//Different objects can be added by pressing numbers 1-8 while in ADD mode

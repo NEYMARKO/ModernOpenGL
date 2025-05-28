@@ -21,7 +21,6 @@ private:
 	//No need for cleanup if using smart pointers
 	std::vector<std::unique_ptr<Object>>& mObjectsInScene;
 	std::unique_ptr<KinematicChain> m_ikChain;
-	//std::vector<std::unique_ptr<MeshLoader>>& mMeshLoaders; 
 	Lighting* mLightSource;
 	Camera* mCamera;
 	Shader* mObjectShader;
@@ -32,8 +31,7 @@ private:
 	RigidBodyRegistry m_rigidBodyRegistry;
 
 public:
-	Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, /*std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,*/
-		Shader* objectShader, Shader* boundingBoxShader);
+	Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, Shader* objectShader);
 	void loadDefaultScene();
 
 	void renderScene();

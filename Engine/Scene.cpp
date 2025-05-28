@@ -11,9 +11,9 @@
 #include "RigidBody.h"
 #include <string>
 #include "Scene.h"
-Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, /*std::vector<std::unique_ptr<MeshLoader>>& meshLoaders,*/ Shader* objectShader, Shader* boundingBoxShader) 
+Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, Shader* objectShader) 
 	: mCamera{ camera }, mLightSource{ lightSource }, mObjectsInScene{ objectsInScene }, 
-	/*mMeshLoaders { meshLoaders },*/ mObjectShader{ objectShader }, mBoundingBoxShader{ boundingBoxShader }
+	mObjectShader{ objectShader }
 {
 	loadDefaultScene();
 }
@@ -43,10 +43,10 @@ void Scene::loadDefaultScene()
 	auto floorTransform = Transform(glm::vec3(0.0f, -4.0f, 0.0f),
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 
-	auto templeMesh = ResourceManager<Mesh>::addResource("temple", std::make_unique<Mesh>(mBoundingBoxShader, &templeLoader));
-	auto dragonMesh = ResourceManager<Mesh>::addResource("dragon", std::make_unique<Mesh>(mBoundingBoxShader, &dragonLoader));
-	auto frogMesh = ResourceManager<Mesh>::addResource("frog", std::make_unique<Mesh>(mBoundingBoxShader, &frogLoader));
-	auto floorMesh = ResourceManager<Mesh>::addResource("floor", std::make_unique<Mesh>(mBoundingBoxShader, &floorLoader));
+	auto templeMesh = ResourceManager<Mesh>::addResource("temple", std::make_unique<Mesh>(&templeLoader));
+	auto dragonMesh = ResourceManager<Mesh>::addResource("dragon", std::make_unique<Mesh>(&dragonLoader));
+	auto frogMesh = ResourceManager<Mesh>::addResource("frog", std::make_unique<Mesh>(&frogLoader));
+	auto floorMesh = ResourceManager<Mesh>::addResource("floor", std::make_unique<Mesh>(&floorLoader));
 
 	auto templeMaterial = ResourceManager<Material>::addResource("temple", std::make_unique<Material>(mObjectShader));
 	auto dragonMaterial = ResourceManager<Material>::addResource("dragon", std::make_unique<Material>(mObjectShader));
@@ -95,8 +95,8 @@ void Scene::loadDefaultScene()
 	auto jointTransform = Transform(glm::vec3(-30.0f, 0.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 
-	auto cubeMesh = ResourceManager<Mesh>::addResource("cube", std::make_unique<Mesh>(mBoundingBoxShader, &cubeLoader));
-	auto jointMesh = ResourceManager<Mesh>::addResource("joint", std::make_unique<Mesh>(mBoundingBoxShader, &jointLoader));
+	auto cubeMesh = ResourceManager<Mesh>::addResource("cube", std::make_unique<Mesh>(&cubeLoader));
+	auto jointMesh = ResourceManager<Mesh>::addResource("joint", std::make_unique<Mesh>(&jointLoader));
 
 	auto cubeMaterial = ResourceManager<Material>::addResource("cube", std::make_unique<Material>(mObjectShader));
 	auto jointMaterial = ResourceManager<Material>::addResource("joint", std::make_unique<Material>(mObjectShader));

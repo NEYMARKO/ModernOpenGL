@@ -7,7 +7,6 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
-#include "BoundingBox.h"
 
 class Vertex;
 class Shader;
@@ -29,19 +28,15 @@ class Mesh
 		std::vector<Vertex> mVertices;
 		std::vector<unsigned int> mIndices;
 
-		Shader* mBoundingBoxShaderProgram;
-		float mDistanceFromCamera;
-
 		void setupBuffers();
 
 	public:
 		glm::vec3 m_minimums;
 		glm::vec3 m_maximums;
 
-		const BoundingBox& boundingBox;
 		float scalingFactor;
 
-		Mesh(Shader* boundingBoxShaderProgram, MeshLoader* meshLoader);
+		Mesh(MeshLoader* meshLoader);
 		~Mesh();
 		void transferLoadedMeshInfo(MeshLoader* meshLoader);
 		int GetID();

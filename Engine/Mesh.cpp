@@ -3,9 +3,8 @@
 #include "MeshLoader.h"
 #include "Mesh.h"
 
-Mesh::Mesh(Shader* boundingBoxShaderProgram, MeshLoader* meshLoader) : 
-	m_id{ s_idGenerator++ }, mVAO{ VAO() }, mBoundingBoxShaderProgram{boundingBoxShaderProgram},
-	boundingBox { BoundingBox(meshLoader->minExtremes, meshLoader->maxExtremes, this) }
+Mesh::Mesh(MeshLoader* meshLoader) : 
+	m_id{ s_idGenerator++ }, mVAO{ VAO() }
 {
 	transferLoadedMeshInfo(meshLoader);
 	setupBuffers();
@@ -32,11 +31,6 @@ void Mesh::setupBuffers()
 	mVAO.Unbind();
 	mVBO.Unbind();
 	mEBO.Unbind();
-}
-
-float Mesh::GetDistanceFromCamera()
-{
-	return this->mDistanceFromCamera;
 }
 
 int Mesh::GetID()

@@ -1,5 +1,4 @@
 #include "Joint.h"
-//#include "Mesh.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include "KinematicChain.h"

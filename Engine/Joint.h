@@ -29,8 +29,6 @@ class Joint
 		//Returns false if joint has rotated past it's constraint (angle is too big)
 		bool CanRotate();
 
-		/*void Render();*/
-
 		void SetParent(Joint* parent);
 		void SetChild(Joint* child);
 		void SetPosition(const glm::vec3& position);
