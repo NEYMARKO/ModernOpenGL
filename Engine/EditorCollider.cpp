@@ -31,7 +31,7 @@ void EditorCollider::setParent(Object* parent)
 	{
 		point += pos;
 	}
-	calculateExtremes();
+	setupAABB();
 }
 void EditorCollider::calculateExtremes()
 {
