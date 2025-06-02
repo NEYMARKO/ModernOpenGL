@@ -29,8 +29,8 @@ protected:
 	void toggleFreeMode() { m_freeMode = !m_freeMode; };
 	void update();
 public:
-	TransformState(Camera* camera, Object* object) :
-		m_camera { camera }, m_selectedObject { object }
+	TransformState(StateMachine* stateMachine, Camera* camera, Object* object) :
+		State{ stateMachine }, m_camera{ camera }, m_selectedObject{ object }
 	{ }
 
 	void enter();

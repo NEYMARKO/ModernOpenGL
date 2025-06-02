@@ -12,7 +12,7 @@
 #include <string>
 #include "Scene.h"
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, Shader* objectShader) 
-	: mCamera{ camera }, mLightSource{ lightSource }, mObjectsInScene{ objectsInScene }, 
+	: mCamera{ camera }, mLightSource{ lightSource }, m_objectsInScene{ objectsInScene }, 
 	mObjectShader{ objectShader }
 {
 	loadDefaultScene();
@@ -61,31 +61,31 @@ void Scene::loadDefaultScene()
 	auto frogRenderer = MeshRenderer(frogMesh, frogMaterial);
 	auto floorRenderer = MeshRenderer(floorMesh, floorMaterial);
 
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer), "temple"));
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform2), std::move(templeRenderer2), "temple_behind"));
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform2), std::move(dragonRenderer2), "dragon_near_temple"));
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform3), std::move(dragonRenderer3), "dragon_infront_temple"));
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer), "dragon"));
+	m_objectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer), "temple"));
+	m_objectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform2), std::move(templeRenderer2), "temple_behind"));
+	m_objectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform2), std::move(dragonRenderer2), "dragon_near_temple"));
+	m_objectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform3), std::move(dragonRenderer3), "dragon_infront_temple"));
+	m_objectsInScene.push_back(std::make_unique<Object>(std::move(dragonTransform), std::move(dragonRenderer), "dragon"));
 	
 	auto dragonCollider = std::make_unique<SphereCollider>(1.0f);
-	mObjectsInScene.back()->addComponent(std::move(dragonCollider));
+	m_objectsInScene.back()->addComponent(std::move(dragonCollider));
 	auto dragonRigidBody = std::make_unique<RigidBody>(1.0f, 0.8f);
-	mObjectsInScene.back()->addComponent(std::move(dragonRigidBody));
+	m_objectsInScene.back()->addComponent(std::move(dragonRigidBody));
 	
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(frogTransform), std::move(frogRenderer), "frog"));
+	m_objectsInScene.push_back(std::make_unique<Object>(std::move(frogTransform), std::move(frogRenderer), "frog"));
 	
 	auto frogCollider = std::make_unique<SphereCollider>(1.0f);
-	mObjectsInScene.back()->addComponent(std::move(frogCollider));
+	m_objectsInScene.back()->addComponent(std::move(frogCollider));
 	auto frogRigidBody = std::make_unique<RigidBody>(0.3f, 0.8f);
-	mObjectsInScene.back()->addComponent(std::move(frogRigidBody));
+	m_objectsInScene.back()->addComponent(std::move(frogRigidBody));
 
-	mObjectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform), std::move(floorRenderer), "floor"));
+	m_objectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform), std::move(floorRenderer), "floor"));
 
-	Transform* floorTransformPtr = mObjectsInScene.back()->getComponent<Transform>();
+	Transform* floorTransformPtr = m_objectsInScene.back()->getComponent<Transform>();
 	auto floorCollider = std::make_unique<BoxCollider>(20.0f, 0.05f, 20.0f);
-	mObjectsInScene.back()->addComponent(std::move(floorCollider));
+	m_objectsInScene.back()->addComponent(std::move(floorCollider));
 	auto floorRigidBody = std::make_unique<RigidBody>(0.0f, 0.8f);
-	mObjectsInScene.back()->addComponent(std::move(floorRigidBody));
+	m_objectsInScene.back()->addComponent(std::move(floorRigidBody));
 
 	MeshLoader cubeLoader("cubeFlat.txt");
 	MeshLoader jointLoader("joint4.txt");
@@ -104,12 +104,12 @@ void Scene::loadDefaultScene()
 	auto jointRenderer = std::make_unique<MeshRenderer>(jointMesh, jointMaterial);
 	auto cubeRenderer = MeshRenderer(cubeMesh, cubeMaterial);
 	
-	mObjectsInScene.push_back(std::make_unique<Object>(
+	m_objectsInScene.push_back(std::make_unique<Object>(
 		std::move(cubeTransform), std::move(cubeRenderer), "cube"
 	));
 
 	m_ikChain = std::make_unique<KinematicChain>(14, 45.0f,
-		glm::vec3(0.0f, 0.0f, 0.0f), mObjectsInScene.back()->getComponent<Transform>());
+		glm::vec3(0.0f, 0.0f, 0.0f), m_objectsInScene.back()->getComponent<Transform>());
 	
 	m_ikChain.get()->setMeshRenderer(std::move(jointRenderer));
 
@@ -140,7 +140,7 @@ void Scene::renderObjects()
 {
 	//need to use constant reference to avoid copying elements of mObjectsInScene
 	//into obj
-	for (const std::unique_ptr<Object>& obj : mObjectsInScene)
+	for (const std::unique_ptr<Object>& obj : m_objectsInScene)
 	{
 		if (Object* object = obj.get())
 			if (MeshRenderer* mr = object->getComponent<MeshRenderer>())
@@ -159,7 +159,7 @@ void Scene::renderIKChain()
 }
 void Scene::addObject(std::unique_ptr<Object> object)
 {
-	mObjectsInScene.push_back(std::move(object));
+	m_objectsInScene.push_back(std::move(object));
 }
 
 //void Scene::addObjects(const std::vector<Mesh*>& objects)

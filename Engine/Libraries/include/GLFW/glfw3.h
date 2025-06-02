@@ -4962,7 +4962,7 @@ GLFWAPI const unsigned char* glfwGetJoystickButtons(int jid, int* count);
  *  @code
  *  if (hats[2] & GLFW_HAT_RIGHT)
  *  {
- *      // State of hat 2 could be right-up, right or right-down
+ *      // SM_State of hat 2 could be right-up, right or right-down
  *  }
  *  @endcode
  *

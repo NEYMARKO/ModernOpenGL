@@ -27,19 +27,19 @@ void TransformState::onKeyboardPress(const int keyCode, const int action)
 	switch (keyCode)
 	{
 	case GLFW_KEY_G:
-		transitionState = States::GRAB;
+		m_transitionState = States::GRAB;
 		break;
 	case GLFW_KEY_R:
-		transitionState = States::ROTATE;
+		m_transitionState = States::ROTATE;
 		break;
 	case GLFW_KEY_S:
-		transitionState = States::SCALE;
+		m_transitionState = States::SCALE;
 		break;
 	case GLFW_KEY_F:
 		toggleFreeMode();
 		break;
 	default:
-		transitionState = States::EMPTY;
+		m_transitionState = States::DEFAULT;
 	}
 }
 

@@ -19,7 +19,7 @@ class Scene
 {
 private:
 	//No need for cleanup if using smart pointers
-	std::vector<std::unique_ptr<Object>>& mObjectsInScene;
+	std::vector<std::unique_ptr<Object>>& m_objectsInScene;
 	std::unique_ptr<KinematicChain> m_ikChain;
 	Lighting* mLightSource;
 	Camera* mCamera;

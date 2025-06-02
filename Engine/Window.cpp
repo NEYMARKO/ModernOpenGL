@@ -1,6 +1,6 @@
-#include "Window.h"
-#include "Camera.h"
 #include "StateMachine.h"
+#include "Camera.h"
+#include "Window.h"
 
 Window::Window(Camera* camera, int width = 1920, int height = 1080)
 	: mWidth{ width }, mHeight{ height }, mCamera{ camera }
@@ -83,19 +83,19 @@ bool Window::shouldClose()
 void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (win && win->mStateMachine) win->mStateMachine->ChangeState(window, key, action, *(win->mCamera));
+	if (win && win->mStateMachine) win->mStateMachine->ChangeState(window, key, action, win->mCamera);
 }
 
 void Window::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (win && win->mStateMachine) win->mStateMachine->MouseMove(window, *(win->mCamera), xpos, ypos);
+	if (win && win->mStateMachine) win->mStateMachine->MouseMove(window, win->mCamera, xpos, ypos);
 }
 
 void Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (win && win->mStateMachine) win->mStateMachine->MouseClick(window, *(win->mCamera), button, action);
+	if (win && win->mStateMachine) win->mStateMachine->MouseClick(window, win->mCamera, button, action);
 }
 
 void Window::mouse_scroll_back(GLFWwindow* window, double xOffset, double yOffset)

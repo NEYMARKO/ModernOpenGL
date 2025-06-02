@@ -3,6 +3,8 @@
 #include <string_view>
 #include "OpenGLIncludes.h"
 
+//#include "StateMachine.h"
+//#include "Camera.h"
 class Camera;
 class StateMachine;
 

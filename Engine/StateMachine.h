@@ -3,23 +3,25 @@
 #include <vector>
 #include <glm/glm.hpp>
 
-class Camera;
+#include "State.h"
+#include "Camera.h"
+//class State;
 class Shader;
 class Object;
 class MeshLoader;
 class PhysicsWorld;
 
-enum State
+enum SM_State
 {
-	NOTHING,
-	GRAB,
-	ROTATE,
-	SCALE,
-	ADD,
-	DELETE,
-	FOCUS,
-	RESTART_SCENE,
-	CLOSE_WINDOW
+	SM_NOTHING,
+	SM_GRAB,
+	SM_ROTATE,
+	SM_SCALE,
+	SM_ADD,
+	SM_DELETE,
+	SM_FOCUS,
+	SM_RESTART_SCENE,
+	SM_CLOSE_WINDOW
 };
 
 enum SubState
@@ -35,7 +37,7 @@ enum SubState
 	X,
 	Y,
 	Z,
-	EMPTY
+	SM_EMPTY
 };
 
 struct Plane
@@ -47,16 +49,16 @@ struct Plane
 class StateMachine
 {
 	private:
+
+		std::unique_ptr<State> m_activeState;
+
 		Shader* mShaderProgram;
 
-		Camera* camera;
-		Object* mTarget;
-		State state;
+		SM_State state;
 		SubState subState;
 		Plane objectPlane;
 		PhysicsWorld* m_physicsWorld;
 
-		std::vector<std::unique_ptr<Object>>& mObjectsInScene;
 		std::vector<std::unique_ptr<MeshLoader>>& mMeshLoaders;
 		bool followMouse = false;
 		bool canRotateCamera = false;
@@ -66,21 +68,24 @@ class StateMachine
 		glm::vec3 mouseDirectionWorld;
 
 	public:
-		StateMachine(Camera* camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene,
+		Camera* m_camera;
+		std::vector<std::unique_ptr<Object>>& m_objectsInScene;
+		Object* m_target;
+		StateMachine(Camera* m_camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene,
 			PhysicsWorld* physicsWorld);
 		
 		void AddShaderPrograms(Shader* shader, Shader* boxShader);
-		//Controls state that StateMachine is currently in. State changes on the press of a button
-		void ChangeState(GLFWwindow* window, const int key, const int action, Camera& camera);
+		//Controls state that StateMachine is currently in. SM_State changes on the press of a button
+		void ChangeState(GLFWwindow* window, int key, int action, Camera* camera);
 		//Calculates coefficients of a plane in which target object lies, normal of a plane is opposite to the camera direction
 		void CalculateObjectPlane();
 		//Calculates intersection between plane and a point
 		//Used for finding intersection of plane (in which target object lies) and click ray projected from camera
 		glm::vec3 CalculateIntersectionPoint();
 		//Callback function for mouse click
-		void MouseClick(GLFWwindow* window, Camera& camera, int button, int action);
+		void MouseClick(GLFWwindow* window, Camera* camera, int button, int action);
 		//Callback function for mouse movement
-		void MouseMove(GLFWwindow* window, Camera& camera, const double mouseX, const double mouseY);
+		void MouseMove(GLFWwindow* window, Camera* camera, double mouseX, double mouseY);
 		
 		//Returns vector containing pointers to all objects in the scene
 		//Checks if any object has been clicked on

@@ -6,9 +6,9 @@ class Object;
 
 enum Layer
 {
-	DEFAULT,
-	OBJECT,
-	GIZMOS
+	EC_DEFAULT,
+	EC_OBJECT,
+	EC_GIZMOS
 };
 
 struct EditorCollider
@@ -20,8 +20,8 @@ struct EditorCollider
 	glm::vec3 m_min;
 	//max value for each dimension
 	glm::vec3 m_max;
-	Layer m_layer{ DEFAULT };
-	EditorCollider(const glm::vec3& minimums, const glm::vec3& maximums, Layer layer = DEFAULT);
+	Layer m_layer{ EC_DEFAULT };
+	EditorCollider(const glm::vec3& minimums, const glm::vec3& maximums, Layer layer = EC_DEFAULT);
 	void setParent(Object* parent);
 	void calculateExtremes();
 	void setupAABB();
