@@ -162,12 +162,14 @@
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodyRegistry.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SelectedState.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TransformPlane.cpp" />
     <ClCompile Include="TransformState.cpp" />
     <ClCompile Include="VAO.cpp" />
     <ClCompile Include="VBO.cpp" />
@@ -188,9 +190,11 @@
     <ClInclude Include="MyBulletDebugDrawer.h" />
     <ClInclude Include="OpenGLIncludes.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="SelectedState.h" />
     <ClInclude Include="SortingAlgorithms.h" />
     <ClInclude Include="RigidBodyRegistry.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="TransformPlane.h" />
     <ClInclude Include="TransformState.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="Joint.h" />

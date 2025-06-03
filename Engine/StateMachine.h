@@ -2,7 +2,9 @@
 #include <memory>
 #include <vector>
 #include <glm/glm.hpp>
-
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#undef GLFW_INCLUDE_NONE
 //#include "OpenGLIncludes.h"
 #include "State.h"
 //#include "Camera.h"

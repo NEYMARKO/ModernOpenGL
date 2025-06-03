@@ -114,5 +114,5 @@ bool EditorCollider::intersects(const glm::vec3& start, const glm::vec3& directi
 		std::cout << glm::to_string(point) << '\n';
 	}*/
 
-	return t_close_float <= t_far_float;
+	return t_close_float <= t_far_float && t_close_float > 0;
 }

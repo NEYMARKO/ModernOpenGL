@@ -13,28 +13,22 @@
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define SELECTED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
-void State::onMouseClick(GLFWwindow* window, int button, int action)
+void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir, 
+	int button, int action)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT)
 	{
 		if (action == GLFW_PRESS)
 		{
-			double xPos, yPos;
-			glfwGetCursorPos(window, &xPos, &yPos);
-			m_stateMachine->m_camera->Raycast(window, xPos, yPos);
-
-			Ray* ray = m_stateMachine->m_camera->mRay;
-			glm::vec3 rayStart = ray->GetRayStart();
-			glm::vec3 rayDir = ray->GetRayDirection();
 			std::vector<Object*> intersected;
 
 			for (const auto& object : m_stateMachine->m_objectsInScene)
 			{
-				if (object.get()->getEditorCollider()->intersects(rayStart, rayDir))
+				if (object.get()->getEditorCollider()->intersects(start, dir))
 					intersected.emplace_back(object.get());
 			}
 
-			sortObjects(intersected, rayStart);
+			sortObjects(intersected, start);
 			std::cout << "SORTED HITS (by priority descending):" << '\n';
 			for (const auto* obj : intersected)
 			{
@@ -79,15 +73,36 @@ void State::sortObjects(std::vector<Object*>& objects, const glm::vec3& start)
 void State::updateSelection(const std::vector<Object*>& objects)
 {
 	Object* currentSelection = m_stateMachine->m_target;
+	//ray has hit something - objects is bound to have atleast 1 element
 	if (objects.size() > 0)
 	{
-		if (currentSelection && currentSelection != objects[0])
+		//there isn't active selection
+		if (!currentSelection)
+		{
+			m_stateMachine->m_target = objects[0];
+			m_stateMachine->m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
+			//CalculateObjectPlane();
+			m_transitionState = States::SELECTED;
+			return;
+		}
+		//There already exists active selection, but it isn't same as hit
+		else if (currentSelection != objects[0])
+		{
 			currentSelection->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
-		m_stateMachine->m_target = objects[0];
-		m_stateMachine->m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
-		//CalculateObjectPlane();
-		m_transitionState = States::SELECTED;
+			m_stateMachine->m_target = objects[0];
+			m_stateMachine->m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
+			m_transitionState = States::SELECTED;
+			
+		}
+		//currently active selection is same as the hit
+		else
+		{
+			m_transitionState = States::NO_TRANSITION;
+			return;
+		}
+		
 	}
+	//ray missed everything
 	else
 	{
 		if (currentSelection)

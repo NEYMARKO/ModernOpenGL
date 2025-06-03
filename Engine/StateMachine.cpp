@@ -36,6 +36,23 @@ void StateMachine::AddShaderPrograms(Shader* shader, Shader* boxShader)
 }
 void StateMachine::ChangeState(GLFWwindow* window, int key, int action, Camera* camera)
 {
+	/*States newState = m_activeState.get()->getTransitionState();
+	if (newState != States::NO_TRANSITION)
+	{
+		m_activeState.reset();
+		switch (newState)
+		{
+		case States::DEFAULT:
+			m_activeState = std::make_unique<State>();
+			break;
+		case States::SELECTED:
+			m_activeState = std::make_unique<SelectedState>();
+			break;
+		case States::GRAB:
+			m_activeState = std::make_unique<GrabState>();
+		}
+	}*/
+	
 	if (action == GLFW_PRESS)
 	{
 		switch (key)
@@ -124,7 +141,12 @@ void StateMachine::ChangeState(GLFWwindow* window, int key, int action, Camera* 
 
 void StateMachine::MouseClick(GLFWwindow* window, Camera* camera, int button, int action)
 {
-	m_activeState.get()->onMouseClick(window, button, action);
+	double xPos, yPos;
+	glfwGetCursorPos(window, &xPos, &yPos);
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		m_camera->Raycast(window, xPos, yPos);
+	m_camera->ScreenToWorldCoordinates(xPos, yPos, mouseStartWorld, mouseDirectionWorld);
+	m_activeState.get()->onMouseClick(mouseStartWorld, mouseDirectionWorld, button, action);
 	switch (button)
 	{
 	//case GLFW_MOUSE_BUTTON_LEFT:
@@ -262,6 +284,9 @@ glm::vec3 StateMachine::CalculateIntersectionPoint()
 }
 void StateMachine::MouseMove(GLFWwindow* window, Camera* camera, double mouseX, double mouseY)
 {
+	m_camera->ScreenToWorldCoordinates(mouseX, mouseY, mouseStartWorld, mouseDirectionWorld);
+	m_activeState.get()->onMouseMove(mouseStartWorld, mouseDirectionWorld);
+	
 	/*if (mTarget && !this->canRotateCamera) return;
 
 	else if (mTarget) camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);*/
