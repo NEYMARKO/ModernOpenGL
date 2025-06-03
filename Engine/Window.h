@@ -1,10 +1,11 @@
 #pragma once
 #include <iostream>
 #include <string_view>
-#include "OpenGLIncludes.h"
+//#include "OpenGLIncludes.h"
+#include <glad/glad.h>
 
-//#include "StateMachine.h"
 //#include "Camera.h"
+//#include "StateMachine.h"
 class Camera;
 class StateMachine;
 

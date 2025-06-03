@@ -1,8 +1,10 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <vector>
-
-class GLFWwindow;
+//#include "OpenGLIncludes.h"
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#undef GLFW_INCLUDE_NONE
 class Object;
 class StateMachine;
 

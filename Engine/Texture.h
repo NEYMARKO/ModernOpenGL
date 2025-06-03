@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
 #include <stb/stb_image.h>
-#include "OpenGLIncludes.h"
+//#include "OpenGLIncludes.h"
+#include <glad/glad.h>
 
 class Texture
 {

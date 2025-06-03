@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
-#include "OpenGLIncludes.h"
+//#include "OpenGLIncludes.h"
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 struct Vertex;
 //class for vertex buffer object

@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
-#include "OpenGLIncludes.h"
+//#include "OpenGLIncludes.h"
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"

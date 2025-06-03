@@ -1,6 +1,6 @@
+#include "StateMachine.h"
 #include "Camera.h"
 #include "Lighting.h"
-#include "StateMachine.h"
 #include "Grid.h"
 #include "Gizmos.h"
 #include "Window.h"

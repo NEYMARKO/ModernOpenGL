@@ -3,9 +3,13 @@
 #include <vector>
 #include <glm/glm.hpp>
 
+//#include "OpenGLIncludes.h"
 #include "State.h"
-#include "Camera.h"
+//#include "Camera.h"
 //class State;
+class Camera;
+class Ray;
+//class GLFWwindow;
 class Shader;
 class Object;
 class MeshLoader;

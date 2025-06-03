@@ -1,6 +1,9 @@
 #pragma once
 #include "Shader.h"
-#include "OpenGLIncludes.h"
+//#include "OpenGLIncludes.h"
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#undef GLFW_INCLUDE_NONE
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtx/vector_angle.hpp>

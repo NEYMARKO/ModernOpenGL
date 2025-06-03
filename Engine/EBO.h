@@ -1,5 +1,6 @@
 #pragma once
-#include "OpenGLIncludes.h"
+//#include "OpenGLIncludes.h"
+#include <glad/glad.h>
 #include <vector>
 class EBO
 {

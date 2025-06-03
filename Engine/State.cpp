@@ -1,7 +1,6 @@
 #include <iostream>
 #include <algorithm>
 
-#include "OpenGLIncludes.h"
 #include "StateMachine.h"
 #include "Camera.h"
 #include "Ray.h"
@@ -17,6 +16,7 @@
 void State::onMouseClick(GLFWwindow* window, int button, int action)
 {
 	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	{
 		if (action == GLFW_PRESS)
 		{
 			double xPos, yPos;
@@ -44,6 +44,7 @@ void State::onMouseClick(GLFWwindow* window, int button, int action)
 			if (m_stateMachine->m_target)
 				std::cout << "HIT: " << m_stateMachine->m_target->getName() << '\n';
 		}
+	}
 }
 
 void State::sortObjects(std::vector<Object*>& objects, const glm::vec3& start)
