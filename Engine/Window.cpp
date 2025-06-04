@@ -83,7 +83,7 @@ bool Window::shouldClose()
 void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (win && win->mStateMachine) win->mStateMachine->ChangeState(window, key, action, win->mCamera);
+	if (win && win->mStateMachine) win->mStateMachine->KeyboardPress(window, key, action, win->mCamera);
 }
 
 void Window::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)

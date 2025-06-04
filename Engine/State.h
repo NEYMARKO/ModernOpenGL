@@ -33,7 +33,7 @@ public:
 	virtual void onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld) {};
 	virtual void onMouseClick(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld,
 		int button, int action);
-	virtual void onKeyboardPress(int key) {};
+	virtual void onKeyboardPress(int key, int action) {};
 	//Sorts objects using 2 conditions: by layer (starting from those that have higher priority layer),
 	//and by distance (those closer to ray start have advantage)
 	void sortObjects(std::vector<Object*>& objects, const glm::vec3& start);

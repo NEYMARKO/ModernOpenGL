@@ -9,7 +9,7 @@
 //#include "OpenGLIncludes.h"
 
 class Camera;
-class Object;
+class Transform;
 
 enum TransformAxis
 {
@@ -36,9 +36,9 @@ protected:
 	const glm::vec3 worldForward{0.0f, 0.0f, -1.0f};
 	const glm::vec3 worldRight{1.0f, 0.0f, 0.0f};
 	const glm::vec3 worldUp{0.0f, 1.0f, 0.0f};
-	bool m_transforming{ false };
+	bool m_trackingMouse{ true };
 	Camera* m_camera;
-	Object* m_selectedObject;
+	Transform* m_selectedTransform;
 	TransformPlane m_transformPlane;
 	TransformAxis m_transformAxis{NONE};
 	bool m_freeMode = false;
@@ -47,11 +47,11 @@ protected:
 	void toggleFreeMode() { m_freeMode = !m_freeMode; };
 	void update();
 public:
-	TransformState(StateMachine* stateMachine, Camera* camera, Object* object);
+	TransformState(StateMachine* stateMachine, Camera* camera, Transform* objectTransform);
 
 	void enter();
-	void onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld);
+	virtual void onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld) override;
 	virtual void onMouseClick(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld,
 		int button, int action) override;
-	virtual void onKeyboardPress(int keyCode) override;
+	virtual void onKeyboardPress(int keyCode, int action) override;
 };

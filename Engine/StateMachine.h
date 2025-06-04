@@ -40,9 +40,9 @@ enum SubState
 	NO_6,
 	NO_7,
 	NO_8,
-	X,
-	Y,
-	Z,
+	SM_X,
+	SM_Y,
+	SM_Z,
 	SM_EMPTY
 };
 
@@ -82,7 +82,7 @@ class StateMachine
 		
 		void AddShaderPrograms(Shader* shader, Shader* boxShader);
 		//Controls state that StateMachine is currently in. SM_State changes on the press of a button
-		void ChangeState(GLFWwindow* window, int key, int action, Camera* camera);
+		void KeyboardPress(GLFWwindow* window, int key, int action, Camera* camera);
 		//Calculates coefficients of a plane in which target object lies, normal of a plane is opposite to the camera direction
 		void CalculateObjectPlane();
 		//Calculates intersection between plane and a point
@@ -93,6 +93,7 @@ class StateMachine
 		//Callback function for mouse movement
 		void MouseMove(GLFWwindow* window, Camera* camera, double mouseX, double mouseY);
 		
+		void changeState();
 		//Returns vector containing pointers to all objects in the scene
 		//Checks if any object has been clicked on
 		void CheckTarget();

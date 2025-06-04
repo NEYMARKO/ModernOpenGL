@@ -1,5 +1,8 @@
 #include <algorithm> //necessary for sorting vector hits
 //#include "State.h"
+#include "GrabState.h"
+#include "TransformState.h"
+#include "SelectedState.h"
 #include "Object.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
@@ -34,24 +37,33 @@ void StateMachine::AddShaderPrograms(Shader* shader, Shader* boxShader)
 {
 	mShaderProgram = shader;
 }
-void StateMachine::ChangeState(GLFWwindow* window, int key, int action, Camera* camera)
+
+void StateMachine::changeState()
 {
-	/*States newState = m_activeState.get()->getTransitionState();
+	States newState = m_activeState.get()->getTransitionState();
 	if (newState != States::NO_TRANSITION)
 	{
+		m_activeState.get()->exit();
 		m_activeState.reset();
 		switch (newState)
 		{
 		case States::DEFAULT:
-			m_activeState = std::make_unique<State>();
+			m_activeState = std::make_unique<State>(this);
 			break;
 		case States::SELECTED:
-			m_activeState = std::make_unique<SelectedState>();
+			m_activeState = std::make_unique<SelectedState>(this, m_target);
 			break;
 		case States::GRAB:
-			m_activeState = std::make_unique<GrabState>();
+			m_activeState = std::make_unique<GrabState>(this, m_camera, m_target->getComponent<Transform>());
+			break;
 		}
-	}*/
+		m_activeState.get()->enter();
+	}
+}
+void StateMachine::KeyboardPress(GLFWwindow* window, int key, int action, Camera* camera)
+{	
+	m_activeState.get()->onKeyboardPress(key, action);
+	changeState();
 	
 	if (action == GLFW_PRESS)
 	{
@@ -88,13 +100,13 @@ void StateMachine::ChangeState(GLFWwindow* window, int key, int action, Camera* 
 			CloseWindow(window);
 			break;
 		case GLFW_KEY_X:
-			this->subState = X;
+			this->subState = SM_X;
 			break;
 		case GLFW_KEY_Y:
-			this->subState = Y;
+			this->subState = SM_Y;
 			break;
 		case GLFW_KEY_Z:
-			this->subState = Z;
+			this->subState = SM_Z;
 			break;
 		case GLFW_KEY_1:
 			this->subState = NO_1;
@@ -144,9 +156,14 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera* camera, int button, in
 	double xPos, yPos;
 	glfwGetCursorPos(window, &xPos, &yPos);
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+	{
+		//std::cout << "SHOULD CHECK FOR STATE CHANGE\n";
+		m_camera->ScreenToWorldCoordinates(xPos, yPos, mouseStartWorld, mouseDirectionWorld);
+		m_activeState.get()->onMouseClick(mouseStartWorld, mouseDirectionWorld, button, action);
+		changeState();	
 		m_camera->Raycast(window, xPos, yPos);
-	m_camera->ScreenToWorldCoordinates(xPos, yPos, mouseStartWorld, mouseDirectionWorld);
-	m_activeState.get()->onMouseClick(mouseStartWorld, mouseDirectionWorld, button, action);
+	}
+	
 	switch (button)
 	{
 	//case GLFW_MOUSE_BUTTON_LEFT:
@@ -154,8 +171,8 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera* camera, int button, in
 	//	{
 	//		double xpos, ypos;
 	//		glfwGetCursorPos(window, &xpos, &ypos);
-	//		m_camera.Raycast(window, xpos, ypos);
-	//		Ray* ray = m_camera.mRay;
+	//		m_camera->Raycast(window, xpos, ypos);
+	//		Ray* ray = m_camera->mRay;
 
 	//		if (this->state == SM_ADD)
 	//		{
@@ -335,7 +352,7 @@ void StateMachine::CheckTarget()
 
 void StateMachine::Grab()
 {
-	glm::vec3 translationVector = CalculateIntersectionPoint();
+	/*glm::vec3 translationVector = CalculateIntersectionPoint();
 	float xValue, yValue, zValue;
 	glm::vec3 objectPos = m_target->getComponent<Transform>()->getPosition();
 	switch (this->subState)
@@ -360,7 +377,7 @@ void StateMachine::Grab()
 		break;
 	}
 
-	m_target->getComponent<Transform>()->setPosition(translationVector);
+	m_target->getComponent<Transform>()->setPosition(translationVector);*/
 
 }
 void StateMachine::Rotate()

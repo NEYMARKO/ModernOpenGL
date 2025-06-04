@@ -20,6 +20,7 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 	{
 		if (action == GLFW_PRESS)
 		{
+			std::cout << "ENTERED STATE MOUSE CLICK\n";
 			std::vector<Object*> intersected;
 
 			for (const auto& object : m_stateMachine->m_objectsInScene)
@@ -29,14 +30,14 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 			}
 
 			sortObjects(intersected, start);
-			std::cout << "SORTED HITS (by priority descending):" << '\n';
-			for (const auto* obj : intersected)
+			//std::cout << "SORTED HITS (by priority descending):" << '\n';
+			/*for (const auto* obj : intersected)
 			{
 				std::cout << obj->getName() << '\n';
-			}
+			}*/
 			updateSelection(intersected);
-			if (m_stateMachine->m_target)
-				std::cout << "HIT: " << m_stateMachine->m_target->getName() << '\n';
+			/*if (m_stateMachine->m_target)
+				std::cout << "HIT: " << m_stateMachine->m_target->getName() << '\n';*/
 		}
 	}
 }
@@ -105,6 +106,7 @@ void State::updateSelection(const std::vector<Object*>& objects)
 	//ray missed everything
 	else
 	{
+		std::cout << "WILL BE IN DEFAULT STATE\n";
 		if (currentSelection)
 			currentSelection->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
 		m_stateMachine->m_target = nullptr;
