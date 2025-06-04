@@ -10,8 +10,8 @@ struct TransformPlane
 	TransformPlane(glm::vec3 origin) :
 		m_origin{ origin }
 	{}
-	void calculatePlaneParameters(glm::vec3& normal);
-	void calculatePlaneParameters(glm::vec3& normal, const glm::vec3& pointOnPlane);
+	void calculatePlaneParameters(const glm::vec3& normal);
+	void calculatePlaneParameters(const glm::vec3& normal, const glm::vec3& pointOnPlane);
 	glm::vec3 calculateRayIntersectionPoint(const glm::vec3& mouseStartWorld, 
 		const glm::vec3& mouseDirectionWorld);
 	//Projects direction vector onto a plane

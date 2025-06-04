@@ -1,11 +1,11 @@
 #include "TransformPlane.h"
 
-void TransformPlane::calculatePlaneParameters(glm::vec3& normal)
+void TransformPlane::calculatePlaneParameters(const glm::vec3& normal)
 {
 	calculatePlaneParameters(normal, m_origin);
 }
 
-void TransformPlane::calculatePlaneParameters(glm::vec3& normal,
+void TransformPlane::calculatePlaneParameters(const glm::vec3& normal,
 	const glm::vec3& pointOnPlane)
 {
 	m_normal = normal;

@@ -25,11 +25,11 @@ void EditorCollider::setParent(Object* parent)
 {
 	m_parent = parent;
 	Transform* t = m_parent->getComponent<Transform>();
-	glm::vec3 pos = t->getPosition();
+	m_colliderPosition = t->getPosition();
 	//transforming them to world space
 	for (auto& point : m_vertices)
 	{
-		point += pos;
+		point += m_colliderPosition;
 	}
 	setupAABB();
 }
@@ -37,11 +37,13 @@ void EditorCollider::calculateExtremes()
 {
 	m_min = m_vertices[0];
 	m_max = m_vertices[0];
-	for (const auto& point : m_vertices)
+	
+	for (auto& point : m_vertices)
 	{
 		m_min = glm::min(m_min, point);
 		m_max = glm::max(m_max, point);
 	}
+
 }
 void EditorCollider::setupAABB()
 {
@@ -57,6 +59,18 @@ void EditorCollider::setupAABB()
 		glm::vec3(m_max.x, m_max.y, m_min.z),
 		glm::vec3(m_max.x, m_max.y, m_max.z),
 	};
+
+	//follow object
+	if (m_parent)
+	{
+		glm::vec3 objectPos = m_parent->getComponent<Transform>()->getPosition();
+		for (auto& point : m_vertices)
+		{
+			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), (objectPos - m_colliderPosition));
+			point = glm::vec3(translationMatrix * glm::vec4(point, 1.0f));
+		}
+		m_colliderPosition = objectPos;
+	}
 
 	m_edges =
 	{

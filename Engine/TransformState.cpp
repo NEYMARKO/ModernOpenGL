@@ -77,22 +77,24 @@ void TransformState::onKeyboardPress(const int keyCode, int action)
 		m_transitionState = States::DEFAULT;
 	}
 
-	glm::vec3 dir;
 	switch (m_transformAxis)
 	{
 	case TransformAxis::X:
-		dir = worldRight;
+		m_projectedAxis = worldRight;
+		m_infiniteAxis = worldRight;
 		break;
 	case TransformAxis::Y:
-		dir = worldUp;
+		m_projectedAxis = worldUp;
+		m_infiniteAxis = worldUp;
 		break;
 	case TransformAxis::Z:
-		dir = worldForward;
+		m_projectedAxis = worldForward;
+		m_infiniteAxis = worldForward;
 		break;
 	}
-	m_transformPlane.projectVectorToPlane(dir);
-	m_infiniteAxis = (m_transformPlane.m_origin + dir * 100.0f)
-		- (m_transformPlane.m_origin + dir * -100.0f);
+	m_transformPlane.projectVectorToPlane(m_projectedAxis);
+	m_projectedAxis = (m_transformPlane.m_origin + m_projectedAxis * 100.0f)
+		- (m_transformPlane.m_origin + m_projectedAxis * -100.0f);
 
 }
 

@@ -20,6 +20,7 @@ struct EditorCollider
 	glm::vec3 m_min;
 	//max value for each dimension
 	glm::vec3 m_max;
+	glm::vec3 m_colliderPosition;
 	Layer m_layer{ EC_DEFAULT };
 	EditorCollider(const glm::vec3& minimums, const glm::vec3& maximums, Layer layer = EC_DEFAULT);
 	void setParent(Object* parent);

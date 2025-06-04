@@ -24,6 +24,11 @@ void GrabState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& m
 	}
 	else
 	{
-		m_selectedTransform->setPosition(projectPointToVector(planeIntersectionPoint, m_infiniteAxis));
+		float movedDistance = glm::distance(
+			projectPointToVector(planeIntersectionPoint, m_projectedAxis), m_transformPlane.m_origin);
+		std::cout << "MOVED DISTANCE: " << movedDistance << "\n";
+		float direction = glm::dot(glm::normalize(planeIntersectionPoint - m_transformPlane.m_origin), glm::normalize(m_projectedAxis));
+		std::cout << "DIRECTION: " << direction << "\n";
+		m_selectedTransform->setPosition(m_transformPlane.m_origin + m_infiniteAxis * movedDistance * direction);
 	}
 }
