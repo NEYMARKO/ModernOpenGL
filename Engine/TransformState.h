@@ -1,8 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#undef GLFW_INCLUDE_NONE
+//#define GLFW_INCLUDE_NONE
+//#include <GLFW/glfw3.h>
+//#undef GLFW_INCLUDE_NONE
 
 #include "State.h"
 #include "TransformPlane.h"
@@ -36,6 +36,7 @@ protected:
 	const glm::vec3 worldForward{0.0f, 0.0f, -1.0f};
 	const glm::vec3 worldRight{1.0f, 0.0f, 0.0f};
 	const glm::vec3 worldUp{0.0f, 1.0f, 0.0f};
+	glm::vec3 m_infiniteAxis;
 	bool m_trackingMouse{ true };
 	Camera* m_camera;
 	Transform* m_selectedTransform;

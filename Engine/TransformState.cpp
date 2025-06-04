@@ -76,16 +76,7 @@ void TransformState::onKeyboardPress(const int keyCode, int action)
 	default:
 		m_transitionState = States::DEFAULT;
 	}
-}
 
-void TransformState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld)
-{
-	if (!m_trackingMouse)
-	{
-		//std::cout << "SHOULD CALL MOUSE MOVE FROM PARENT CLASS\n";
-		State::onMouseMove(mouseStartWorld, mouseDirectionWorld);
-		return;
-	}
 	glm::vec3 dir;
 	switch (m_transformAxis)
 	{
@@ -98,6 +89,20 @@ void TransformState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::ve
 	case TransformAxis::Z:
 		dir = worldForward;
 		break;
+	}
+	m_transformPlane.projectVectorToPlane(dir);
+	m_infiniteAxis = (m_transformPlane.m_origin + dir * 100.0f)
+		- (m_transformPlane.m_origin + dir * -100.0f);
+
+}
+
+void TransformState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld)
+{
+	if (!m_trackingMouse)
+	{
+		//std::cout << "SHOULD CALL MOUSE MOVE FROM PARENT CLASS\n";
+		State::onMouseMove(mouseStartWorld, mouseDirectionWorld);
+		return;
 	}
 	//direction vector isn't ZERO => it's transformation should be performed around axis
 	//if (!glm::all(glm::lessThan(glm::abs(dir), glm::vec3(EPSILON))))

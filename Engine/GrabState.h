@@ -12,4 +12,5 @@ public:
 	}
 
 	virtual void onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld) override;
+	glm::vec3 projectPointToVector(const glm::vec3& point, const glm::vec3& vector);
 };
