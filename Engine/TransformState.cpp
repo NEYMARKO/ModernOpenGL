@@ -80,18 +80,26 @@ void TransformState::onKeyboardPress(const int keyCode, int action)
 	switch (m_transformAxis)
 	{
 	case TransformAxis::X:
-		m_projectedAxis = worldRight;
-		m_infiniteAxis = worldRight;
+		m_projectedAxis = m_worldRight;
+		m_infiniteAxis = m_worldRight;
 		break;
 	case TransformAxis::Y:
-		m_projectedAxis = worldUp;
-		m_infiniteAxis = worldUp;
+		m_projectedAxis = m_worldUp;
+		m_infiniteAxis = m_worldUp;
 		break;
 	case TransformAxis::Z:
-		m_projectedAxis = worldForward;
-		m_infiniteAxis = worldForward;
+		m_projectedAxis = m_worldForward;
+		m_infiniteAxis = m_worldForward;
 		break;
 	}
+
+	//Points get projected to projectedAxis (axis that was projected to plane).
+	//Distance between origin of the plane and point projected to projectedAxis is calculated
+	//and used to determine amount of translation object needs to perform along World axis.
+	//Since projectedAxis spans from plane origin in both ways, it goes through origin (which is constant
+	//as long as plane parameters don't need to be recalculated - it can be used to determine distance
+	//that object should travel along world axis (distance from origin (which is constant) to projection of
+	//plane intersection onto projectedAxis)
 	m_transformPlane.projectVectorToPlane(m_projectedAxis);
 	m_projectedAxis = (m_transformPlane.m_origin + m_projectedAxis * 100.0f)
 		- (m_transformPlane.m_origin + m_projectedAxis * -100.0f);

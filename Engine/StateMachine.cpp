@@ -1,6 +1,7 @@
 #include <algorithm> //necessary for sorting vector hits
 //#include "State.h"
 #include "GrabState.h"
+#include "RotateState.h"
 #include "TransformState.h"
 #include "SelectedState.h"
 #include "Object.h"
@@ -56,6 +57,8 @@ void StateMachine::changeState()
 		case States::GRAB:
 			m_activeState = std::make_unique<GrabState>(this, m_camera, m_target->getComponent<Transform>());
 			break;
+		case States::ROTATE:
+			m_activeState = std::make_unique<RotateState>(this, m_camera, m_target->getComponent<Transform>());
 		}
 		m_activeState.get()->enter();
 	}

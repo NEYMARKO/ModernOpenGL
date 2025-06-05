@@ -161,6 +161,7 @@
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodyRegistry.cpp" />
+    <ClCompile Include="RotateState.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SelectedState.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="MyBulletDebugDrawer.h" />
     <ClInclude Include="OpenGLIncludes.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="RotateState.h" />
     <ClInclude Include="SelectedState.h" />
     <ClInclude Include="SortingAlgorithms.h" />
     <ClInclude Include="RigidBodyRegistry.h" />

@@ -33,9 +33,9 @@ enum TransformAxis
 class TransformState : public State
 {
 protected:
-	const glm::vec3 worldForward{0.0f, 0.0f, -1.0f};
-	const glm::vec3 worldRight{1.0f, 0.0f, 0.0f};
-	const glm::vec3 worldUp{0.0f, 1.0f, 0.0f};
+	const glm::vec3 m_worldForward{0.0f, 0.0f, -1.0f};
+	const glm::vec3 m_worldRight{1.0f, 0.0f, 0.0f};
+	const glm::vec3 m_worldUp{0.0f, 1.0f, 0.0f};
 	glm::vec3 m_projectedAxis;
 	glm::vec3 m_infiniteAxis;
 	bool m_trackingMouse{ true };
