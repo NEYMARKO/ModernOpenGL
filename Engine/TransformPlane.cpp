@@ -1,5 +1,6 @@
 #include "TransformPlane.h"
 
+#include <iostream>
 void TransformPlane::calculatePlaneParameters(const glm::vec3& normal)
 {
 	calculatePlaneParameters(normal, m_origin);
@@ -8,8 +9,9 @@ void TransformPlane::calculatePlaneParameters(const glm::vec3& normal)
 void TransformPlane::calculatePlaneParameters(const glm::vec3& normal,
 	const glm::vec3& pointOnPlane)
 {
-	m_normal = normal;
+	m_normal = glm::normalize(normal);
 	m_D = -glm::dot(m_normal, pointOnPlane);
+	std::cout << "RECALCULATED PLANE PARAMS\n";
 }
 
 glm::vec3 TransformPlane::calculateRayIntersectionPoint(const glm::vec3& mouseStartWorld,

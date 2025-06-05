@@ -27,18 +27,21 @@ void RotateState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3&
 		m_oldIntersection = pointOnCircle;
 		return;
 	}
-	std::cout << "DISTANCE: " << glm::distance(m_oldIntersection, pointOnCircle) << "\n";
-	std::cout << "EPSILON: " << EPSILON << "\n";
+	//std::cout << "DISTANCE: " << glm::distance(m_oldIntersection, pointOnCircle) << "\n";
+	//std::cout << "EPSILON: " << EPSILON << "\n";
 	/*std::cout << "OLD: " << glm::to_string(m_oldIntersection) << "\n";
 	std::cout << "POINT ON CIRCLE: " << glm::to_string(pointOnCircle) << "\n";*/
-	float angle = glm::acos(glm::dot(glm::normalize(m_oldIntersection), glm::normalize(pointOnCircle)));
-	std::cout << "ANGLE: " << angle << "\n";
+	glm::vec3 newVector = glm::normalize(m_oldIntersection - m_transformPlane.m_origin);
+	glm::vec3 oldVector = glm::normalize(pointOnCircle - m_transformPlane.m_origin);
+	glm::vec3 crossProduct = glm::cross(newVector, oldVector);
+	float angle = glm::atan(glm::dot(crossProduct, m_transformPlane.m_normal), glm::dot(newVector, oldVector));
+	/*float angle = glm::acos(glm::dot(glm::normalize(m_oldIntersection - m_transformPlane.m_origin)
+		, glm::normalize(pointOnCircle - m_transformPlane.m_origin)));*/
+	//std::cout << "ANGLE: " << angle << "\n";
 	//transform around all axis equally
 	if (m_transformAxis == TransformAxis::NONE)
 	{
-		glm::quat newRotation = glm::angleAxis(angle, m_worldForward);
-		newRotation = glm::angleAxis(angle, m_worldUp) * newRotation;
-		newRotation = glm::angleAxis(angle, m_worldRight) * newRotation;
+		glm::quat newRotation = glm::angleAxis(angle, m_transformPlane.m_normal);
 		m_selectedTransform->rotate(newRotation);
 	}
 	else

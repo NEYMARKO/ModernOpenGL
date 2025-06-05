@@ -71,7 +71,7 @@ class Camera
 		//Function for camera rotation
 		//Rotation starts after pressing right mouse and ends when mouse gets released
 		//By hovering mouse across screen (while right mouse is pressed), camera gets rotated
-		void Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY);
+		void Rotate(double startingX, double startingY, double currentX, double currentY);
 
 		//Transforms 2D pixel coordinates to 3D world coordinates
 		void ScreenToWorldCoordinates(const double mouseX, const double mouseY, glm::vec4& start, glm::vec3& direction);

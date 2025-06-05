@@ -9,11 +9,9 @@ class RotateState : public TransformState
 private:
 	float m_radius{15.0f};
 	glm::vec3 m_oldIntersection{ 0.0f, 0.0f, 0.0f };
-	glm::quat m_originalRotation;
 public:
 	RotateState(StateMachine* stateMachine, Camera* camera, Transform* objectTransform) :
-		TransformState{ stateMachine, camera, objectTransform },
-		m_originalRotation{ objectTransform->getQuaternionRotation() }
+		TransformState{ stateMachine, camera, objectTransform }
 	{
 		std::cout << "IN ROTATE\n";
 	}

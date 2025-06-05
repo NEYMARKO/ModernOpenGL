@@ -3,6 +3,7 @@
 #include "GrabState.h"
 #include "RotateState.h"
 #include "TransformState.h"
+#include "CameraRotateState.h"
 #include "SelectedState.h"
 #include "Object.h"
 #include "Transform.h"
@@ -59,6 +60,10 @@ void StateMachine::changeState()
 			break;
 		case States::ROTATE:
 			m_activeState = std::make_unique<RotateState>(this, m_camera, m_target->getComponent<Transform>());
+			break;
+		case States::CAMERA_ROTATE:
+			m_activeState = std::make_unique<CameraRotateState>(this, m_camera);
+			break;
 		}
 		m_activeState.get()->enter();
 	}
@@ -158,183 +163,182 @@ void StateMachine::MouseClick(GLFWwindow* window, Camera* camera, int button, in
 {
 	double xPos, yPos;
 	glfwGetCursorPos(window, &xPos, &yPos);
+	mousePosX = xPos;
+	mousePosY = yPos;
+	m_camera->ScreenToWorldCoordinates(xPos, yPos, mouseStartWorld, mouseDirectionWorld);
+	m_activeState.get()->onMouseClick(mouseStartWorld, mouseDirectionWorld, button, action);
+	changeState();	
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 	{
 		//std::cout << "SHOULD CHECK FOR STATE CHANGE\n";
-		m_camera->ScreenToWorldCoordinates(xPos, yPos, mouseStartWorld, mouseDirectionWorld);
-		m_activeState.get()->onMouseClick(mouseStartWorld, mouseDirectionWorld, button, action);
-		changeState();	
 		m_camera->Raycast(window, xPos, yPos);
 	}
-	
-	switch (button)
-	{
-	//case GLFW_MOUSE_BUTTON_LEFT:
+
+	//switch (button)
+	//{
+	////case GLFW_MOUSE_BUTTON_LEFT:
+	////	if (action == GLFW_PRESS)
+	////	{
+	////		double xpos, ypos;
+	////		glfwGetCursorPos(window, &xpos, &ypos);
+	////		m_camera->Raycast(window, xpos, ypos);
+	////		Ray* ray = m_camera->mRay;
+
+	////		if (this->state == SM_ADD)
+	////		{
+	////			AddObject(ray);
+	////		}
+	////		//object transformation has been completed
+	////		else if (this->state == SM_GRAB || this->state == SM_SCALE || this->state == SM_ROTATE)
+	////		{
+	////			if (!m_target) return;
+	////			//this->target->ChangeColor(DEFAULT_OBJECT_COLOR);
+	////			m_target->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+	////			m_target = nullptr;
+	////			this->state = SM_NOTHING;
+	////			this->subState = SM_EMPTY;
+	////		}
+	////		else
+	////		{
+	////			bool objectPicked = false;
+	////			int pickedId = -1;
+	////			//SortObjectsInScene();
+	////			//std::cout << "OBJ IN SCENE SIZE: " << mObjectsInScene.size() << std::endl;
+	////			
+	////			glm::vec3 rs = ray->GetRayStart();
+	////			glm::vec3 rdir = ray->GetRayDirection();
+	////			std::vector<Object*> intersected;
+	////			for (const auto& object : m_objectsInScene)
+	////			{
+	////				if (object.get()->getEditorCollider()->intersects(rs, rdir))
+	////					intersected.emplace_back(object.get());
+	////			}
+
+	////			//sorts objects first by layer (starting from those that have higher priority layer)
+	////			//and by distance (those closer to ray start have advantage)
+	////			std::sort(intersected.begin(), intersected.end(),
+	////				[&rs](Object* obj1, Object* obj2)
+	////				{
+	////					int layer1 = obj1->getEditorCollider()->getLayer();
+	////					int layer2 = obj2->getEditorCollider()->getLayer();
+
+	////					float distance1 = glm::distance(
+	////						obj1->getComponent<Transform>()->getPosition(), rs);
+	////					float distance2 = glm::distance(
+	////						obj2->getComponent<Transform>()->getPosition(), rs);
+
+	////					if (layer1 > layer2)
+	////						return true;
+	////					else if (layer1 < layer2)
+	////						return false;
+	////					else
+	////					{
+	////						if (distance1 <= distance2)
+	////							return true;
+	////						else
+	////							return false;
+	////					}
+	////					return 
+	////						glm::distance(obj1->getComponent<Transform>()->getPosition(), rs)
+	////						< glm::distance(obj2->getComponent<Transform>()->getPosition(), rs);
+	////				}
+	////			);
+
+	////			std::cout << "SORTED HITS (by priority descending):" << '\n';
+	////			for (const auto* obj : intersected)
+	////			{
+	////				std::cout << obj->getName() << '\n';
+	////			}
+	////			if (intersected.size() > 0)
+	////			{
+	////				if (m_target && m_target != intersected[0])
+	////					m_target->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+	////				m_target = intersected[0];
+	////				m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
+	////				CalculateObjectPlane();
+	////			}
+	////			else
+	////			{
+	////				if (m_target)
+	////					m_target->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+	////				m_target = nullptr;
+	////			}
+
+
+	////			if (m_target)
+	////				std::cout << "HIT: " << m_target->getName() << '\n';
+	////		}
+	////	}
+	////	break;
+
+	//case GLFW_MOUSE_BUTTON_RIGHT:
 	//	if (action == GLFW_PRESS)
 	//	{
-	//		double xpos, ypos;
-	//		glfwGetCursorPos(window, &xpos, &ypos);
-	//		m_camera->Raycast(window, xpos, ypos);
-	//		Ray* ray = m_camera->mRay;
-
-	//		if (this->state == SM_ADD)
-	//		{
-	//			AddObject(ray);
-	//		}
-	//		//object transformation has been completed
-	//		else if (this->state == SM_GRAB || this->state == SM_SCALE || this->state == SM_ROTATE)
-	//		{
-	//			if (!m_target) return;
-	//			//this->target->ChangeColor(DEFAULT_OBJECT_COLOR);
-	//			m_target->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
-	//			m_target = nullptr;
-	//			this->state = SM_NOTHING;
-	//			this->subState = SM_EMPTY;
-	//		}
-	//		else
-	//		{
-	//			bool objectPicked = false;
-	//			int pickedId = -1;
-	//			//SortObjectsInScene();
-	//			//std::cout << "OBJ IN SCENE SIZE: " << mObjectsInScene.size() << std::endl;
-	//			
-	//			glm::vec3 rs = ray->GetRayStart();
-	//			glm::vec3 rdir = ray->GetRayDirection();
-	//			std::vector<Object*> intersected;
-	//			for (const auto& object : m_objectsInScene)
-	//			{
-	//				if (object.get()->getEditorCollider()->intersects(rs, rdir))
-	//					intersected.emplace_back(object.get());
-	//			}
-
-	//			//sorts objects first by layer (starting from those that have higher priority layer)
-	//			//and by distance (those closer to ray start have advantage)
-	//			std::sort(intersected.begin(), intersected.end(),
-	//				[&rs](Object* obj1, Object* obj2)
-	//				{
-	//					int layer1 = obj1->getEditorCollider()->getLayer();
-	//					int layer2 = obj2->getEditorCollider()->getLayer();
-
-	//					float distance1 = glm::distance(
-	//						obj1->getComponent<Transform>()->getPosition(), rs);
-	//					float distance2 = glm::distance(
-	//						obj2->getComponent<Transform>()->getPosition(), rs);
-
-	//					if (layer1 > layer2)
-	//						return true;
-	//					else if (layer1 < layer2)
-	//						return false;
-	//					else
-	//					{
-	//						if (distance1 <= distance2)
-	//							return true;
-	//						else
-	//							return false;
-	//					}
-	//					return 
-	//						glm::distance(obj1->getComponent<Transform>()->getPosition(), rs)
-	//						< glm::distance(obj2->getComponent<Transform>()->getPosition(), rs);
-	//				}
-	//			);
-
-	//			std::cout << "SORTED HITS (by priority descending):" << '\n';
-	//			for (const auto* obj : intersected)
-	//			{
-	//				std::cout << obj->getName() << '\n';
-	//			}
-	//			if (intersected.size() > 0)
-	//			{
-	//				if (m_target && m_target != intersected[0])
-	//					m_target->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
-	//				m_target = intersected[0];
-	//				m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
-	//				CalculateObjectPlane();
-	//			}
-	//			else
-	//			{
-	//				if (m_target)
-	//					m_target->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
-	//				m_target = nullptr;
-	//			}
-
-
-	//			if (m_target)
-	//				std::cout << "HIT: " << m_target->getName() << '\n';
-	//		}
+	//		//std::cout << "SHOULD ROTATE CAMERA \n";
+	//		this->canRotateCamera = true;
+	//		glfwGetCursorPos(window, &this->mousePosX, &this->mousePosY);
+	//		std::cout << "PRESS (X, Y): (" << mousePosX << ", " << mousePosY << ")\n";
+	//		GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+	//		glfwSetCursor(window, cursor);
+	//	}
+	//	else
+	//	{
+	//		glfwSetCursor(window, NULL);
+	//		this->canRotateCamera = false;
 	//	}
 	//	break;
-
-	case GLFW_MOUSE_BUTTON_RIGHT:
-		if (action == GLFW_PRESS)
-		{
-			//std::cout << "SHOULD ROTATE CAMERA \n";
-			this->canRotateCamera = true;
-			glfwGetCursorPos(window, &this->mousePosX, &this->mousePosY);
-			GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
-			glfwSetCursor(window, cursor);
-		}
-		else
-		{
-			glfwSetCursor(window, NULL);
-			this->canRotateCamera = false;
-		}
-		break;
-	default:
-		break;
-	}
-	if (m_target && this->state != SM_ADD)
-	{
-		this->state = SM_NOTHING;
-	}
+	//default:
+	//	break;
+	//}
+	//if (m_target && this->state != SM_ADD)
+	//{
+	//	this->state = SM_NOTHING;
+	//}
 }
 
-void StateMachine::CalculateObjectPlane()
-{
-	this->objectPlane.normal = -m_camera->GetCameraForward();
-	this->objectPlane.D = - glm::dot(this->objectPlane.normal, m_target->getComponent<Transform>()->getPosition());
-}
-
-glm::vec3 StateMachine::CalculateIntersectionPoint()
-{
-	float t;
-
-	t = (-glm::dot(this->objectPlane.normal, glm::vec3(this->mouseStartWorld)) - this->objectPlane.D) / glm::dot(this->objectPlane.normal, this->mouseDirectionWorld);
-	return glm::vec3(this->mouseStartWorld) + this->mouseDirectionWorld * t;
-
-}
 void StateMachine::MouseMove(GLFWwindow* window, Camera* camera, double mouseX, double mouseY)
 {
-	m_camera->ScreenToWorldCoordinates(mouseX, mouseY, mouseStartWorld, mouseDirectionWorld);
-	m_activeState.get()->onMouseMove(mouseStartWorld, mouseDirectionWorld);
 	
+	if (m_activeState.get()->m_convertMouseTo3D)
+	{
+		m_camera->ScreenToWorldCoordinates(mouseX, mouseY, mouseStartWorld, mouseDirectionWorld);
+		m_activeState.get()->onMouseMove(mouseStartWorld, mouseDirectionWorld);
+	}
+	else
+	{
+		m_activeState.get()->onMouseMove(mouseX, mouseY);
+	}
+	mousePosX = mouseX;
+	mousePosY = mouseY;
 	/*if (mTarget && !this->canRotateCamera) return;
 
 	else if (mTarget) camera.ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);*/
 
-	if (m_target) m_camera->ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);
+	/*if (m_target) m_camera->ScreenToWorldCoordinates(mouseX, mouseY, this->mouseStartWorld, this->mouseDirectionWorld);*/
 
-	if (this->canRotateCamera)
-	{
-		this->m_camera->Rotate(window, this->mousePosX, this->mousePosY, mouseX, mouseY);
-		this->mousePosX = mouseX;
-		this->mousePosY = mouseY;
-	}
+	//if (this->canRotateCamera)
+	//{
+	//	std::cout << "ROTATE/move (X, Y): (" << mouseX << ", " << mouseY << ")\n";
+	//	this->m_camera->Rotate(/*window, */this->mousePosX, this->mousePosY, mouseX, mouseY);
+	//	this->mousePosX = mouseX;
+	//	this->mousePosY = mouseY;
+	//}
 
-	switch (this->state)
-	{
-	case SM_GRAB:
-		//std::cout << "SHOULD CHANGE TO GRAB" << '\n';
-		Grab();
-		break;
-	case SM_ROTATE:
-		Rotate();
-		break;
-	case SM_SCALE:
-		Scale();
-		break;
-	default:
-		break;
-	}
+	//switch (this->state)
+	//{
+	//case SM_GRAB:
+	//	//std::cout << "SHOULD CHANGE TO GRAB" << '\n';
+	//	Grab();
+	//	break;
+	//case SM_ROTATE:
+	//	Rotate();
+	//	break;
+	//case SM_SCALE:
+	//	Scale();
+	//	break;
+	//default:
+	//	break;
+	//}
 }
 void StateMachine::CheckTarget()
 {
@@ -353,47 +357,12 @@ void StateMachine::CheckTarget()
 	return;
 }
 
-void StateMachine::Grab()
-{
-	/*glm::vec3 translationVector = CalculateIntersectionPoint();
-	float xValue, yValue, zValue;
-	glm::vec3 objectPos = m_target->getComponent<Transform>()->getPosition();
-	switch (this->subState)
-	{
-	case X: 
-		xValue = (glm::vec3(1.0f, 0.0f, 0.0f) *
-			glm::length(translationVector) * glm::normalize(translationVector)).x;
-		translationVector = glm::vec3(xValue, objectPos.y, objectPos.z);
-		break;
-	case Y:
-		yValue = (glm::vec3(0.0f, 1.0f, 0.0f) *
-			glm::length(translationVector) * glm::normalize(translationVector)).y;
-		translationVector = glm::vec3(objectPos.x, yValue, objectPos.z);
-		break;
-	case Z:
-		zValue = (glm::vec3(0.0f, 0.0f, 1.0f) *
-			glm::length(translationVector) * (translationVector.y < objectPos.y ? -1.0f : 1.0f)).z;
-		translationVector = glm::vec3(objectPos.x, objectPos.y, zValue);
-		break;
-
-	default:
-		break;
-	}
-
-	m_target->getComponent<Transform>()->setPosition(translationVector);*/
-
-}
-void StateMachine::Rotate()
-{
-	//std::cout << "IN ROTATE " << std::endl;
-}
-
-void StateMachine::Scale()
-{
-	glm::vec3 translationVector = CalculateIntersectionPoint();
-	float scalingFactor = glm::distance(translationVector, m_target->getComponent<Transform>()->getPosition());
-	m_target->getComponent<Transform>()->setScale(scalingFactor);
-}
+//void StateMachine::Scale()
+//{
+//	glm::vec3 translationVector = CalculateIntersectionPoint();
+//	float scalingFactor = glm::distance(translationVector, m_target->getComponent<Transform>()->getPosition());
+//	m_target->getComponent<Transform>()->setScale(scalingFactor);
+//}
 
 void StateMachine::AddObject(Ray* ray)
 {

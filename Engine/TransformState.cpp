@@ -6,7 +6,7 @@
 #define EPSILON 0.001f
 
 TransformState::TransformState(StateMachine* stateMachine, Camera* camera, Transform* objectTransform) :
-	State{ stateMachine }, m_camera{ camera },
+	State{ stateMachine, true }, m_camera{ camera },
 	m_selectedTransform{ objectTransform },
 	m_transformPlane{ objectTransform->getPosition() }
 { 
@@ -38,6 +38,10 @@ void TransformState::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 			std::cout << "Currently not transforming\n";
 			State::onMouseClick(start, dir, button, action);
 		}
+	}
+	else if (GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+	{
+		State::onMouseClick(glm::vec3(), glm::vec3(), button, action);
 	}
 }
 void TransformState::onKeyboardPress(const int keyCode, int action)

@@ -20,7 +20,7 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 	{
 		if (action == GLFW_PRESS)
 		{
-			std::cout << "ENTERED STATE MOUSE CLICK\n";
+			//std::cout << "ENTERED STATE MOUSE CLICK\n";
 			std::vector<Object*> intersected;
 
 			for (const auto& object : m_stateMachine->m_objectsInScene)
@@ -38,6 +38,23 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 			updateSelection(intersected);
 			/*if (m_stateMachine->m_target)
 				std::cout << "HIT: " << m_stateMachine->m_target->getName() << '\n';*/
+		}
+	}
+	else
+	{
+		m_stateMachine->m_target = nullptr;
+		std::cout << "RM CLICKED\n";
+
+		//TODO: AVOID CHANGING STATE IF CAMERA_ROTATE_STATE CALLED THIS CODE - IT SHOULD REMAIN IN 
+		//THAT SAME STATE - HOW TO CHECK WHETHER CAMERA_ROTATE_STATE CALLED?
+		if (action == GLFW_PRESS)
+		{
+			m_transitionState = States::CAMERA_ROTATE;
+		}
+		//RM has been released - stop with camera rotation
+		else
+		{
+			m_transitionState = DEFAULT;
 		}
 	}
 }
@@ -99,6 +116,7 @@ void State::updateSelection(const std::vector<Object*>& objects)
 		else
 		{
 			m_transitionState = States::NO_TRANSITION;
+			std::cout << "STAYED IN SAME STATE\n";
 			return;
 		}
 		

@@ -14,6 +14,8 @@ enum States
 	GRAB,
 	ROTATE,
 	SCALE,
+	CAMERA_MOVE,
+	CAMERA_ROTATE,
 	ADD,
 	DELETE
 };
@@ -24,12 +26,14 @@ protected:
 	States m_transitionState = States::NO_TRANSITION;
 	StateMachine* m_stateMachine;
 public:
-	State(StateMachine* stateMachine) :
-		m_stateMachine{ stateMachine }
+	State(StateMachine* stateMachine, bool convertTo3D = false) :
+		m_stateMachine{ stateMachine }, m_convertMouseTo3D { convertTo3D }
 	{
 	}
+	bool m_convertMouseTo3D{ false };
 	virtual void enter() {};
 	virtual void exit() {};
+	virtual void onMouseMove(double x, double y) {};
 	virtual void onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld) {};
 	virtual void onMouseClick(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld,
 		int button, int action);

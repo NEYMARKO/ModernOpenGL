@@ -94,7 +94,7 @@ void Camera::Zoom(double amount)
 	mFov += amount * - 2;
 }
 
-void Camera::Rotate(GLFWwindow* window, double startingX, double startingY, double currentX, double currentY)
+void Camera::Rotate(double startingX, double startingY, double currentX, double currentY)
 {
 	calculatePointOnSphere(startingX, startingY, currentX, currentY);
 	updateCameraAxis();

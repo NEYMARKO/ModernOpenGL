@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="BulletGizmos.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CameraRotateState.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="EditorCollider.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="BulletGizmos.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CameraRotateState.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EBO.h" />
