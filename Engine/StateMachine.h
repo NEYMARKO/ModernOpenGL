@@ -8,49 +8,13 @@
 //#include "OpenGLIncludes.h"
 #include "State.h"
 //#include "Camera.h"
-//class State;
 class Camera;
 class Ray;
-//class GLFWwindow;
 class Shader;
 class Object;
 class MeshLoader;
 class PhysicsWorld;
 
-enum SM_State
-{
-	SM_NOTHING,
-	SM_GRAB,
-	SM_ROTATE,
-	SM_SCALE,
-	SM_ADD,
-	SM_DELETE,
-	SM_FOCUS,
-	SM_RESTART_SCENE,
-	SM_CLOSE_WINDOW
-};
-
-enum SubState
-{
-	NO_1,
-	NO_2,
-	NO_3,
-	NO_4,
-	NO_5,
-	NO_6,
-	NO_7,
-	NO_8,
-	SM_X,
-	SM_Y,
-	SM_Z,
-	SM_EMPTY
-};
-
-struct Plane
-{
-	glm::vec3 normal;
-	float D;
-};
 
 class StateMachine
 {
@@ -60,14 +24,9 @@ class StateMachine
 
 		Shader* mShaderProgram;
 
-		SM_State state;
-		SubState subState;
-		Plane objectPlane;
 		PhysicsWorld* m_physicsWorld;
 
 		std::vector<std::unique_ptr<MeshLoader>>& mMeshLoaders;
-		bool followMouse = false;
-		bool canRotateCamera = false;
 		glm::vec4 mouseStartWorld;
 		glm::vec3 mouseDirectionWorld;
 
@@ -91,13 +50,6 @@ class StateMachine
 		
 		void update();
 		void changeState();
-		//Returns vector containing pointers to all objects in the scene
-		//Checks if any object has been clicked on
-		void CheckTarget();
-		bool ShouldFollowMouse();
-		//void Grab();
-		//void Rotate();
-		//void Scale();
 
 		//Adds object to scene at the position of the click
 		//Different objects can be added by pressing numbers 1-8 while in ADD mode

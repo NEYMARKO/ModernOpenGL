@@ -49,7 +49,8 @@ void TransformState::onKeyboardPress(const int keyCode, int action)
 	if (!m_trackingMouse)
 	{
 		State::onKeyboardPress(keyCode, action);
-		return;
+		if (m_transitionState == CAMERA_MOVE)
+			return;
 	}
 	if (action != GLFW_PRESS)
 		return;

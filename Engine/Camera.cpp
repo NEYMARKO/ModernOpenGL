@@ -35,6 +35,7 @@ void Camera::generateViewProjectionMatrices(Shader& shaderProgram)
 		return;
 	}
 
+	std::cout << "EYE: " << glm::to_string(m_position + mPointOnSphere) << " CENTER: " << glm::to_string(m_position) << "\n";
 	view = glm::lookAt(m_position + mPointOnSphere, m_position, glm::vec3(0.0f, 1.0f, 0.0f));
 	//m_rotation = glm::quat_cast(glm::mat3(glm::inverse(view)));
 	projection = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
@@ -130,6 +131,8 @@ void Camera::updateCameraAxis()
 
 void Camera::UpdateViewportDimensions(const int& width, const int& height)
 {
+	if (width <= 0 || height <= 0)
+		return;
 	float xRatio = (float)width / mWidth;
 	float yRatio = (float)height / mHeight;
 
