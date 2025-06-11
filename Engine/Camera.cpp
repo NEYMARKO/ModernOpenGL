@@ -36,6 +36,7 @@ void Camera::generateViewProjectionMatrices(Shader& shaderProgram)
 	}
 
 	view = glm::lookAt(m_position + mPointOnSphere, m_position, glm::vec3(0.0f, 1.0f, 0.0f));
+	//m_rotation = glm::quat_cast(glm::mat3(glm::inverse(view)));
 	projection = glm::perspective(glm::radians(mFov), mWidth / mHeight, 0.1f, 100.0f);
 
 	shaderProgram.SetMat4("view", view);
@@ -48,47 +49,9 @@ void Camera::generateViewProjectionMatrices(Shader& shaderProgram)
 
 void Camera::Move(glm::vec3 direction, float deltaTime)
 {
-	std::cout << "Move direction: " << glm::to_string(direction) << "\n";
-	std::cout << "Rotated direction: " << glm::to_string(m_rotation * glm::normalize(direction)) << "\n";
-	std::cout << "QUATERNION: " << glm::to_string(m_rotation) << "\n\n";
 	direction = m_rotation * glm::normalize(direction);
 	float cameraSpeed = mSpeed * deltaTime;
 	m_position += direction * cameraSpeed;
-	//std::cout << "CAMERA SPEED: " << cameraSpeed << "\n";
-	//if (key == GLFW_KEY_UP)
-	//{
-	//	m_position += cameraSpeed * mForward;
-	//	/*std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;*/
-
-	//}
-	//if (key == GLFW_KEY_DOWN)
-	//{
-	//	m_position -= cameraSpeed * mForward;
-	//	//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
-	//}
-
-	//if (key == GLFW_KEY_RIGHT)
-	//{
-	//	m_position += cameraSpeed * mRight;
-	//	//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
-	//}
-
-	//if (key == GLFW_KEY_LEFT)
-	//{
-	//	m_position -= cameraSpeed * mRight;
-	//	//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
-	//}
-
-	//if (key == GLFW_KEY_SPACE)
-	//{
-	//	m_position += cameraSpeed * mUp;
-	//}
-	//if (key == GLFW_KEY_LEFT_CONTROL)
-	//{
-	//	m_position -= cameraSpeed * mUp;
-	//}
-
-	//std::cout << "Camera position: " << m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
 
 	//glm::vec3 direction = this->position - this->targetPos;
 	if (!this->focus)
@@ -145,10 +108,24 @@ void Camera::updateCameraAxis()
 	//std::cout << "FORWARD: " << msForward.x << " " << mForward.y << " " << mForward.z << std::endl;
 	mRight = glm::normalize(glm::cross(mForward, mWorldUp));
 	//std::cout << "RIGHT: " << mRight.x << " " << mRight.y << " " << mRight.z << std::endl;
-	mUp = glm::normalize(glm::cross(mForward, -mRight));
+	mUp = glm::normalize(glm::cross(mRight, mForward));
 
-	glm::mat3 rotationMatrix(mRight, mUp, mForward);
-	m_rotation = glm::quat_cast(rotationMatrix);
+
+	//FROM glm::lookAtRH
+	/*glm::mat4 rotationMatrix(1);
+	rotationMatrix[0][0] = mRight.x;
+	rotationMatrix[1][0] = mRight.y;
+	rotationMatrix[2][0] = mRight.z;
+	rotationMatrix[0][1] = mUp.x;
+	rotationMatrix[1][1] = mUp.y;
+	rotationMatrix[2][1] = mUp.z;
+	rotationMatrix[0][2] = -mForward.x;
+	rotationMatrix[1][2] = -mForward.y;
+	rotationMatrix[2][2] = -mForward.z;
+	rotationMatrix[3][0] = -glm::dot(mRight, (mPointOnSphere + m_position));
+	rotationMatrix[3][1] = -glm::dot(mUp, (mPointOnSphere + m_position));
+	rotationMatrix[3][2] = glm::dot(mForward, (mPointOnSphere + m_position));*/
+	m_rotation = glm::quat_cast(glm::inverse(view));
 }
 
 void Camera::UpdateViewportDimensions(const int& width, const int& height)

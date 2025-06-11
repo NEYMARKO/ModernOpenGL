@@ -18,7 +18,7 @@ void State::onKeyboardPress(int key, int action)
 {
 	//NO MATTER WHAT STATE WE ARE CURRENTLY IN, IF THESE BUTTONS GET PRESSEED,
 	//CAMERA HAS TO GET MOVED
-	if (action == GLFW_PRESS && !m_movingCamera)
+	if (action == GLFW_PRESS /*&& !m_movingCamera*/)
 	{
 		if (key == GLFW_KEY_UP ||
 			key == GLFW_KEY_DOWN ||
@@ -27,7 +27,7 @@ void State::onKeyboardPress(int key, int action)
 			key == GLFW_KEY_SPACE ||
 			key == GLFW_KEY_LEFT_CONTROL)
 		{
-			m_movingCamera = true;
+			/*m_movingCamera = true;*/
 			m_transitionState = States::CAMERA_MOVE;
 		}
 	}

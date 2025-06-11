@@ -18,7 +18,7 @@ public:
 		m_key { stateMachine->m_lastKey }*/
 	{
 		std::cout << "IN CAMERA MOVE\n";
-		m_movingCamera = true;
+		//m_movingCamera = true;
 		updateMoveDirection(m_stateMachine->m_lastKey, GLFW_PRESS);
 	}
 	virtual void update() override;

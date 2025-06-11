@@ -46,6 +46,11 @@ void TransformState::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 }
 void TransformState::onKeyboardPress(const int keyCode, int action)
 {
+	if (!m_trackingMouse)
+	{
+		State::onKeyboardPress(keyCode, action);
+		return;
+	}
 	if (action != GLFW_PRESS)
 		return;
 	switch (keyCode)
