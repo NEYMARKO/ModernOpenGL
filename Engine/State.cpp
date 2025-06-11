@@ -13,6 +13,26 @@
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define SELECTED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
+
+void State::onKeyboardPress(int key, int action)
+{
+	//NO MATTER WHAT STATE WE ARE CURRENTLY IN, IF THESE BUTTONS GET PRESSEED,
+	//CAMERA HAS TO GET MOVED
+	if (action == GLFW_PRESS && !m_movingCamera)
+	{
+		if (key == GLFW_KEY_UP ||
+			key == GLFW_KEY_DOWN ||
+			key == GLFW_KEY_LEFT ||
+			key == GLFW_KEY_RIGHT ||
+			key == GLFW_KEY_SPACE ||
+			key == GLFW_KEY_LEFT_CONTROL)
+		{
+			m_movingCamera = true;
+			m_transitionState = States::CAMERA_MOVE;
+		}
+	}
+}
+
 void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir, 
 	int button, int action)
 {

@@ -72,6 +72,7 @@ class StateMachine
 		glm::vec3 mouseDirectionWorld;
 
 	public:
+		int m_lastKey;
 		Camera* m_camera;
 		double mousePosX;
 		double mousePosY;
@@ -88,6 +89,7 @@ class StateMachine
 		//Callback function for mouse movement
 		void MouseMove(GLFWwindow* window, Camera* camera, double mouseX, double mouseY);
 		
+		void update();
 		void changeState();
 		//Returns vector containing pointers to all objects in the scene
 		//Checks if any object has been clicked on

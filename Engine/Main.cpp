@@ -85,7 +85,8 @@ int main()
 			camera.mRay->Draw(boundingBoxShaderProgram, camera);
 		}
 
-		camera.Move(window.getGLFWWindow(), physicsWorld.getDeltaTime());
+		stateMachine.update();
+		//camera.Move(window.getGLFWWindow(), physicsWorld.getDeltaTime());
 
 		glfwSwapBuffers(window.getGLFWWindow());
 		glfwPollEvents();

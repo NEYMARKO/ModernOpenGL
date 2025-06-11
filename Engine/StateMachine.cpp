@@ -3,6 +3,7 @@
 #include "GrabState.h"
 #include "RotateState.h"
 #include "TransformState.h"
+#include "CameraMoveState.h"
 #include "CameraRotateState.h"
 #include "SelectedState.h"
 #include "Object.h"
@@ -40,6 +41,11 @@ void StateMachine::AddShaderPrograms(Shader* shader, Shader* boxShader)
 	mShaderProgram = shader;
 }
 
+void StateMachine::update()
+{
+	m_activeState.get()->update();
+}
+
 void StateMachine::changeState()
 {
 	States newState = m_activeState.get()->getTransitionState();
@@ -64,6 +70,9 @@ void StateMachine::changeState()
 		case States::CAMERA_ROTATE:
 			m_activeState = std::make_unique<CameraRotateState>(this, m_camera);
 			break;
+		case States::CAMERA_MOVE:
+			m_activeState = std::make_unique<CameraMoveState>(this, m_camera);
+			break;
 		}
 		m_activeState.get()->enter();
 	}
@@ -71,92 +80,93 @@ void StateMachine::changeState()
 void StateMachine::KeyboardPress(GLFWwindow* window, int key, int action, Camera* camera)
 {	
 	m_activeState.get()->onKeyboardPress(key, action);
+	m_lastKey = key;
 	changeState();
 	
-	if (action == GLFW_PRESS)
-	{
-		switch (key)
-		{
-		case GLFW_KEY_G:
-			this->state = SM_GRAB;
-			break;
-		case GLFW_KEY_R:
-			this->state = SM_ROTATE;
-			break;
-		case GLFW_KEY_S:
-			this->state = SM_SCALE;
-			break;
-			//if A has been pressed, state has to be changed: if ADD has been active, it has to change to NOTHING
-		case GLFW_KEY_A:
-			this->state == SM_ADD ? this->state = SM_NOTHING : this->state = SM_ADD;
-			//if adding is done, state for adding meshLoaders should be empty
-			if (this->state == SM_NOTHING) this->subState = SM_EMPTY;
-			break;
-		case GLFW_KEY_DELETE:
-			this->state = SM_DELETE;
-			if (m_target) DeleteObject();
-			break;
-		case GLFW_KEY_F:
-			this->state = SM_FOCUS;
-			break;
-		case GLFW_KEY_Q:
-			this->state = SM_RESTART_SCENE;
-			this->m_camera->RestartCameraParameters();
-			break;
-		case GLFW_KEY_ESCAPE:
-			this->state = SM_CLOSE_WINDOW;
-			CloseWindow(window);
-			break;
-		case GLFW_KEY_X:
-			this->subState = SM_X;
-			break;
-		case GLFW_KEY_Y:
-			this->subState = SM_Y;
-			break;
-		case GLFW_KEY_Z:
-			this->subState = SM_Z;
-			break;
-		case GLFW_KEY_1:
-			this->subState = NO_1;
-			break;
-		case GLFW_KEY_2:
-			this->subState = NO_2;
-			break;
-		case GLFW_KEY_3:
-			this->subState = NO_3;
-			break;
-		case GLFW_KEY_4:
-			this->subState = NO_4;
-			break;
-		case GLFW_KEY_5:
-			this->subState = NO_5;
-			break;
-		case GLFW_KEY_6:
-			this->subState = NO_6;
-			break;
-		case GLFW_KEY_7:
-			this->subState = NO_7;
-			break;
-		case GLFW_KEY_8:
-			this->subState = NO_8;
-			break;
-		//while moving camera preserve same state
-		case GLFW_KEY_DOWN:
-			break;
-		case GLFW_KEY_UP:
-			break;
-		case GLFW_KEY_RIGHT:
-			break;
-		case GLFW_KEY_LEFT:
-			break;
-		default:
-			this->state = SM_NOTHING;
-			this->subState = SM_EMPTY;
-			break;
-		}
-		this->followMouse = false;
-		CheckTarget();
-	}
+	//if (action == GLFW_PRESS)
+	//{
+	//	switch (key)
+	//	{
+	//	case GLFW_KEY_G:
+	//		this->state = SM_GRAB;
+	//		break;
+	//	case GLFW_KEY_R:
+	//		this->state = SM_ROTATE;
+	//		break;
+	//	case GLFW_KEY_S:
+	//		this->state = SM_SCALE;
+	//		break;
+	//		//if A has been pressed, state has to be changed: if ADD has been active, it has to change to NOTHING
+	//	case GLFW_KEY_A:
+	//		this->state == SM_ADD ? this->state = SM_NOTHING : this->state = SM_ADD;
+	//		//if adding is done, state for adding meshLoaders should be empty
+	//		if (this->state == SM_NOTHING) this->subState = SM_EMPTY;
+	//		break;
+	//	case GLFW_KEY_DELETE:
+	//		this->state = SM_DELETE;
+	//		if (m_target) DeleteObject();
+	//		break;
+	//	case GLFW_KEY_F:
+	//		this->state = SM_FOCUS;
+	//		break;
+	//	case GLFW_KEY_Q:
+	//		this->state = SM_RESTART_SCENE;
+	//		this->m_camera->RestartCameraParameters();
+	//		break;
+	//	case GLFW_KEY_ESCAPE:
+	//		this->state = SM_CLOSE_WINDOW;
+	//		CloseWindow(window);
+	//		break;
+	//	case GLFW_KEY_X:
+	//		this->subState = SM_X;
+	//		break;
+	//	case GLFW_KEY_Y:
+	//		this->subState = SM_Y;
+	//		break;
+	//	case GLFW_KEY_Z:
+	//		this->subState = SM_Z;
+	//		break;
+	//	case GLFW_KEY_1:
+	//		this->subState = NO_1;
+	//		break;
+	//	case GLFW_KEY_2:
+	//		this->subState = NO_2;
+	//		break;
+	//	case GLFW_KEY_3:
+	//		this->subState = NO_3;
+	//		break;
+	//	case GLFW_KEY_4:
+	//		this->subState = NO_4;
+	//		break;
+	//	case GLFW_KEY_5:
+	//		this->subState = NO_5;
+	//		break;
+	//	case GLFW_KEY_6:
+	//		this->subState = NO_6;
+	//		break;
+	//	case GLFW_KEY_7:
+	//		this->subState = NO_7;
+	//		break;
+	//	case GLFW_KEY_8:
+	//		this->subState = NO_8;
+	//		break;
+	//	//while moving camera preserve same state
+	//	case GLFW_KEY_DOWN:
+	//		break;
+	//	case GLFW_KEY_UP:
+	//		break;
+	//	case GLFW_KEY_RIGHT:
+	//		break;
+	//	case GLFW_KEY_LEFT:
+	//		break;
+	//	default:
+	//		this->state = SM_NOTHING;
+	//		this->subState = SM_EMPTY;
+	//		break;
+	//	}
+	//	this->followMouse = false;
+	//	CheckTarget();
+	//}
 }
 
 void StateMachine::MouseClick(GLFWwindow* window, Camera* camera, int button, int action)

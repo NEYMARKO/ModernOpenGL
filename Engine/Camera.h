@@ -64,7 +64,7 @@ class Camera
 		void generateViewProjectionMatrices(Shader& shaderProgram);
 		
 		//Moves camera in all 3 axis
-		void Move(GLFWwindow* window, float deltaTime);
+		void Move(glm::vec3 direction, float deltaTime);
 
 		//Modifies fov to zoom in/out
 		void Zoom(double amount);

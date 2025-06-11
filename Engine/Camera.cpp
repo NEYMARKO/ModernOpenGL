@@ -1,6 +1,8 @@
 #include "Ray.h"
 #include "Camera.h"
 
+#include <glm/gtx/string_cast.hpp>
+
 #define ANGLE_LOWER_BOUND 10
 
 Camera::Camera(glm::vec3 position, glm::vec3 targetPos, float speed, 
@@ -44,41 +46,47 @@ void Camera::generateViewProjectionMatrices(Shader& shaderProgram)
 //Camera is converging to negative x when Right key is pressed because camera is positioned behind the origin of the world
 //Draw (0, 0, 0) and your camera at (0, 0, 5) and (0, 0, -5) and check up and right for those cases - everything works fine and makes sense
 
-void Camera::Move(GLFWwindow* window, float deltaTime)
+void Camera::Move(glm::vec3 direction, float deltaTime)
 {
+	std::cout << "Move direction: " << glm::to_string(direction) << "\n";
+	std::cout << "Rotated direction: " << glm::to_string(m_rotation * glm::normalize(direction)) << "\n";
+	std::cout << "QUATERNION: " << glm::to_string(m_rotation) << "\n\n";
+	direction = m_rotation * glm::normalize(direction);
 	float cameraSpeed = mSpeed * deltaTime;
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-	{
-		m_position += cameraSpeed * mForward;
-		/*std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;*/
+	m_position += direction * cameraSpeed;
+	//std::cout << "CAMERA SPEED: " << cameraSpeed << "\n";
+	//if (key == GLFW_KEY_UP)
+	//{
+	//	m_position += cameraSpeed * mForward;
+	//	/*std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;*/
 
-	}
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-	{
-		m_position -= cameraSpeed * mForward;
-		//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
-	}
+	//}
+	//if (key == GLFW_KEY_DOWN)
+	//{
+	//	m_position -= cameraSpeed * mForward;
+	//	//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
+	//}
 
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-	{
-		m_position += cameraSpeed * mRight;
-		//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
-	}
+	//if (key == GLFW_KEY_RIGHT)
+	//{
+	//	m_position += cameraSpeed * mRight;
+	//	//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
+	//}
 
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-	{
-		m_position -= cameraSpeed * mRight;
-		//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
-	}
+	//if (key == GLFW_KEY_LEFT)
+	//{
+	//	m_position -= cameraSpeed * mRight;
+	//	//std::cout << this->position.x << " " << this->position.y << " " << this->position.z << std::endl;
+	//}
 
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	{
-		m_position += cameraSpeed * mUp;
-	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-	{
-		m_position -= cameraSpeed * mUp;
-	}
+	//if (key == GLFW_KEY_SPACE)
+	//{
+	//	m_position += cameraSpeed * mUp;
+	//}
+	//if (key == GLFW_KEY_LEFT_CONTROL)
+	//{
+	//	m_position -= cameraSpeed * mUp;
+	//}
 
 	//std::cout << "Camera position: " << m_position.x << " " << m_position.y << " " << m_position.z << std::endl;
 
@@ -131,11 +139,16 @@ void Camera::updateCameraAxis()
 	//AND RIGHT ARROW KEY WOULD MOVE CAMERA TO THE LEFT\
 	//THE PROBLEM IS THAT THERE IS SNAPPING WHEN CAMERA PASSES k*PI ANGLES BECASUE OF MIRRORING (FLIPPED RIGHT AXIS)
 	//vector pointing from A to B: B - A => center - eye
+	//center = m_position
+	//eye = m_position + mPointOnSphere
 	mForward = glm::normalize(-mPointOnSphere);
 	//std::cout << "FORWARD: " << msForward.x << " " << mForward.y << " " << mForward.z << std::endl;
 	mRight = glm::normalize(glm::cross(mForward, mWorldUp));
 	//std::cout << "RIGHT: " << mRight.x << " " << mRight.y << " " << mRight.z << std::endl;
-	mUp = glm::normalize(glm::cross(mRight, mForward));
+	mUp = glm::normalize(glm::cross(mForward, -mRight));
+
+	glm::mat3 rotationMatrix(mRight, mUp, mForward);
+	m_rotation = glm::quat_cast(rotationMatrix);
 }
 
 void Camera::UpdateViewportDimensions(const int& width, const int& height)
