@@ -31,7 +31,7 @@ void Window::initialize()
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
-		mStatus = INVALID;
+		mStatus = WIN_INVALID;
 		return;
 	}
 
@@ -54,7 +54,7 @@ void Window::initialize()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	mStatus = VALID;
+	mStatus = WIN_VALID;
 }
 
 void Window::addStateMachine(StateMachine* stateMachine)
@@ -80,22 +80,27 @@ bool Window::shouldClose()
 	return glfwWindowShouldClose(mWindow);
 }
 
+void Window::closeWindow()
+{
+	glfwSetWindowShouldClose(mWindow, GL_TRUE);
+}
+
 void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (win && win->mStateMachine) win->mStateMachine->KeyboardPress(window, key, action, win->mCamera);
+	if (win && win->mStateMachine) win->mStateMachine->KeyboardPress(key, action, win->mCamera);
 }
 
 void Window::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (win && win->mStateMachine) win->mStateMachine->MouseMove(window, win->mCamera, xpos, ypos);
+	if (win && win->mStateMachine) win->mStateMachine->MouseMove(win->mCamera, xpos, ypos);
 }
 
 void Window::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	Window* win = static_cast<Window*>(glfwGetWindowUserPointer(window));
-	if (win && win->mStateMachine) win->mStateMachine->MouseClick(window, win->mCamera, button, action);
+	if (win && win->mStateMachine) win->mStateMachine->MouseClick(win->mCamera, button, action);
 }
 
 void Window::mouse_scroll_back(GLFWwindow* window, double xOffset, double yOffset)

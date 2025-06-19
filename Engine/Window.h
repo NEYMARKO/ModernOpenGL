@@ -3,6 +3,9 @@
 #include <string_view>
 //#include "OpenGLIncludes.h"
 #include <glad/glad.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+#undef GLFW_INCLUDE_NONE
 
 //#include "Camera.h"
 //#include "StateMachine.h"
@@ -11,9 +14,9 @@ class StateMachine;
 
 enum Status
 {
-	NONE,
-	VALID,
-	INVALID
+	WIN_NONE,
+	WIN_VALID,
+	WIN_INVALID
 };
 class Window
 {
@@ -21,7 +24,7 @@ private:
 	int mWidth;
 	int mHeight;
 	std::string_view m_name;
-	Status mStatus {NONE};
+	Status mStatus {WIN_NONE};
 	GLFWwindow* mWindow;
 	Camera* mCamera;
 	StateMachine* mStateMachine;
@@ -33,12 +36,12 @@ public:
 	void addStateMachine(StateMachine* stateMachine);
 	void alignCameraToWindow();
 	//returns true if window was successfully loaded, otherwise returns false
-	bool loaded() { return mStatus == VALID; };
+	bool loaded() { return mStatus == WIN_VALID; };
 	bool shouldClose();
 	int getWidth() { return mWidth; };
 	int getHeight() { return mHeight; };
 	GLFWwindow* getGLFWWindow() { return mWindow; };
-
+	void closeWindow();
 	//CALLBACKS
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);

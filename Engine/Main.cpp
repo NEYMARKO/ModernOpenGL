@@ -34,8 +34,8 @@ int main()
 
 	BulletGizmos bulletGizmos(&physicsWorld);
 	
-	StateMachine stateMachine(&camera, meshLoaders, objectsInScene, &physicsWorld);
-	stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
+	StateMachine stateMachine(&window, &camera, objectsInScene, &physicsWorld);
+	//stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
 	window.addStateMachine(&stateMachine);
 	
 	Grid grid(100);

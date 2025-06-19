@@ -28,8 +28,11 @@ void State::onKeyboardPress(int key, int action)
 			key == GLFW_KEY_LEFT_CONTROL)
 		{
 			/*m_movingCamera = true;*/
+			m_stateMachine->m_target = nullptr;
 			m_transitionState = States::CAMERA_MOVE;
 		}
+		else if (key == GLFW_KEY_ESCAPE)
+			m_stateMachine->CloseWindow();
 	}
 }
 

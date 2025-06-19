@@ -2,17 +2,13 @@
 #include <memory>
 #include <vector>
 #include <glm/glm.hpp>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
-#undef GLFW_INCLUDE_NONE
 //#include "OpenGLIncludes.h"
+#include "Window.h"
 #include "State.h"
 //#include "Camera.h"
 class Camera;
 class Ray;
-class Shader;
 class Object;
-class MeshLoader;
 class PhysicsWorld;
 
 
@@ -22,13 +18,12 @@ class StateMachine
 
 		std::unique_ptr<State> m_activeState;
 
-		Shader* mShaderProgram;
-
 		PhysicsWorld* m_physicsWorld;
 
-		std::vector<std::unique_ptr<MeshLoader>>& mMeshLoaders;
 		glm::vec4 mouseStartWorld;
 		glm::vec3 mouseDirectionWorld;
+
+		Window* m_window;
 
 	public:
 		int m_lastKey;
@@ -37,16 +32,15 @@ class StateMachine
 		double mousePosY;
 		std::vector<std::unique_ptr<Object>>& m_objectsInScene;
 		Object* m_target;
-		StateMachine(Camera* m_camera, std::vector<std::unique_ptr<MeshLoader>>& meshLoaders, std::vector<std::unique_ptr<Object>>& objectsInScene,
+		StateMachine(Window* window, Camera* m_camera, std::vector<std::unique_ptr<Object>>& objectsInScene,
 			PhysicsWorld* physicsWorld);
 		
-		void AddShaderPrograms(Shader* shader, Shader* boxShader);
 		//Controls state that StateMachine is currently in. SM_State changes on the press of a button
-		void KeyboardPress(GLFWwindow* window, int key, int action, Camera* camera);
+		void KeyboardPress(int key, int action, Camera* camera);
 		//Callback function for mouse click
-		void MouseClick(GLFWwindow* window, Camera* camera, int button, int action);
+		void MouseClick(Camera* camera, int button, int action);
 		//Callback function for mouse movement
-		void MouseMove(GLFWwindow* window, Camera* camera, double mouseX, double mouseY);
+		void MouseMove(Camera* camera, double mouseX, double mouseY);
 		
 		void update();
 		void changeState();
@@ -56,6 +50,6 @@ class StateMachine
 		void AddObject(Ray* ray);
 		//Deletes selected object from both the scene and the vector containing all objects in the scene
 		void DeleteObject();
-		void CloseWindow(GLFWwindow* window);
+		void CloseWindow();
 		//~StateMachine();
 };
