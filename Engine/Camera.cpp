@@ -61,8 +61,7 @@ void Camera::Zoom(double amount)
 
 void Camera::Rotate(double startingX, double startingY, double currentX, double currentY)
 {
-	mSensitivity = 1;
-	float pitch = (currentY - startingY) / mWidth * glm::radians(360.0f) * mSensitivity;
+	float pitch = (currentY - startingY) / mWidth * glm::radians(360.0f) * mSensitivity/2;
 	//invert yaw controls
 	float yaw = (currentX - startingX) / mHeight * glm::radians(180.0f) * mSensitivity * -1;
 

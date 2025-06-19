@@ -20,6 +20,12 @@ enum States
 	DELETE
 };
 
+struct Hit
+{
+	Object* obj;
+	glm::vec3 point;
+};
+
 class State
 {
 protected:
@@ -42,8 +48,8 @@ public:
 	virtual void onKeyboardPress(int key, int action);
 	//Sorts objects using 2 conditions: by layer (starting from those that have higher priority layer),
 	//and by distance (those closer to ray start have advantage)
-	void sortObjects(std::vector<Object*>& objects, const glm::vec3& start);
-	void updateSelection(const std::vector<Object*>& objects);
+	void sortObjects(std::vector<Hit>& hits, const glm::vec3& start);
+	void updateSelection(const std::vector<Hit>& hits);
 	States getTransitionState() { return m_transitionState; }
 	virtual ~State() {};
 };

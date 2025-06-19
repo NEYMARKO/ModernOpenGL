@@ -1,3 +1,6 @@
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
+#undef GLFW_INCLUDE_NONE
 #include "RigidBody.h"
 #include "Transform.h"
 #include "Object.h"

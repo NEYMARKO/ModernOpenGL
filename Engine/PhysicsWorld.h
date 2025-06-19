@@ -4,9 +4,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <memory>
 //#include "OpenGLIncludes.h"
-#define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
-#undef GLFW_INCLUDE_NONE
+
 class RigidBody;
 class PhysicsObject;
 

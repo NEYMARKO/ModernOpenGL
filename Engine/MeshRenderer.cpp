@@ -18,11 +18,6 @@ void MeshRenderer::changeColor(const glm::vec3& color)
 	m_material->setDiffuse(color);
 }
 
-//void MeshRenderer::setParent(Object* parent)
-//{
-//	m_parentObject = parent;
-//}
-
 void MeshRenderer::draw(Camera& camera, Lighting& lighting, Transform* transform)
 {
 	//std::cout << "PARENT OBJECT DOES " + std::string(m_parentObject != nullptr ? "" : "NOT") + " EXIST!" << std::endl;

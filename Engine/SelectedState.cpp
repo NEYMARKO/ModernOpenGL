@@ -1,9 +1,9 @@
+#include "StateMachine.h"
+#include "MeshRenderer.h"
 #include "SelectedState.h"
-#define GLFW_INCLUDE_NONE	
-#include <GLFW/glfw3.h>
-#undef GLFW_INCLUDE_NONE
 
 #include <iostream>
+
 void SelectedState::onKeyboardPress(int key, int action)
 {
 	State::onKeyboardPress(key, action);

@@ -16,6 +16,8 @@ public:
 	{
 		//std::cout << "ENTERED CAMERA ROTATED\n";
 	}
+	virtual void enter() override;
+	virtual void exit() override;
 	virtual void onMouseMove(double x, double y) override;
 
 };

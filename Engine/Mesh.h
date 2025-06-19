@@ -40,7 +40,6 @@ class Mesh
 		~Mesh();
 		void transferLoadedMeshInfo(MeshLoader* meshLoader);
 		int GetID();
-		float GetDistanceFromCamera();
 		VAO* getVAO() { return &mVAO; }
 		std::vector<Vertex>* getVertices() { return &mVertices; }
 		std::vector<unsigned int>* getIndices() { return &mIndices; }

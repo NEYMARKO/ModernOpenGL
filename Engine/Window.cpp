@@ -2,6 +2,8 @@
 #include "Camera.h"
 #include "Window.h"
 
+#define GLFW_HAND_CURSOR 0x00036004
+
 Window::Window(Camera* camera, int width = 1920, int height = 1080)
 	: mWidth{ width }, mHeight{ height }, mCamera{ camera }
 {
@@ -75,6 +77,22 @@ void Window::alignCameraToWindow()
 	}
 }
 
+void Window::changeCursorShape(CursorShape shape)
+{
+	switch (shape)
+	{
+	case CursorShape::DEFAULT_CURSOR:
+		m_cursor = NULL;
+		break;
+	case CursorShape::CLOSED_HAND_CURSOR:
+		m_cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+		break;
+	default:
+		break;
+	}
+	
+	glfwSetCursor(mWindow, m_cursor);
+}
 bool Window::shouldClose()
 {
 	return glfwWindowShouldClose(mWindow);

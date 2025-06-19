@@ -95,7 +95,7 @@ void EditorCollider::setupAABB()
 }
 
 
-bool EditorCollider::intersects(const glm::vec3& start, const glm::vec3& direction)
+bool EditorCollider::intersects(const glm::vec3& start, const glm::vec3& direction, glm::vec3& intersectionOut)
 {
 	float t_close[3]{0.0f};
 	float t_far[3]{0.0f};
@@ -128,5 +128,6 @@ bool EditorCollider::intersects(const glm::vec3& start, const glm::vec3& directi
 		std::cout << glm::to_string(point) << '\n';
 	}*/
 
+	intersectionOut = start + t_close_float * direction;
 	return t_close_float <= t_far_float && t_close_float > 0;
 }

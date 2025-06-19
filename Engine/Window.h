@@ -18,6 +18,13 @@ enum Status
 	WIN_VALID,
 	WIN_INVALID
 };
+
+enum CursorShape
+{
+	DEFAULT_CURSOR,
+	CLOSED_HAND_CURSOR
+};
+
 class Window
 {
 private:
@@ -25,7 +32,9 @@ private:
 	int mHeight;
 	std::string_view m_name;
 	Status mStatus {WIN_NONE};
+	CursorShape m_cursorShape{ DEFAULT_CURSOR };
 	GLFWwindow* mWindow;
+	GLFWcursor* m_cursor;
 	Camera* mCamera;
 	StateMachine* mStateMachine;
 public:
@@ -42,6 +51,7 @@ public:
 	int getHeight() { return mHeight; };
 	GLFWwindow* getGLFWWindow() { return mWindow; };
 	void closeWindow();
+	void changeCursorShape(CursorShape shape);
 	//CALLBACKS
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);

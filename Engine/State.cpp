@@ -13,7 +13,6 @@
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define SELECTED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)
 
-
 void State::onKeyboardPress(int key, int action)
 {
 	//NO MATTER WHAT STATE WE ARE CURRENTLY IN, IF THESE BUTTONS GET PRESSEED,
@@ -28,7 +27,12 @@ void State::onKeyboardPress(int key, int action)
 			key == GLFW_KEY_LEFT_CONTROL)
 		{
 			/*m_movingCamera = true;*/
-			m_stateMachine->m_target = nullptr;
+			if (m_stateMachine->m_target)
+			{
+				m_stateMachine->m_target->getComponent<MeshRenderer>()->
+					changeColor(DEFAULT_OBJECT_COLOR);
+				m_stateMachine->m_target = nullptr;
+			}
 			m_transitionState = States::CAMERA_MOVE;
 		}
 		else if (key == GLFW_KEY_ESCAPE)
@@ -44,28 +48,36 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 		if (action == GLFW_PRESS)
 		{
 			//std::cout << "ENTERED STATE MOUSE CLICK\n";
-			std::vector<Object*> intersected;
-
+			std::vector<Hit> hits;
+			glm::vec3 intersectionPoint;
 			for (const auto& object : m_stateMachine->m_objectsInScene)
 			{
-				if (object.get()->getEditorCollider()->intersects(start, dir))
-					intersected.emplace_back(object.get());
+				if (object.get()->getEditorCollider()->intersects(start, dir, intersectionPoint))
+					hits.emplace_back(Hit{ object.get(), intersectionPoint });
 			}
 
-			sortObjects(intersected, start);
-			//std::cout << "SORTED HITS (by priority descending):" << '\n';
-			/*for (const auto* obj : intersected)
+			sortObjects(hits, start);
+			std::cout << "SORTED HITS (by priority descending):" << '\n';
+			for (auto hit: hits)
 			{
-				std::cout << obj->getName() << '\n';
-			}*/
-			updateSelection(intersected);
+				std::cout << hit.obj->getName() << '\n';
+			}
+			updateSelection(hits);
 			/*if (m_stateMachine->m_target)
 				std::cout << "HIT: " << m_stateMachine->m_target->getName() << '\n';*/
 		}
 	}
 	else
 	{
-		m_stateMachine->m_target = nullptr;
+		//This code can't be put in SelectedState::exit() because that will get triggered
+		//both when going to camera move/rotate (as wanted), and when going to transform state
+		//(which will then perform something over nullptr - unwanted behaviour)
+		if (m_stateMachine->m_target)
+		{
+			m_stateMachine->m_target->getComponent<MeshRenderer>()->
+				changeColor(DEFAULT_OBJECT_COLOR);
+			m_stateMachine->m_target = nullptr;
+		}
 		//std::cout << "RM CLICKED\n";
 
 		//TODO: AVOID CHANGING STATE IF CAMERA_ROTATE_STATE CALLED THIS CODE - IT SHOULD REMAIN IN 
@@ -82,18 +94,16 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 	}
 }
 
-void State::sortObjects(std::vector<Object*>& objects, const glm::vec3& start)
+void State::sortObjects(std::vector<Hit>& hits, const glm::vec3& start)
 {
-	std::sort(objects.begin(), objects.end(),
-		[&start](Object* obj1, Object* obj2)
+	std::sort(hits.begin(), hits.end(),
+		[&start](Hit hit1, Hit hit2)
 		{
-			int layer1 = obj1->getEditorCollider()->getLayer();
-			int layer2 = obj2->getEditorCollider()->getLayer();
+			int layer1 = hit1.obj->getEditorCollider()->getLayer();
+			int layer2 = hit2.obj->getEditorCollider()->getLayer();
 
-			float distance1 = glm::distance(
-				obj1->getComponent<Transform>()->getPosition(), start);
-			float distance2 = glm::distance(
-				obj2->getComponent<Transform>()->getPosition(), start);
+			float distance1 = glm::distance(hit1.point, start);
+			float distance2 = glm::distance(hit2.point, start);
 
 			if (layer1 > layer2)
 				return true;
@@ -111,26 +121,26 @@ void State::sortObjects(std::vector<Object*>& objects, const glm::vec3& start)
 	);
 }
 
-void State::updateSelection(const std::vector<Object*>& objects)
+void State::updateSelection(const std::vector<Hit>& hits)
 {
 	Object* currentSelection = m_stateMachine->m_target;
 	//ray has hit something - objects is bound to have atleast 1 element
-	if (objects.size() > 0)
+	if (hits.size() > 0)
 	{
 		//there isn't active selection
 		if (!currentSelection)
 		{
-			m_stateMachine->m_target = objects[0];
+			m_stateMachine->m_target = hits[0].obj;
 			m_stateMachine->m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
 			//CalculateObjectPlane();
 			m_transitionState = States::SELECTED;
 			return;
 		}
 		//There already exists active selection, but it isn't same as hit
-		else if (currentSelection != objects[0])
+		else if (currentSelection != hits[0].obj)
 		{
 			currentSelection->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
-			m_stateMachine->m_target = objects[0];
+			m_stateMachine->m_target = hits[0].obj;
 			m_stateMachine->m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
 			m_transitionState = States::SELECTED;
 			

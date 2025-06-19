@@ -23,10 +23,10 @@ class StateMachine
 		glm::vec4 mouseStartWorld;
 		glm::vec3 mouseDirectionWorld;
 
-		Window* m_window;
 
 	public:
 		int m_lastKey;
+		Window* m_window;
 		Camera* m_camera;
 		double mousePosX;
 		double mousePosY;

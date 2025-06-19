@@ -27,7 +27,7 @@ struct EditorCollider
 	void calculateExtremes();
 	void setupAABB();
 	//Uses slab algorithm for ray-box(AABB) intersection
-	bool intersects(const glm::vec3& start, const glm::vec3& direction);
+	bool intersects(const glm::vec3& start, const glm::vec3& direction, glm::vec3& intersectionOut);
 	void setLayer(Layer layer) { m_layer = layer; }
 	int getLayer() { return m_layer; }
 };
