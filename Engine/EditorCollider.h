@@ -14,6 +14,7 @@ enum Layer
 struct EditorCollider
 {
 	Object* m_parent;
+	std::array<glm::vec3, 8> m_origVerts;
 	std::array<glm::vec3, 8> m_vertices;
 	std::array<glm::vec3, 24> m_edges;
 	//min value for each dimension

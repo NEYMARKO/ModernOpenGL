@@ -18,6 +18,9 @@ EditorCollider::EditorCollider(const glm::vec3& minimums, const glm::vec3& maxim
 		glm::vec3(m_max.x, m_max.y, m_min.z),
 		glm::vec3(m_max.x, m_max.y, m_max.z),
 	};
+
+	m_origVerts = m_vertices;
+
 	setupAABB();
 }
 
@@ -47,6 +50,27 @@ void EditorCollider::calculateExtremes()
 }
 void EditorCollider::setupAABB()
 {
+
+	//follow object
+	if (m_parent)
+	{
+		Transform* t = m_parent->getComponent<Transform>();
+		glm::vec3 objectPos = t->getPosition();
+		glm::quat rotation = t->getQuaternionRotation();
+
+		int i = 0;
+		for (auto point : m_origVerts)
+		{
+			//glm::mat4 rotationMatrix = glm::toMat4(rotation);
+			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), objectPos);
+			point = glm::vec3(translationMatrix * glm::vec4(point, 1.0f));
+			point = rotation * (point - objectPos) + objectPos;
+			m_vertices[i] = point;
+			i++;
+		}
+		m_colliderPosition = objectPos;
+	}
+
 	calculateExtremes();
 	m_vertices = 
 	{
@@ -59,19 +83,6 @@ void EditorCollider::setupAABB()
 		glm::vec3(m_max.x, m_max.y, m_min.z),
 		glm::vec3(m_max.x, m_max.y, m_max.z),
 	};
-
-	//follow object
-	if (m_parent)
-	{
-		glm::vec3 objectPos = m_parent->getComponent<Transform>()->getPosition();
-		for (auto& point : m_vertices)
-		{
-			glm::mat4 translationMatrix = glm::translate(glm::mat4(1.0f), (objectPos - m_colliderPosition));
-			point = glm::vec3(translationMatrix * glm::vec4(point, 1.0f));
-		}
-		m_colliderPosition = objectPos;
-	}
-
 	m_edges =
 	{
 		// Bottom square
