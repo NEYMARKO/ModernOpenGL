@@ -6,6 +6,10 @@
 #include <iostream>
 void SelectedState::onKeyboardPress(int key, int action)
 {
+	State::onKeyboardPress(key, action);
+	if (m_transitionState == States::CAMERA_MOVE)
+		return;
+
 	if (action != GLFW_PRESS)
 		return;
 	switch (key)

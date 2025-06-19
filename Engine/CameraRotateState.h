@@ -14,7 +14,7 @@ public:
 		State{ stateMachine, false }, m_camera{ camera }/*, 
 		m_xStart{ stateMachine->mousePosX }, m_yStart{ stateMachine->mousePosY }*/
 	{
-		std::cout << "ENTERED CAMERA ROTATED\n";
+		//std::cout << "ENTERED CAMERA ROTATED\n";
 	}
 	virtual void onMouseMove(double x, double y) override;
 

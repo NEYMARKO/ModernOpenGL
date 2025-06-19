@@ -63,7 +63,7 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 	else
 	{
 		m_stateMachine->m_target = nullptr;
-		std::cout << "RM CLICKED\n";
+		//std::cout << "RM CLICKED\n";
 
 		//TODO: AVOID CHANGING STATE IF CAMERA_ROTATE_STATE CALLED THIS CODE - IT SHOULD REMAIN IN 
 		//THAT SAME STATE - HOW TO CHECK WHETHER CAMERA_ROTATE_STATE CALLED?
