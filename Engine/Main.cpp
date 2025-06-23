@@ -23,7 +23,7 @@ int main()
 
 	Camera camera(glm::vec3(-5.0f, 5.0f, 15.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1, 800, 800);
 	
-	Window window{&camera, 1024, 1024};
+	Window window{&camera, 1920, 1080};
 	if (!window.loaded()) return -1;
 
 	Shader defaultShaderProgram("default.vert", "default.frag");

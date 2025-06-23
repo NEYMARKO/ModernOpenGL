@@ -29,7 +29,7 @@ public:
 	};
 	void setup();
 	void addBone(const glm::vec3& position, const glm::quat& rotation, float mass);
-	void addConstraint(RigidBody* rb1, RigidBody* rb2);
+	void addConstraint(RigidBody* rb1, RigidBody* rb2, const btVector3& axis);
 	void update();
 	std::vector<Object*>* getAllBones() { return &m_bones; };
 	~Ragdoll();

@@ -29,16 +29,21 @@ void Ragdoll::setup()
 	//addBone(glm::vec3(0.0f, 1.8f, 0.0f), glm::quat(), 5);
 
 	//upperArmL
-	addBone(glm::vec3(-0.5f, 1.5f, 0.0f), 
-		glm::angleAxis(glm::radians(90.0f), glm::vec3(0, 0, 1)), 3);
+	addBone(glm::vec3(0.0f, 2.0f, 0.0f), 
+		/*glm::angleAxis(glm::radians(90.0f), glm::vec3(0, 0, 1))*/glm::quat(), 3);
 	//lowerArmL
-	addBone(glm::vec3(-0.8f, 1.5f, 0.0f), glm::quat(), 2);
+	addBone(glm::vec3(0.0f, 1.0f, 0.0f), 
+		/*glm::angleAxis(glm::radians(90.0f), glm::vec3(1, 0, 0))*/
+		glm::quat(), 2);
 
 	//upperArmR
-	addBone(glm::vec3(0.5f, 1.5f, 0.0f), glm::quat(), 2);
+	addBone(glm::vec3(-2.0f, 1.0f, 0.0f), 
+		glm::angleAxis(glm::radians(90.0f), glm::vec3(0, 0, 1))
+		/*glm::quat()*/, 2);
 	//lowerArmR
-	addBone(glm::vec3(0.8f, 1.5f, 0.0f), 
-		glm::angleAxis(glm::radians(-90.0f), glm::vec3(0, 0, 1)), 2);
+	addBone(glm::vec3(-3.0f, 1.0f, 0.0f), 
+		glm::angleAxis(glm::radians(-90.0f), glm::vec3(0, 0, 1))
+		/*glm::quat()*/, 2);
 	
 	////upperLegL
 	//addBone(glm::vec3(-0.2f, 0.6f, 0.0f), glm::quat(), 6);
@@ -50,71 +55,6 @@ void Ragdoll::setup()
 	////lowerLegR
 	//addBone(glm::vec3(0.2f, 0.2f, 0.0f), glm::quat(), 4);
 
-	//btVector3 worldPivot = 0.5f * (m_bones[3]->getComponent<Transform>()->getBulletPosition() +
-	//	m_bones[4]->getComponent<Transform>()->getBulletPosition());
-
-	//btTransform transA = m_bones[3]->getComponent<RigidBody>()->getRigidBody()->getCenterOfMassTransform();
-	//btTransform transB = m_bones[4]->getComponent<RigidBody>()->getRigidBody()->getCenterOfMassTransform();
-	//
-	//btVector3 pivotInA = transA.inverse() * worldPivot;
-	//btVector3 pivotInB = transB.inverse() * worldPivot;
-
-	//btVector3 axisInA = transA.getBasis().inverse() * btVector3(1, 0, 0); // hinge around x
-	//btVector3 axisInB = transB.getBasis().inverse() * btVector3(1, 0, 0);
-
-	//btHingeConstraint* hinge = new btHingeConstraint(
-	//	*m_bones[3]->getComponent<RigidBody>()->getRigidBody(),
-	//	*m_bones[4]->getComponent<RigidBody>()->getRigidBody(),
-	//	pivotInA, pivotInB,
-	//	axisInA, axisInB
-	//);
-	//m_constraints.push_back(hinge);
-	//m_physicsWorld->getDynamicsWorld()->addConstraint(m_constraints.back());
-	/*btHingeConstraint* testHinge = new btHingeConstraint(
-		*m_bones[3]->getComponent<RigidBody>()->getRigidBody(),
-			*m_bones[4]->getComponent<RigidBody>()->getRigidBody(),
-		btVector3(0, -0.5f, 0),
-		btVector3(0, 0.5f, 0),
-		btVector3(1, 0, 0),
-		btVector3(1, 0, 0)
-	);
-	m_constraints.push_back(testHinge);*/
-	//m_physicsWorld->getDynamicsWorld()->addConstraint(m_constraints.back());
-	//m_physicsWorld->getDynamicsWorld()->addConstraint(testHinge);
-	/*m_bones[3]->getComponent<RigidBody>()->getRigidBody()->activate(true);
-	m_bones[4]->getComponent<RigidBody>()->getRigidBody()->activate(true);*/
-	/*btHingeConstraint* hinge2 = new btHingeConstraint(
-		*m_bones[5]->getComponent<RigidBody>()->getRigidBody(),
-		*m_bones[6]->getComponent<RigidBody>()->getRigidBody(),
-		m_bones[5]->getComponent<Transform>()->getBulletPosition(),
-		m_bones[6]->getComponent<Transform>()->getBulletPosition(),
-		btVector3(0, 1, 0), btVector3(1, 0, 0)
-	);
-	m_constraints.push_back(hinge2);
-	m_physicsWorld->getDynamicsWorld()->addConstraint(m_constraints.back());*/
-	
-	//RigidBody* a = m_bones[3]->getComponent<RigidBody>();
-	//RigidBody* b = m_bones[4]->getComponent<RigidBody>();
-	//btRigidBody* rbA = a->getRigidBody();
-	//btRigidBody* rbB = b->getRigidBody();
-	///*std::cout << "1ST FINALIZED: " << (a->m_finalized ? "TRUE" : "FALSE") << "2ND FINALIZED"
-	//	<< (b->m_finalized ? "TRUE\n" : "FALSE\n");*/
-	//btVector3 worldPivot = 0.5f * (rbA->getCenterOfMassPosition() + rbB->getCenterOfMassPosition());
-	//btVector3 worldAxis(1, 0, 0); // hinge around x
-
-	//btTransform localA, localB;
-	//localA = rbA->getCenterOfMassTransform().inverse() * btTransform(btQuaternion::getIdentity(), worldPivot);
-	//localB = rbB->getCenterOfMassTransform().inverse() * btTransform(btQuaternion::getIdentity(), worldPivot);
-
-	//btHingeConstraint* hinge = new btHingeConstraint(
-	//	*rbA, *rbB, localA, localB
-	//);
-
-	//hinge->setLimit(-SIMD_HALF_PI / 2, SIMD_HALF_PI / 2);
-	//hinge->setDbgDrawSize(1.0f);
-
-	//m_physicsWorld->getDynamicsWorld()->addConstraint(hinge);
-	//addConstraint(m_bones[3]->getComponent<RigidBody>(), m_bones[4]->getComponent<RigidBody>());
 }
 
 
@@ -132,8 +72,9 @@ void Ragdoll::addBone(const glm::vec3& position, const glm::quat& rotation, floa
 	m_bones.back()->addComponent(std::move(boneRigidBody));
 }
 
-void Ragdoll::addConstraint(RigidBody* rb1, RigidBody* rb2)
+void Ragdoll::addConstraint(RigidBody* rb1, RigidBody* rb2, const btVector3& axis)
 {
+	//rigid bodies aren't still added to the world or all constraints have been set up
 	if (!rb1->m_addedToWorld || !rb2->m_addedToWorld || m_finalizedCount >= m_bones.size() / 2)
 		return;
 	
@@ -149,11 +90,11 @@ void Ragdoll::addConstraint(RigidBody* rb1, RigidBody* rb2)
 	btTransform transA = rb1->getRigidBody()->getCenterOfMassTransform();
 	btTransform transB = rb2->getRigidBody()->getCenterOfMassTransform();
 
-	btVector3 pivotInA = transA.inverse() * (worldPivot - btVector3(0, 0.5f, 0));
-	btVector3 pivotInB = transB.inverse() * (worldPivot + btVector3(0, 0.5f, 0));
+	btVector3 pivotInA = transA.inverse() * worldPivot;
+	btVector3 pivotInB = transB.inverse() * worldPivot;
 
-	btVector3 axisInA = transA.getBasis().inverse() * btVector3(1, 0, 0); // hinge around x
-	btVector3 axisInB = transB.getBasis().inverse() * btVector3(1, 0, 0);
+	btVector3 axisInA = transA.getBasis().inverse() * axis; 
+	btVector3 axisInB = transB.getBasis().inverse() * axis;
 
 	btHingeConstraint* hinge = new btHingeConstraint(
 		*rb1->getRigidBody(),
@@ -163,8 +104,13 @@ void Ragdoll::addConstraint(RigidBody* rb1, RigidBody* rb2)
 		axisInA,
 		axisInB
 	);
+	hinge->setLimit(-SIMD_PI / 2.0f, SIMD_PI / 2.0f);
+	/*rb1->getRigidBody()->setDamping(0.05f, 0.85f);
+	rb2->getRigidBody()->setDamping(0.05f, 0.85f);*/
 	m_constraints.push_back(hinge);
-	m_physicsWorld->getDynamicsWorld()->addConstraint(m_constraints.back());
+	/*rb1->getRigidBody()->activate(true);
+	rb2->getRigidBody()->activate(true);*/
+	m_physicsWorld->getDynamicsWorld()->addConstraint(m_constraints.back(), true);
 	std::cout << "ADDED CONSTRAINT\n";
 	m_finalizedCount++;
 }
@@ -173,8 +119,10 @@ void Ragdoll::update()
 {
 	/*addConstraint(m_bones[3]->getComponent<RigidBody>(), m_bones[4]->getComponent<RigidBody>());
 	addConstraint(m_bones[5]->getComponent<RigidBody>(), m_bones[6]->getComponent<RigidBody>());*/
-	addConstraint(m_bones[0]->getComponent<RigidBody>(), m_bones[1]->getComponent<RigidBody>());
-	addConstraint(m_bones[2]->getComponent<RigidBody>(), m_bones[3]->getComponent<RigidBody>());
+	addConstraint(m_bones[0]->getComponent<RigidBody>(), 
+		m_bones[1]->getComponent<RigidBody>(), btVector3(0,0,1));
+	addConstraint(m_bones[2]->getComponent<RigidBody>(), 
+		m_bones[3]->getComponent<RigidBody>(), btVector3(0,0,1));
 }
 
 Ragdoll::~Ragdoll()
