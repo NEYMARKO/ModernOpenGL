@@ -160,6 +160,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="PrintClass.cpp" />
+    <ClCompile Include="Ragdoll.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodyRegistry.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraMoveState.h" />
     <ClInclude Include="CameraRotateState.h" />
+    <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="EBO.h" />
@@ -194,6 +196,7 @@
     <ClInclude Include="Grid.h" />
     <ClInclude Include="MyBulletDebugDrawer.h" />
     <ClInclude Include="OpenGLIncludes.h" />
+    <ClInclude Include="Ragdoll.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RotateState.h" />
     <ClInclude Include="SelectedState.h" />

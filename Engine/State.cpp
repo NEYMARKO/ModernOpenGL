@@ -58,7 +58,7 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 
 			sortObjects(hits, start);
 			std::cout << "SORTED HITS (by priority descending):" << '\n';
-			for (auto hit: hits)
+			for (const auto hit: hits)
 			{
 				std::cout << hit.obj->getName() << '\n';
 			}

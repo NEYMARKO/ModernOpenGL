@@ -13,9 +13,5 @@ public:
 	{
 		std::cout << "IN SELECTED\n";
 	}
-	virtual void enter() {};
-	virtual void exit() {};
-	void onMouseMove() {};
-	void onMouseClick() {};
 	virtual void onKeyboardPress(int key, int action) override;
 };

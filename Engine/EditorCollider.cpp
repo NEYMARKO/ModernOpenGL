@@ -41,7 +41,7 @@ void EditorCollider::calculateExtremes()
 	m_min = m_vertices[0];
 	m_max = m_vertices[0];
 	
-	for (auto& point : m_vertices)
+	for (const auto& point : m_vertices)
 	{
 		m_min = glm::min(m_min, point);
 		m_max = glm::max(m_max, point);

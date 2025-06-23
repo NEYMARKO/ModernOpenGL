@@ -16,10 +16,10 @@ private:
 
 	Transform m_transform;
 	MeshRenderer m_meshRenderer;
+	Object* m_parentObject = nullptr;
 	EditorCollider m_editorCollider;
 	std::vector<std::unique_ptr<Component>> m_components;
 	std::vector<std::unique_ptr<Object>> mChildren;
-	Object* m_parentObject;
 	std::string m_name;
 
 public:

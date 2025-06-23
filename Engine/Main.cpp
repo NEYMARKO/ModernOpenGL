@@ -14,6 +14,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Ray.h"
+#include "Ragdoll.h"
 #include "BulletGizmos.h"
 int main()
 {
@@ -57,6 +58,10 @@ int main()
 	Lighting light(&lightingShaderProgram, lightBulb, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 	Scene scene{&camera, &light, objectsInScene, &defaultShaderProgram};
+	
+	Ragdoll ragdoll(glm::vec3(0.0f, 10.0f, 0.0f), &physicsWorld);
+	scene.addRagdoll(&ragdoll);
+	
 	Gizmos gizmos(&camera);
 
 	for (auto& obj : objectsInScene)
@@ -79,7 +84,7 @@ int main()
 		bulletGizmos.updateBufferContent();
 		bulletGizmos.renderColliders(&camera);
 		grid.Draw(boundingBoxShaderProgram, camera);
-		
+		scene.renderRagdoll();
 		if (camera.mRay != nullptr)
 		{
 			camera.mRay->Draw(boundingBoxShaderProgram, camera);

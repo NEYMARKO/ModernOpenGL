@@ -10,6 +10,7 @@
 #include "BoxCollider.h"
 #include "RigidBody.h"
 #include <string>
+#include "Ragdoll.h"
 #include "Scene.h"
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, Shader* objectShader) 
 	: mCamera{ camera }, mLightSource{ lightSource }, m_objectsInScene{ objectsInScene }, 
@@ -157,6 +158,20 @@ void Scene::renderIKChain()
 		m_ikChain.get()->getMeshRenderer()->draw(*mCamera, *mLightSource, transform);
 	}
 }
+
+void Scene::addRagdoll(Ragdoll* ragdoll)
+{
+	m_ragdoll = ragdoll;
+}
+
+void Scene::renderRagdoll()
+{
+	for (auto& bone : *m_ragdoll->getAllBones())
+	{
+		bone->getComponent<MeshRenderer>()->draw(*mCamera, *mLightSource);
+	}
+}
+
 void Scene::addObject(std::unique_ptr<Object> object)
 {
 	m_objectsInScene.push_back(std::move(object));

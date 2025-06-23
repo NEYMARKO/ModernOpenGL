@@ -138,6 +138,9 @@
     <ClCompile Include="CameraMoveState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Ragdoll.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Joint.h">
@@ -279,6 +282,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CameraMoveState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ragdoll.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
