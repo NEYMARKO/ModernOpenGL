@@ -102,5 +102,7 @@ void PhysicsWorld::addObjectToWorld(RigidBody* rbComponent)
 	if (!rbComponent)
 		throw std::runtime_error("RigidBody is null");
 	m_rigidBodies.push_back(rbComponent);
+	std::cout << "RB COMPONENT ADDDED TO WORLD\n";
+	rbComponent->m_addedToWorld = true;
 	mDynamicsWorld->addRigidBody(rbComponent->getRigidBody());
 }

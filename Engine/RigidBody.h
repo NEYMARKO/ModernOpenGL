@@ -19,6 +19,8 @@ private:
 	std::unique_ptr<btRigidBody> m_rigidBody;
 
 public:
+	bool m_addedToWorld = false;
+
 	RigidBody(float mass = 1.0f, float restitution = 0.4f);
 	void finalizeRigidBody();
 	btVector3 calculateInertia();

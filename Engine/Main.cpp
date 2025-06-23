@@ -84,7 +84,8 @@ int main()
 		bulletGizmos.updateBufferContent();
 		bulletGizmos.renderColliders(&camera);
 		grid.Draw(boundingBoxShaderProgram, camera);
-		scene.renderRagdoll();
+		//scene.renderRagdoll();
+		ragdoll.update();
 		if (camera.mRay != nullptr)
 		{
 			camera.mRay->Draw(boundingBoxShaderProgram, camera);
