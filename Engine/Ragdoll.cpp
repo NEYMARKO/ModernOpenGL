@@ -293,16 +293,13 @@ void Ragdoll::update()
 
 Ragdoll::~Ragdoll()
 {
-	int i;
-	for (i = 0; i < JOINTS_COUNT; i++)
-	{
-		if (m_jointConstraints[i])
-		{
-			m_physicsWorld->getDynamicsWorld()->removeConstraint(m_jointConstraints[i]);
-			delete m_jointConstraints[i];
-			m_jointConstraints[i] = 0;
-		}
-	}
+	//int i;
+	//for (i = 0; i < JOINTS_COUNT; i++)
+	//{
+	//	m_physicsWorld->getDynamicsWorld()->removeConstraint(m_jointConstraints[i]);
+	//	delete m_jointConstraints[i];
+	//	m_jointConstraints[i] = 0;
+	//}
 	//for (i = 0; i < BONES_COUNT; i++)
 	//{
 	//	delete m_bones[i];

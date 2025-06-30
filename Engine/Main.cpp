@@ -59,7 +59,7 @@ int main()
 
 	Scene scene{&camera, &light, objectsInScene, &defaultShaderProgram};
 	
-	Ragdoll ragdoll(glm::vec3(0.0f, 5.0f, -5.0f), &physicsWorld, 2.5);
+	Ragdoll ragdoll(glm::vec3(0.0f, 15.0f, -3.0f), &physicsWorld, 2.5);
 	scene.addRagdoll(&ragdoll);
 	
 	Gizmos gizmos(&camera);
@@ -79,8 +79,8 @@ int main()
 		scene.renderScene();
 		for (auto& obj : objectsInScene)
 			obj.get()->getEditorCollider()->setupAABB();
-		gizmos.updateBufferContent();
-		gizmos.renderBoundingVolumes();
+		/*gizmos.updateBufferContent();
+		gizmos.renderBoundingVolumes();*/
 		bulletGizmos.updateBufferContent();
 		bulletGizmos.renderColliders(&camera);
 		grid.Draw(boundingBoxShaderProgram, camera);

@@ -43,6 +43,10 @@ void Scene::loadDefaultScene()
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto floorTransform = Transform(glm::vec3(0.0f, -4.0f, 0.0f),
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto floorTransform2 = Transform(glm::vec3(0.0f, 7.0f, 0.0f),
+		glm::angleAxis(glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f)), glm::vec3(0.2f, 0.2f, 0.2f));
+	auto floorTransform3 = Transform(glm::vec3(-4.0f, 2.0f, 0.0f),
+		glm::angleAxis(glm::radians(-25.0f), glm::vec3(0.0f, 0.0f, 1.0f)), glm::vec3(0.2f, 0.2f, 0.2f));
 
 	auto templeMesh = ResourceManager<Mesh>::addResource("temple", std::make_unique<Mesh>(&templeLoader));
 	auto dragonMesh = ResourceManager<Mesh>::addResource("dragon", std::make_unique<Mesh>(&dragonLoader));
@@ -61,6 +65,8 @@ void Scene::loadDefaultScene()
 	auto dragonRenderer3 = MeshRenderer(dragonMesh, dragonMaterial);
 	auto frogRenderer = MeshRenderer(frogMesh, frogMaterial);
 	auto floorRenderer = MeshRenderer(floorMesh, floorMaterial);
+	auto floorRenderer2 = MeshRenderer(floorMesh, floorMaterial);
+	auto floorRenderer3 = MeshRenderer(floorMesh, floorMaterial);
 
 	m_objectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform), std::move(templeRenderer), "temple"));
 	m_objectsInScene.push_back(std::make_unique<Object>(std::move(templeTransform2), std::move(templeRenderer2), "temple_behind"));
@@ -81,12 +87,30 @@ void Scene::loadDefaultScene()
 	m_objectsInScene.back()->addComponent(std::move(frogRigidBody));
 
 	m_objectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform), std::move(floorRenderer), "floor"));
+	
 
-	Transform* floorTransformPtr = m_objectsInScene.back()->getComponent<Transform>();
+	//Transform* floorTransformPtr = m_objectsInScene.back()->getComponent<Transform>();
 	auto floorCollider = std::make_unique<BoxCollider>(20.0f, 0.05f, 20.0f);
 	m_objectsInScene.back()->addComponent(std::move(floorCollider));
 	auto floorRigidBody = std::make_unique<RigidBody>(0.0f, 0.8f);
 	m_objectsInScene.back()->addComponent(std::move(floorRigidBody));
+
+	m_objectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform2), std::move(floorRenderer2), "floor2"));
+
+	//Transform* floorTransformPtr2 = m_objectsInScene.back()->getComponent<Transform>();
+	auto floorCollider2 = std::make_unique<BoxCollider>(4.0f, 0.05f, 4.0f);
+	m_objectsInScene.back()->addComponent(std::move(floorCollider2));
+	auto floorRigidBody2 = std::make_unique<RigidBody>(0.0f, 0.8f);
+	m_objectsInScene.back()->addComponent(std::move(floorRigidBody2));
+
+
+	m_objectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform3), std::move(floorRenderer3), "floor3"));
+
+	//Transform* floorTransformPtr3 = m_objectsInScene.back()->getComponent<Transform>();
+	auto floorCollider3 = std::make_unique<BoxCollider>(4.0f, 0.05f, 4.0f);
+	m_objectsInScene.back()->addComponent(std::move(floorCollider3));
+	auto floorRigidBody3 = std::make_unique<RigidBody>(0.0f, 0.8f);
+	m_objectsInScene.back()->addComponent(std::move(floorRigidBody3));
 
 	MeshLoader cubeLoader("cubeFlat.txt");
 	MeshLoader jointLoader("joint4.txt");
