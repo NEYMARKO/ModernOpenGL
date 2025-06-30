@@ -55,12 +55,13 @@ class Ragdoll
 private:
 	std::array<Object*, BONES_COUNT> m_bones;
 	//std::array<btCollisionShape*, BONES_COUNT> m_shapes;
-	std::array<btHingeConstraint*, JOINTS_COUNT> m_jointConstraints;
+	std::array<btTypedConstraint*, JOINTS_COUNT> m_jointConstraints;
 	glm::vec3 m_position;
 	PhysicsWorld* m_physicsWorld;
 	Mesh* m_mesh;
 	Material* m_material;
 	Shader* m_shader;
+	float m_scale;
 public:
 	bool m_finalized = false;
 	short m_finalizedCount = 0;

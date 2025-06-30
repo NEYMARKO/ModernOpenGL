@@ -11,13 +11,20 @@
 #include "Shader.h"
 #include "Ragdoll.h"
 
+#ifndef M_PI
+#define M_PI btScalar(3.14159265358979323846)
+#endif
 
 #ifndef M_PI_2
 #define M_PI_2 btScalar(1.57079632679489661923)
 #endif
 
+#ifndef M_PI_4
+#define M_PI_4 btScalar(0.785398163397448309616)
+#endif
+
 Ragdoll::Ragdoll(const glm::vec3& position, PhysicsWorld* physicsWorld, float scale) :
-	m_physicsWorld{ physicsWorld }
+	m_physicsWorld{ physicsWorld }, m_scale{ scale }
 {
 	MeshLoader jointLoader("joint4.txt");
 	//m_mesh = ResourceManager<Mesh>::getResource("joint");
@@ -30,12 +37,10 @@ Ragdoll::Ragdoll(const glm::vec3& position, PhysicsWorld* physicsWorld, float sc
 
 	//Adding bones and shapes
 	btTransform offset;
+
 	offset.setIdentity();
 	offset.setOrigin(btVector3(position.x, position.y, position.z));
 
-	std::cout << "POSITION: (" << position.x << ", " << position.y << ", " << position.z << ")\n";
-	btVector3 btPos = offset.getOrigin();
-	std::cout << "BT POS: (" << btPos.getX() << ", " << btPos.getY() << ", " << btPos.getZ() << ")\n";
 	btTransform transform;
 	
 	transform.setIdentity();
@@ -76,6 +81,14 @@ Ragdoll::Ragdoll(const glm::vec3& position, PhysicsWorld* physicsWorld, float sc
 	transform.getBasis().setEulerZYX(0, 0, -M_PI_2);
 	addBone(BONE_LOWER_ARM_RIGHT, offset * transform, 0.04 * scale, 0.25 * scale);
 
+
+	for (int i = 0; i < BONES_COUNT; i++)
+	{
+		btRigidBody* rb = m_bones[i]->getComponent<RigidBody>()->getRigidBody();
+		rb->setDamping(btScalar(0.05), btScalar(0.85));
+		rb->setDeactivationTime(btScalar(0.8));
+		rb->setSleepingThresholds(btScalar(1.6), btScalar(2.5));
+	}
 	//adding constraints
 
 }
@@ -144,26 +157,152 @@ void Ragdoll::addConstraint(RigidBody* rb1, RigidBody* rb2, const btVector3& axi
 
 void Ragdoll::update()
 {
-	/*addConstraint(m_bones[3]->getComponent<RigidBody>(), m_bones[4]->getComponent<RigidBody>());
-	addConstraint(m_bones[5]->getComponent<RigidBody>(), m_bones[6]->getComponent<RigidBody>());*/
-	addConstraint(m_bones[0]->getComponent<RigidBody>(), 
-		m_bones[1]->getComponent<RigidBody>(), btVector3(0,0,1));
-	addConstraint(m_bones[2]->getComponent<RigidBody>(), 
-		m_bones[3]->getComponent<RigidBody>(), btVector3(0,0,1));
+	if (m_finalized) 
+		return;
+
+	for (auto* obj : m_bones)
+	{
+		if (!(obj->getComponent<RigidBody>()->m_addedToWorld))
+			return;
+	}
+
+	btHingeConstraint* hingeConstraint;
+	btConeTwistConstraint* coneConstraint;
+	btDynamicsWorld* world = m_physicsWorld->getDynamicsWorld();
+	btTransform localA, localB;
+	
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localA.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(0.15), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(-0.15), btScalar(0.)));
+	hingeConstraint = new btHingeConstraint(*m_bones[BONE_HIPS]->getComponent<RigidBody>()->getRigidBody(),
+		*m_bones[BONE_SPINE]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+	hingeConstraint->setLimit(btScalar(-M_PI_4), btScalar(M_PI_2));
+	m_jointConstraints[JOINT_HIPS_SPINE] = hingeConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_HIPS_SPINE], true);
+
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, 0, -M_PI_2);
+	localA.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(0.3), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, 0, M_PI_2);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(-0.14), btScalar(0.)));
+	coneConstraint = new btConeTwistConstraint(*m_bones[BONE_SPINE]->getComponent<RigidBody>()->getRigidBody(),
+		*m_bones[BONE_HEAD]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+
+	coneConstraint->setLimit(M_PI_4, M_PI_4);
+	m_jointConstraints[JOINT_LEFT_HIP] = coneConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_LEFT_HIP], true);
+
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, 0, -M_PI_4 * 5);
+	localA.setOrigin(m_scale * btVector3(btScalar(-0.18), btScalar(-0.10), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, 0, -M_PI_4 * 5);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(0.225), btScalar(0.)));
+	coneConstraint = new btConeTwistConstraint(*m_bones[BONE_HIPS]->getComponent<RigidBody>()->getRigidBody(),
+		*m_bones[BONE_UPPER_LEG_LEFT]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+	coneConstraint->setLimit(M_PI_4, M_PI_4, 0);
+	m_jointConstraints[JOINT_LEFT_HIP] = coneConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_LEFT_HIP], true);
+
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localA.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(-0.225), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(0.185), btScalar(0.)));
+	hingeConstraint = new btHingeConstraint(*m_bones[BONE_UPPER_LEG_LEFT]->getComponent<RigidBody>()->getRigidBody(),
+		*m_bones[BONE_LOWER_LEG_LEFT]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+	hingeConstraint->setLimit(btScalar(0), btScalar(M_PI_2));
+	m_jointConstraints[JOINT_LEFT_KNEE] = hingeConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_LEFT_KNEE], true);
+
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, 0, M_PI_4);
+	localA.setOrigin(m_scale * btVector3(btScalar(0.18), btScalar(-0.10), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, 0, M_PI_4);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(0.225), btScalar(0.)));
+	coneConstraint = new btConeTwistConstraint(*m_bones[BONE_HIPS]->getComponent<RigidBody>()->getRigidBody(),
+		*m_bones[BONE_UPPER_LEG_RIGHT]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+	coneConstraint->setLimit(M_PI_4, M_PI_4, 0);
+	m_jointConstraints[JOINT_RIGHT_HIP] = coneConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_RIGHT_HIP], true);
+
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localA.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(-0.225), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(0.185), btScalar(0.)));
+	hingeConstraint = new btHingeConstraint(*m_bones[BONE_UPPER_LEG_RIGHT]->getComponent<RigidBody>()->getRigidBody(), *m_bones[BONE_LOWER_LEG_RIGHT]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+	hingeConstraint->setLimit(btScalar(0), btScalar(M_PI_2));
+	m_jointConstraints[JOINT_RIGHT_KNEE] = hingeConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_RIGHT_KNEE], true);
+
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, 0, M_PI);
+	localA.setOrigin(m_scale * btVector3(btScalar(-0.2), btScalar(0.15), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, 0, M_PI_2);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(-0.18), btScalar(0.)));
+	coneConstraint = new btConeTwistConstraint(*m_bones[BONE_SPINE]->getComponent<RigidBody>()->getRigidBody(), 
+		*m_bones[BONE_UPPER_ARM_LEFT]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+	coneConstraint->setLimit(M_PI_2, M_PI_2, 0);
+	m_jointConstraints[JOINT_LEFT_SHOULDER] = coneConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_LEFT_SHOULDER], true);
+
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localA.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(0.18), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(-0.14), btScalar(0.)));
+	hingeConstraint = new btHingeConstraint(*m_bones[BONE_UPPER_ARM_LEFT]->getComponent<RigidBody>()->getRigidBody(), *m_bones[BONE_LOWER_ARM_LEFT]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+	hingeConstraint->setLimit(btScalar(-M_PI_2), btScalar(0));
+	m_jointConstraints[JOINT_LEFT_ELBOW] = hingeConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_LEFT_ELBOW], true);
+
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, 0, 0);
+	localA.setOrigin(m_scale * btVector3(btScalar(0.2), btScalar(0.15), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, 0, M_PI_2);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(-0.18), btScalar(0.)));
+	coneConstraint = new btConeTwistConstraint(*m_bones[BONE_SPINE]->getComponent<RigidBody>()->getRigidBody(), *m_bones[BONE_UPPER_ARM_RIGHT]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+	coneConstraint->setLimit(M_PI_2, M_PI_2, 0);
+	m_jointConstraints[JOINT_RIGHT_SHOULDER] = coneConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_RIGHT_SHOULDER], true);
+
+	localA.setIdentity();
+	localB.setIdentity();
+	localA.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localA.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(0.18), btScalar(0.)));
+	localB.getBasis().setEulerZYX(0, M_PI_2, 0);
+	localB.setOrigin(m_scale * btVector3(btScalar(0.), btScalar(-0.14), btScalar(0.)));
+	hingeConstraint = new btHingeConstraint(*m_bones[BONE_UPPER_ARM_RIGHT]->getComponent<RigidBody>()->getRigidBody(), *m_bones[BONE_LOWER_ARM_RIGHT]->getComponent<RigidBody>()->getRigidBody(), localA, localB);
+	hingeConstraint->setLimit(btScalar(-M_PI_2), btScalar(0));
+	m_jointConstraints[JOINT_RIGHT_ELBOW] = hingeConstraint;
+	world->addConstraint(m_jointConstraints[JOINT_RIGHT_ELBOW], true);
+
+	m_finalized = true;
 }
 
 Ragdoll::~Ragdoll()
 {
-	//int i;
-	//for (i = 0; i < JOINTS_COUNT; i++)
-	//{
-	//	if (m_jointConstraints[i])
-	//	{
-	//		m_physicsWorld->getDynamicsWorld()->removeConstraint(m_jointConstraints[i]);
-	//		delete m_jointConstraints[i];
-	//		m_jointConstraints[i] = 0;
-	//	}
-	//}
+	int i;
+	for (i = 0; i < JOINTS_COUNT; i++)
+	{
+		if (m_jointConstraints[i])
+		{
+			m_physicsWorld->getDynamicsWorld()->removeConstraint(m_jointConstraints[i]);
+			delete m_jointConstraints[i];
+			m_jointConstraints[i] = 0;
+		}
+	}
 	//for (i = 0; i < BONES_COUNT; i++)
 	//{
 	//	delete m_bones[i];
