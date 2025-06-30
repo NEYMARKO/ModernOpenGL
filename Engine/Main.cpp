@@ -59,7 +59,7 @@ int main()
 
 	Scene scene{&camera, &light, objectsInScene, &defaultShaderProgram};
 	
-	Ragdoll ragdoll(glm::vec3(0.0f, 10.0f, 0.0f), &physicsWorld);
+	Ragdoll ragdoll(glm::vec3(0.0f, 5.0f, -5.0f), &physicsWorld);
 	scene.addRagdoll(&ragdoll);
 	
 	Gizmos gizmos(&camera);
