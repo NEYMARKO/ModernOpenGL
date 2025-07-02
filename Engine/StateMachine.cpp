@@ -36,6 +36,8 @@ void StateMachine::changeState()
 	{
 		m_activeState.get()->exit();
 		m_activeState.reset();
+		if (!m_target)
+			std::cout << "TARGET IS NULL\n";
 		switch (newState)
 		{
 		case States::DEFAULT:

@@ -135,8 +135,8 @@ void MeshLoader::CalculateScalingFactor()
     float firstComparison = std::max(xScale, yScale);
     this->scalingFactor = std::max(firstComparison, zScale);
 
-    minExtremes *= scalingFactor;
-    maxExtremes *= scalingFactor;
+    /*minExtremes *= scalingFactor;
+    maxExtremes *= scalingFactor;*/
 
     //std::cout << "ScalingFactor: " << scalingFactor << std::endl;
 

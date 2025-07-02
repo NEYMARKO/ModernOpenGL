@@ -13,5 +13,6 @@ public:
 	{
 		std::cout << "IN SELECTED\n";
 	}
+	virtual void exit() { std::cout << "EXITED SELECTED, TARGET SHOULD BE SAME\n"; };
 	virtual void onKeyboardPress(int key, int action) override;
 };

@@ -51,7 +51,8 @@ protected:
 public:
 	TransformState(StateMachine* stateMachine, Camera* camera, Transform* objectTransform);
 
-	void enter();
+	virtual void enter();
+	//virtual void exit();
 	virtual void onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld) override;
 	virtual void onMouseClick(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld,
 		int button, int action) override;

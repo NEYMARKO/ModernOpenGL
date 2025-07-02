@@ -77,8 +77,8 @@ int main()
 	{
 		//bulletGizmos.updateBufferContent();
 		scene.renderScene();
-		for (auto& obj : objectsInScene)
-			obj.get()->getEditorCollider()->setupAABB();
+		/*for (auto& obj : objectsInScene)
+			obj.get()->getEditorCollider()->setupAABB();*/
 		gizmos.updateBufferContent();
 		gizmos.renderBoundingVolumes();
 		bulletGizmos.updateBufferContent();

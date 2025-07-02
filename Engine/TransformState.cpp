@@ -1,6 +1,9 @@
 #include <iostream>
 #include "Camera.h"
 #include "Transform.h"
+#include "Object.h"
+#include "EditorCollider.h"
+#include "StateMachine.h"
 #include "TransformState.h"
 
 #define EPSILON 0.001f
@@ -18,6 +21,9 @@ void TransformState::enter()
 	cameraNormal *= -1;
 	m_transformPlane.calculatePlaneParameters(cameraNormal);
 	m_transformPlane.calculateRayIntersectionPoint(mouseWorldPos, mouseWorldDirection);
+	if (!m_stateMachine->m_target)
+		std::cout << "TARGET IS NULL\n";
+	m_stateMachine->m_target->getEditorCollider()->setupAABB();
 }
 
 void TransformState::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
@@ -124,6 +130,13 @@ void TransformState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::ve
 		State::onMouseMove(mouseStartWorld, mouseDirectionWorld);
 		return;
 	}
+
+	//THIS WILL GET TRIGGERED ONLY ONCE BECAUSE GRAB AND ROTATE HAVE OVERRIDEN
+	//onMouseMove functions => this is enough to have precise control over 
+	//ray-box intersection, but will not provide visually satisfying result
+	//since it gets updated only once per transformation
+	if (m_stateMachine->m_target)
+		m_stateMachine->m_target->getEditorCollider()->setupAABB();
 	//direction vector isn't ZERO => it's transformation should be performed around axis
 	//if (!glm::all(glm::lessThan(glm::abs(dir), glm::vec3(EPSILON))))
 	//{
@@ -140,9 +153,6 @@ void TransformState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::ve
 
 void TransformState::update()
 {
-	//every movement of mouse should be tracked
-	/*if (m_freeMode)
-	{ 
-		onMouseMove()
-	}*/
+	if (m_stateMachine->m_target && m_trackingMouse)
+		m_stateMachine->m_target->getEditorCollider()->setupAABB();
 }
