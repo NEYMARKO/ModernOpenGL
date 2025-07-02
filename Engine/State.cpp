@@ -50,8 +50,16 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 			//std::cout << "ENTERED STATE MOUSE CLICK\n";
 			std::vector<Hit> hits;
 			glm::vec3 intersectionPoint;
+
+			/*glm::vec3 startHelper;
+			glm::vec3 dirHelper;
+
+			glm::mat4 transformInverse;*/
 			for (const auto& object : m_stateMachine->m_objectsInScene)
 			{
+				/*transformInverse = glm::inverse(object->getComponent<Transform>()->getModelMatrix());
+				startHelper = glm::vec3(transformInverse * glm::vec4(start, 1));
+				dirHelper = glm::normalize(glm::vec3(transformInverse * glm::vec4(dir, 0)));*/
 				if (object.get()->getEditorCollider()->intersects(start, dir, intersectionPoint))
 					hits.emplace_back(Hit{ object.get(), intersectionPoint });
 			}
@@ -99,24 +107,18 @@ void State::sortObjects(std::vector<Hit>& hits, const glm::vec3& start)
 	std::sort(hits.begin(), hits.end(),
 		[&start](Hit hit1, Hit hit2)
 		{
-			int layer1 = hit1.obj->getEditorCollider()->getLayer();
-			int layer2 = hit2.obj->getEditorCollider()->getLayer();
-
+			//std::cout << "HIT1: " << hit1.obj->getName() << ", HIT2: " << hit2.obj->getName() << "\n";
+			int layer1 = hit1.obj->getEditorCollider()->m_layer;
+			int layer2 = hit2.obj->getEditorCollider()->m_layer;
+			//std::cout << "LAYER1: " << layer1 << " LAYER2: " << layer2 << "\n";
 			float distance1 = glm::distance(hit1.point, start);
 			float distance2 = glm::distance(hit2.point, start);
 
-			if (layer1 > layer2)
-				return true;
-			else if (layer1 < layer2)
-				return false;
-			//objects are in same layer - check next condition: distance from ray start
-			else
-			{
-				if (distance1 <= distance2)
-					return true;
-				else
-					return false;
-			}
+			//std::cout << "DISTANCE1: " << distance1 << " DISTANCE2: " << distance2 << "\n";
+			if (layer1 != layer2)
+				return layer1 > layer2;
+			
+			return distance1 < distance2;
 		}
 	);
 }

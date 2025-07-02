@@ -79,8 +79,8 @@ int main()
 		scene.renderScene();
 		for (auto& obj : objectsInScene)
 			obj.get()->getEditorCollider()->setupAABB();
-		/*gizmos.updateBufferContent();
-		gizmos.renderBoundingVolumes();*/
+		gizmos.updateBufferContent();
+		gizmos.renderBoundingVolumes();
 		bulletGizmos.updateBufferContent();
 		bulletGizmos.renderColliders(&camera);
 		grid.Draw(boundingBoxShaderProgram, camera);

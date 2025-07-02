@@ -18,9 +18,9 @@ Object::Object(Transform&& transform, MeshRenderer&& meshRenderer,
 	m_parentObject{ parent }, m_name { name }
 {
 	m_transform.setParentObject(this);
+	m_transform.setScale(m_meshRenderer.getMesh()->scalingFactor * getComponent<Transform>()->getScale());
 	m_meshRenderer.setParentObject(this);
 	m_editorCollider.setParent(this);
-	m_transform.setScale(m_meshRenderer.getMesh()->scalingFactor * getComponent<Transform>()->getScale());
 }
 
 void Object::addComponent(std::unique_ptr<Component> component)

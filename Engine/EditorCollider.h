@@ -14,21 +14,19 @@ enum Layer
 struct EditorCollider
 {
 	Object* m_parent = nullptr;
-	std::array<glm::vec3, 8> m_origVerts;
+	//min value for each dimension
+	/*const */glm::vec3 m_min;
+	//max value for each dimension
+	/*const */glm::vec3 m_max;
+	Layer m_layer{ EC_DEFAULT };
+	const std::array<glm::vec3, 8> m_origVerts;
 	std::array<glm::vec3, 8> m_vertices;
 	std::array<glm::vec3, 24> m_edges;
-	//min value for each dimension
-	glm::vec3 m_min;
-	//max value for each dimension
-	glm::vec3 m_max;
 	glm::vec3 m_colliderPosition;
-	Layer m_layer{ EC_DEFAULT };
 	EditorCollider(const glm::vec3& minimums, const glm::vec3& maximums, Layer layer = EC_DEFAULT);
 	void setParent(Object* parent);
-	void calculateExtremes();
 	void setupAABB();
+	void calculateExtremes();
 	//Uses slab algorithm for ray-box(AABB) intersection
 	bool intersects(const glm::vec3& start, const glm::vec3& direction, glm::vec3& intersectionOut);
-	void setLayer(Layer layer) { m_layer = layer; }
-	int getLayer() { return m_layer; }
 };
