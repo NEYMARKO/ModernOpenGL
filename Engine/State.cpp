@@ -15,6 +15,8 @@
 
 void State::onKeyboardPress(int key, int action)
 {
+
+	//std::cout << "STATE CONVERT TO 3D: " << (m_convertMouseTo3D == true ? "TRUE" : "FALSE") << "\n";
 	//NO MATTER WHAT STATE WE ARE CURRENTLY IN, IF THESE BUTTONS GET PRESSEED,
 	//CAMERA HAS TO GET MOVED
 	if (action == GLFW_PRESS /*&& !m_movingCamera*/)

@@ -43,9 +43,9 @@ protected:
 	Transform* m_selectedTransform;
 	TransformPlane m_transformPlane;
 	TransformAxis m_transformAxis{NONE};
-	bool m_freeMode = false;
-	glm::vec4 mouseWorldPos;
-	glm::vec3 mouseWorldDirection;
+	bool m_freeMode{ false };
+	/*glm::vec4 mouseWorldPos;
+	glm::vec3 mouseWorldDirection;*/
 	void toggleFreeMode() { m_freeMode = !m_freeMode; };
 	void update();
 public:

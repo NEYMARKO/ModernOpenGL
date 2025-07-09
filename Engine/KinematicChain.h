@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <glm/glm.hpp>
 
 class Joint;
 class Transform;
@@ -22,6 +23,7 @@ class KinematicChain
 		static int inline mIDGenerator{};
 		int m_id{ mIDGenerator++ };
 
+
 	public:
 
 		KinematicChain(int numberOfJoints, float angleConstraint, 
@@ -29,7 +31,6 @@ class KinematicChain
 			Transform* targetTransform);
 		
 		void setMeshRenderer(std::unique_ptr<MeshRenderer> meshRenderer);
-
 
 		void BackwardsPass();
 		void ForwardPass();

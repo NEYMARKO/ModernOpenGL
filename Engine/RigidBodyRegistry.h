@@ -24,6 +24,8 @@ private:
 	static std::vector<RigidBodyQueueItem> m_queue;
 	//form: {worldID: requestCount}
 	static std::unordered_map<int, int> m_worldRequests;
+	static std::unordered_map<int, int> m_deleteRequests;
+	static std::vector<RigidBodyQueueItem> m_deleteQueue;
 public:
 	RigidBodyRegistry() = default;
 	//adds the rigidbody to the queue
@@ -32,6 +34,10 @@ public:
 	//the physics world with the given ID
 	static bool pendingForWorld(int worldID);
 	//returns RigidBody* from the queue that belongs to the physics world with the given ID
+	static bool pendingForDeletion(int worldID);
+	static void addToDeleteQueue(RigidBody* rbComponent, int worldID);
+	static std::vector<RigidBody*> getDiscardedRigidBodies(int worldID);
 	static RigidBody* getFromQueue(int worldID);
+	static RigidBody* getDiscardedFromQueue(int worldID);
 	static std::vector<RigidBody*> getAllForWorld(int worldID);
 };

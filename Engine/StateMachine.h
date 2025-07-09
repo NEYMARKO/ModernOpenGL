@@ -20,16 +20,14 @@ class StateMachine
 
 		PhysicsWorld* m_physicsWorld;
 
-		glm::vec4 mouseStartWorld;
-		glm::vec3 mouseDirectionWorld;
-
-
 	public:
 		int m_lastKey;
 		Window* m_window;
 		Camera* m_camera;
 		double mousePosX;
 		double mousePosY;
+		glm::vec4 mouseStartWorld;
+		glm::vec3 mouseDirectionWorld;
 		std::vector<std::unique_ptr<Object>>& m_objectsInScene;
 		Object* m_target;
 		StateMachine(Window* window, Camera* m_camera, std::vector<std::unique_ptr<Object>>& objectsInScene,

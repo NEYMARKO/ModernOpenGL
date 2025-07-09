@@ -20,53 +20,8 @@ Joint::Joint(int id, float angleConstraint, float length) :
 void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
 	glm::vec3 directionToTarget = glm::normalize(targetPos - m_transform->getPosition());
-	//glm::quat rotationQuaternion = glm::rotation(m_transform->getForwardVector(), directionToTarget);
-	//if (glm::length(directionToTarget) < 0.1f) return;
-	//std::cout << "DIRECTION TO TARGET: " << glm::to_string(directionToTarget) << std::endl;
 	glm::quat rotationQuaternion = glm::rotation(-m_transform->getRightVector(), directionToTarget);
-	//std::cout << "ROTATIOn quaternion: " << glm::to_string(rotationQuaternion) << std::endl;
 	m_transform->rotate(rotationQuaternion);
-	glm::vec3 forward = m_transform->getForwardVector();
-	glm::vec3 trueForward = m_transform->getQuaternionRotation() * glm::vec3(0.0f, 0.0f, -1.0f);
-	/*mOrientation = glm::normalize(rotationQuaternion * mOrientation);
-	mForward = directionToTarget;
-	mMeshContainer->Rotate(mOrientation);*/
-	
-	
-	//if (this->parent)
-	//{
-	//	float currentAngle = glm::acos(glm::clamp(glm::dot(this->forward, this->parent->forward), -1.0f, 1.0f));
-	//	std::cout << "CURRENT ANGLE (id: " << id << ") : " << currentAngle << std::endl;
-	//	glm::quat desiredRotation = glm::rotation(this->forward, directionToTarget);
-	//	glm::vec3 desiredForward = glm::normalize(glm::rotate(desiredRotation, this->forward));
-	//	float desiredAngle = glm::acos(glm::clamp(glm::dot(desiredForward, this->parent->forward), -1.0f, 1.0f));
-	//	if (abs(desiredAngle) > glm::radians(this->angleConstraint))
-	//	{
-	//		float allowedRotation = glm::radians(this->angleConstraint) - abs(currentAngle);
-	//		glm::vec3 rotationAxis = glm::normalize(glm::cross(this->forward, directionToTarget));
-
-	//		glm::vec3 allowedForward = glm::rotate(this->forward, allowedRotation, rotationAxis);
-	//		// Create a new clamped rotation quaternion
-	//		glm::quat clampedRotation = glm::rotation(this->forward, allowedForward);
-
-	//		// Apply the clamped rotation instead of the full rotation
-	//		this->orientation = glm::normalize(clampedRotation * this->orientation);
-	//		this->forward = glm::normalize(glm::rotate(clampedRotation, this->forward));
-	//	}
-	//	else 
-	//	{
-	//		// No constraint violation, proceed with the desired rotation
-	//		this->orientation = glm::normalize(desiredRotation * this->orientation);
-	//		this->forward = desiredForward;
-	//	}
-	//}
-	//else
-	//{
-	//	glm::quat rotationQuaternion = glm::rotation(this->forward, directionToTarget);
-	//	this->orientation = glm::normalize(rotationQuaternion * this->orientation);
-	//	this->forward = directionToTarget;
-	//}
-	//this->meshContainer->Rotate(this->orientation);
 }
 
 bool Joint::CanRotate()

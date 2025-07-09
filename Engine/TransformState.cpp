@@ -6,24 +6,34 @@
 #include "StateMachine.h"
 #include "TransformState.h"
 
+#ifndef EC_ENABLE_VISUAL_DEBUG
+#define EC_ENABLE_VISUAL_DEBUG
+#endif
+
 #define EPSILON 0.001f
 
 TransformState::TransformState(StateMachine* stateMachine, Camera* camera, Transform* objectTransform) :
 	State{ stateMachine, true }, m_camera{ camera },
 	m_selectedTransform{ objectTransform },
-	m_transformPlane{ objectTransform->getPosition() }
+	m_transformPlane{ objectTransform->getPosition() }/*, 
+	m_mouseStart { glm::vec3(m_stateMachine->mouseStartWorld) }*/
 { 
+	glm::vec3 cameraNormal = m_camera->GetCameraForward();
+	cameraNormal *= -1;
+	m_transformPlane.calculatePlaneParameters(cameraNormal);
+	//m_transformPlane.calculateRayIntersectionPoint(mouseWorldPos, mouseWorldDirection);
+	if (!m_stateMachine->m_target)
+		std::cout << "TARGET IS NULL\n";
+#ifdef EC_ENABLE_VISUAL_DEBUG
+	m_stateMachine->m_target->getEditorCollider()->setupAABB();
+#endif
+	/*m_mouseStart = m_transformPlane.calculateRayIntersectionPoint(m_stateMachine->mouseStartWorld,
+		m_stateMachine->mouseDirectionWorld);*/
 }
 
 void TransformState::enter()
 {
-	glm::vec3 cameraNormal = m_camera->GetCameraForward();
-	cameraNormal *= -1;
-	m_transformPlane.calculatePlaneParameters(cameraNormal);
-	m_transformPlane.calculateRayIntersectionPoint(mouseWorldPos, mouseWorldDirection);
-	if (!m_stateMachine->m_target)
-		std::cout << "TARGET IS NULL\n";
-	m_stateMachine->m_target->getEditorCollider()->setupAABB();
+	
 }
 
 void TransformState::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
@@ -135,8 +145,10 @@ void TransformState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::ve
 	//onMouseMove functions => this is enough to have precise control over 
 	//ray-box intersection, but will not provide visually satisfying result
 	//since it gets updated only once per transformation
+#ifdef EC_ENABLE_VISUAL_DEBUG
 	if (m_stateMachine->m_target)
 		m_stateMachine->m_target->getEditorCollider()->setupAABB();
+#endif
 	//direction vector isn't ZERO => it's transformation should be performed around axis
 	//if (!glm::all(glm::lessThan(glm::abs(dir), glm::vec3(EPSILON))))
 	//{

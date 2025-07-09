@@ -107,10 +107,11 @@ void KinematicChain::simulate(const int steps)
 	FabrikAlgorithm(steps);
 
 	glm::vec3 jointTargetPos;
+	Joint* joint;
 
 	for (int i = 0; i < m_chain.size(); i++)
 	{
-		Joint* joint = m_chain[i].get();
+		joint = m_chain[i].get();
 		jointTargetPos = (joint->GetChild() == nullptr ? m_targetTransform->getPosition()
 			: joint->GetChild()->getPosition());
 

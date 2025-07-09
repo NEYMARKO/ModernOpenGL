@@ -39,8 +39,10 @@ public:
 	// In case of previous delay, simulates multiple steps until simulation catches up
 	void simulate();
 	void addObjectToWorld(RigidBody* rbComponent);
+	void removeObjectFromWorld(RigidBody* rbComponent);
 	void updateObjectsTransform();
 	void handleHangingRigidBodies();
+	void handleDiscardedRigidBodies();
 	float getDeltaTime() { return mDeltaTime; }
 	//std::vector<std::unique_ptr<PhysicsObject>>* getPhysicsObjects() { return &m_rigidBodies; };
 	btDiscreteDynamicsWorld* getDynamicsWorld() { return mDynamicsWorld; }

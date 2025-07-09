@@ -90,11 +90,13 @@ void StateMachine::MouseMove(Camera* camera, double mouseX, double mouseY)
 	
 	if (m_activeState.get()->m_convertMouseTo3D)
 	{
+		//std::cout << "GIVING WORLD COORDINATES\n";
 		m_camera->ScreenToWorldCoordinates(mouseX, mouseY, mouseStartWorld, mouseDirectionWorld);
 		m_activeState.get()->onMouseMove(mouseStartWorld, mouseDirectionWorld);
 	}
 	else
 	{
+		//std::cout << "GIVING PIXEL COORDINATES\n";
 		m_activeState.get()->onMouseMove(mouseX, mouseY);
 	}
 	mousePosX = mouseX;

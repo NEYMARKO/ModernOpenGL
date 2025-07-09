@@ -36,8 +36,8 @@ public:
 		m_stateMachine{ stateMachine }, m_convertMouseTo3D { convertTo3D }
 	{
 	}
-	/*bool m_movingCamera{ false };*/
 	bool m_convertMouseTo3D{ false };
+	/*bool m_movingCamera{ false };*/
 	virtual void enter() {};
 	virtual void exit() {};
 	virtual void update() {};

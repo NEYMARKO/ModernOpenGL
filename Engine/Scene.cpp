@@ -1,3 +1,4 @@
+#include <string>
 #include "MeshLoader.h"
 #include "Mesh.h"
 #include "Camera.h"
@@ -9,7 +10,6 @@
 #include "SphereCollider.h"
 #include "BoxCollider.h"
 #include "RigidBody.h"
-#include <string>
 #include "Ragdoll.h"
 #include "Scene.h"
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, Shader* objectShader) 
@@ -190,10 +190,10 @@ void Scene::addRagdoll(Ragdoll* ragdoll)
 
 void Scene::renderRagdoll()
 {
-	for (auto& bone : *m_ragdoll->getAllBones())
+	/*for (auto& bone : *m_ragdoll->getAllBones())
 	{
 		bone->getComponent<MeshRenderer>()->draw(*mCamera, *mLightSource);
-	}
+	}*/
 }
 
 void Scene::addObject(std::unique_ptr<Object> object)

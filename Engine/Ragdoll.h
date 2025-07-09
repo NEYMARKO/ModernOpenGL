@@ -3,11 +3,7 @@
 #include <array>
 #include <btBulletDynamicsCommon.h>
 
-class Mesh;
-class Material;
-class Object;
 class PhysicsWorld;
-class Shader;
 
 enum Bones
 {
@@ -53,22 +49,15 @@ enum JointConstraints
 class Ragdoll
 {
 private:
-	std::array<Object*, BONES_COUNT> m_bones;
-	//std::array<btCollisionShape*, BONES_COUNT> m_shapes;
+	std::array<btRigidBody*, BONES_COUNT> m_bones;
+	std::array<btCollisionShape*, BONES_COUNT> m_collisionShapes;
 	std::array<btTypedConstraint*, JOINTS_COUNT> m_jointConstraints;
 	glm::vec3 m_position;
 	PhysicsWorld* m_physicsWorld;
-	Mesh* m_mesh;
-	Material* m_material;
-	Shader* m_shader;
 	float m_scale;
 public:
-	bool m_finalized = false;
-	short m_finalizedCount = 0;
 	Ragdoll(const glm::vec3& position, PhysicsWorld* physicsWorld, float scale = 1.0f);
-	void addBone(const Bones bone, const btTransform& btTransform, float capsuleRadius, float capsuleHeight, float mass = 1.0f);
-	void addConstraint(RigidBody* rb1, RigidBody* rb2, const btVector3& axis);
-	void update();
-	std::array<Object*, BONES_COUNT>* getAllBones() { return &m_bones; };
+	btRigidBody* createRigidBody(btScalar mass, const btTransform& startTransform, btCollisionShape* shape);
+	//std::array<Object*, BONES_COUNT>* getAllBones() { return &m_bones; };
 	~Ragdoll();
 };

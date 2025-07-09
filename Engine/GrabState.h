@@ -9,6 +9,7 @@ public:
 		TransformState{ stateMachine, camera, objectTransform }
 	{
 		std::cout << "IN GRAB\n";
+		std::cout << "CONVERT TO 3D: " << m_convertMouseTo3D << "\n";
 	}
 
 	virtual void onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld) override;

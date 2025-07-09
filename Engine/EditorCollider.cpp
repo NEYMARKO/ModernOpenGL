@@ -5,6 +5,10 @@
 #include "Transform.h"
 #include "EditorCollider.h"
 
+#ifndef EC_ENABLE_VISUAL_DEBUG
+#define EC_ENABLE_VISUAL_DEBUG
+#endif
+
 EditorCollider::EditorCollider(const glm::vec3& minimums, const glm::vec3& maximums, Layer layer) :
 	m_min{ minimums }, m_max { maximums }, m_layer { layer },
 	m_origVerts
@@ -19,8 +23,12 @@ EditorCollider::EditorCollider(const glm::vec3& minimums, const glm::vec3& maxim
 		glm::vec3(m_max.x, m_max.y, m_max.z),
 	}
 {
+
+#ifdef EC_ENABLE_VISUAL_DEBUG
 	m_vertices = m_origVerts;
 	setupAABB();
+#endif
+
 }
 
 void EditorCollider::setParent(Object* parent)
@@ -40,7 +48,7 @@ void EditorCollider::setParent(Object* parent)
 
 void EditorCollider::setupAABB()
 {
-	std::cout << "SETTING UP\n";
+	//std::cout << "SETTING UP\n";
 	/*std::cout << "SETTING UP BOUNDING VOLUME\n";
 	std::cout << "PARENT IS NULL: " << (m_parent == nullptr ? "TRUE" : "FALSE") << "\n";*/
 	//follow object

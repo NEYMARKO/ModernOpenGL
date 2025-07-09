@@ -75,7 +75,6 @@ int main()
 
 	while (!window.shouldClose())
 	{
-		//bulletGizmos.updateBufferContent();
 		scene.renderScene();
 		/*for (auto& obj : objectsInScene)
 			obj.get()->getEditorCollider()->setupAABB();*/
@@ -85,14 +84,13 @@ int main()
 		bulletGizmos.renderColliders(&camera);
 		grid.Draw(boundingBoxShaderProgram, camera);
 		//scene.renderRagdoll();
-		ragdoll.update();
+		//ragdoll.update();
 		if (camera.mRay != nullptr)
 		{
 			camera.mRay->Draw(boundingBoxShaderProgram, camera);
 		}
 
 		stateMachine.update();
-		//camera.Move(window.getGLFWWindow(), physicsWorld.getDeltaTime());
 
 		glfwSwapBuffers(window.getGLFWWindow());
 		glfwPollEvents();
