@@ -7,8 +7,10 @@
 #include "State.h"
 //#include "Camera.h"
 class Camera;
+class Lighting;
 class Ray;
-class Object;
+//class Object;
+class SceneEntity;
 class PhysicsWorld;
 
 
@@ -24,13 +26,16 @@ class StateMachine
 		int m_lastKey;
 		Window* m_window;
 		Camera* m_camera;
+		Lighting* m_lightSource;
 		double mousePosX;
 		double mousePosY;
 		glm::vec4 mouseStartWorld;
 		glm::vec3 mouseDirectionWorld;
 		std::vector<std::unique_ptr<Object>>& m_objectsInScene;
-		Object* m_target;
-		StateMachine(Window* window, Camera* m_camera, std::vector<std::unique_ptr<Object>>& objectsInScene,
+		//Object* m_target;
+		SceneEntity* m_target;
+		StateMachine(Window* window, Camera* camera, Lighting* lightSource,
+			std::vector<std::unique_ptr<Object>>& objectsInScene,
 			PhysicsWorld* physicsWorld);
 		
 		//Controls state that StateMachine is currently in. SM_State changes on the press of a button

@@ -199,6 +199,7 @@
     <ClInclude Include="Ragdoll.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="RotateState.h" />
+    <ClInclude Include="SceneEntity.h" />
     <ClInclude Include="SelectedState.h" />
     <ClInclude Include="SortingAlgorithms.h" />
     <ClInclude Include="RigidBodyRegistry.h" />

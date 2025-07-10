@@ -37,7 +37,7 @@ void MeshRenderer::draw(Camera& camera, Lighting& lighting, Transform* transform
 
 	shaderProgram->SetVec3("objectColor", m_material->getDiffuse());
 	shaderProgram->SetVec3("lightColor", lighting.getColor());
-	shaderProgram->SetVec3("lightPos", lighting.getPosition());
+	shaderProgram->SetVec3("lightPos", lighting.m_transform.getPosition());
 
 	VAO* VAO = m_mesh->getVAO();
 

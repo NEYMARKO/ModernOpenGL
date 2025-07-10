@@ -3,6 +3,7 @@
 
 #include "StateMachine.h"
 #include "Camera.h"
+#include "Lighting.h"
 #include "Ray.h"
 #include "Object.h"
 #include "Transform.h"
@@ -31,8 +32,8 @@ void State::onKeyboardPress(int key, int action)
 			/*m_movingCamera = true;*/
 			if (m_stateMachine->m_target)
 			{
-				m_stateMachine->m_target->getComponent<MeshRenderer>()->
-					changeColor(DEFAULT_OBJECT_COLOR);
+				/*m_stateMachine->m_target->getComponent<MeshRenderer>()->
+					changeColor(DEFAULT_OBJECT_COLOR);*/
 				m_stateMachine->m_target = nullptr;
 			}
 			m_transitionState = States::CAMERA_MOVE;
@@ -73,6 +74,19 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 				std::cout << hit.obj->getName() << '\n';
 			}
 			updateSelection(hits);
+			bool lightIntersects = m_stateMachine->m_lightSource->m_editorCollider.intersects(start, dir, intersectionPoint);
+			std::cout << "LIGHT INTERSECTS: " << (lightIntersects ? "TRUE" : "FALSE") << "\n";
+			if (!m_stateMachine->m_target)
+			{
+				if (lightIntersects)
+					std::cout << "LIGHT HIT\n";
+			}
+			else
+			{
+				if (lightIntersects && (glm::distance(intersectionPoint, start) < glm::distance(hits[0].point, start)))
+					std::cout << "LIGHT HIT BEFORE OTHER OBJECT\n";
+			}
+
 			/*if (m_stateMachine->m_target)
 				std::cout << "HIT: " << m_stateMachine->m_target->getName() << '\n';*/
 		}
@@ -82,10 +96,10 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 		//This code can't be put in SelectedState::exit() because that will get triggered
 		//both when going to camera move/rotate (as wanted), and when going to transform state
 		//(which will then perform something over nullptr - unwanted behaviour)
-		if (m_stateMachine->m_target)
+		if (m_stateMachine->m_target && dynamic_cast<Object*>(m_stateMachine->m_target))
 		{
-			m_stateMachine->m_target->getComponent<MeshRenderer>()->
-				changeColor(DEFAULT_OBJECT_COLOR);
+			/*m_stateMachine->m_target->getComponent<MeshRenderer>()->
+				changeColor(DEFAULT_OBJECT_COLOR);*/
 			m_stateMachine->m_target = nullptr;
 		}
 		//std::cout << "RM CLICKED\n";
@@ -127,7 +141,7 @@ void State::sortObjects(std::vector<Hit>& hits, const glm::vec3& start)
 
 void State::updateSelection(const std::vector<Hit>& hits)
 {
-	Object* currentSelection = m_stateMachine->m_target;
+	SceneEntity* currentSelection = m_stateMachine->m_target;
 	//ray has hit something - objects is bound to have atleast 1 element
 	if (hits.size() > 0)
 	{
@@ -135,7 +149,7 @@ void State::updateSelection(const std::vector<Hit>& hits)
 		if (!currentSelection)
 		{
 			m_stateMachine->m_target = hits[0].obj;
-			m_stateMachine->m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
+			/*m_stateMachine->m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);*/
 			//CalculateObjectPlane();
 			m_transitionState = States::SELECTED;
 			return;
@@ -143,9 +157,9 @@ void State::updateSelection(const std::vector<Hit>& hits)
 		//There already exists active selection, but it isn't same as hit
 		else if (currentSelection != hits[0].obj)
 		{
-			currentSelection->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+			/*currentSelection->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);*/
 			m_stateMachine->m_target = hits[0].obj;
-			m_stateMachine->m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);
+			/*m_stateMachine->m_target->getComponent<MeshRenderer>()->changeColor(SELECTED_OBJECT_COLOR);*/
 			m_transitionState = States::SELECTED;
 			
 		}
@@ -163,7 +177,7 @@ void State::updateSelection(const std::vector<Hit>& hits)
 	{
 		std::cout << "WILL BE IN DEFAULT STATE\n";
 		if (currentSelection)
-			currentSelection->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);
+			/*currentSelection->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);*/
 		m_stateMachine->m_target = nullptr;
 		m_transitionState = States::DEFAULT;
 	}

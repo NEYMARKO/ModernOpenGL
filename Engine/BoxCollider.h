@@ -17,7 +17,11 @@ public:
 	{
 		assignColliderShape(std::make_unique<btBoxShape>(btVector3(dimX, dimY, dimZ)));
 	}
-
+	virtual void* getBase(std::type_index t) override
+	{
+		if (t == typeid(BoxCollider)) return this;
+		return Collider::getBase(t);
+	}
 	void setSize(float size) { m_size = size; }
 	float getSize() const { return m_size; }
 };

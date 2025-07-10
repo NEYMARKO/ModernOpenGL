@@ -25,7 +25,7 @@ TransformState::TransformState(StateMachine* stateMachine, Camera* camera, Trans
 	if (!m_stateMachine->m_target)
 		std::cout << "TARGET IS NULL\n";
 #ifdef EC_ENABLE_VISUAL_DEBUG
-	m_stateMachine->m_target->getEditorCollider()->setupAABB();
+	m_stateMachine->m_target->m_editorCollider.setupAABB();
 #endif
 	/*m_mouseStart = m_transformPlane.calculateRayIntersectionPoint(m_stateMachine->mouseStartWorld,
 		m_stateMachine->mouseDirectionWorld);*/
@@ -147,7 +147,7 @@ void TransformState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::ve
 	//since it gets updated only once per transformation
 #ifdef EC_ENABLE_VISUAL_DEBUG
 	if (m_stateMachine->m_target)
-		m_stateMachine->m_target->getEditorCollider()->setupAABB();
+		m_stateMachine->m_target->m_editorCollider.setupAABB();
 #endif
 	//direction vector isn't ZERO => it's transformation should be performed around axis
 	//if (!glm::all(glm::lessThan(glm::abs(dir), glm::vec3(EPSILON))))
@@ -166,5 +166,5 @@ void TransformState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::ve
 void TransformState::update()
 {
 	if (m_stateMachine->m_target && m_trackingMouse)
-		m_stateMachine->m_target->getEditorCollider()->setupAABB();
+		m_stateMachine->m_target->m_editorCollider.setupAABB();
 }

@@ -1,21 +1,19 @@
 #include "Shader.h"
 #include "Camera.h"
-#include "Mesh.h"
 #include "Lighting.h"
 
-Lighting::Lighting(Shader* shaderProgram, Mesh* mesh, const glm::vec3& position, const glm::vec3& color) 
-	: mShaderProgram{ shaderProgram }, m_mesh {mesh}, m_position {position}, mColor {color}
+	// Making 3D bounding box for quad (2D shape), for rayBoxIntersection code to work on 2D quad
+	// => need to make thickness something really small, x and y values (width and height) should be 1 => [-0.5, 0.5] range - pivot in middle
+Lighting::Lighting(Shader* shaderProgram, const glm::vec3& position, const glm::vec3& color) 
+	: SceneEntity{ EditorCollider { glm::vec3(-0.5f, -0.5f, -THICKNESS / 2), glm::vec3(0.5f, 0.5f, THICKNESS / 2) }, Transform() },
+	mShaderProgram { shaderProgram }, mColor{ color }
 {
+	m_editorCollider.setParent(this);
 }
 
 Lighting::~Lighting()
 {
 	std::cout << "DELETED LIGHTING" << std::endl;
-}
-
-glm::vec3 Lighting::getPosition()
-{
-	return m_position;
 }
 
 glm::vec3 Lighting::getColor()
@@ -28,8 +26,7 @@ void Lighting::Draw(/*Shader& boundingBoxShaderProgram, */Camera& camera)
 	//std::cout << "Drawing light" << std::endl;
 	mShaderProgram->Activate();
 
-	glm::mat4 model = glm::mat4(1.0f);
-	m_position = glm::vec3(model[3]);
+	glm::mat4 model = m_transform.getModelMatrix();
 	mShaderProgram->SetMat4("model", model);
 	camera.generateViewProjectionMatrices(*mShaderProgram);
 

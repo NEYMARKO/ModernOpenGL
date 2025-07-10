@@ -13,4 +13,9 @@ public:
 	{
 		assignColliderShape(std::make_unique<btCapsuleShape>(radius, height));
 	};
+	virtual void* getBase(std::type_index t) override
+	{
+		if (t == typeid(CapsuleCollider)) return this;
+		return Collider::getBase(t);
+	}
 };

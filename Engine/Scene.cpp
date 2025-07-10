@@ -44,9 +44,9 @@ void Scene::loadDefaultScene()
 	auto floorTransform = Transform(glm::vec3(0.0f, -4.0f, 0.0f),
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto floorTransform2 = Transform(glm::vec3(0.0f, 7.0f, 0.0f),
-		glm::angleAxis(glm::radians(45.0f), glm::vec3(0.0f, 0.0f, 1.0f)), glm::vec3(0.2f, 0.2f, 0.2f));
-	auto floorTransform3 = Transform(glm::vec3(-7.0f, 0.0f, 0.0f),
 		glm::angleAxis(glm::radians(25.0f), glm::vec3(0.0f, 0.0f, 1.0f)), glm::vec3(0.2f, 0.2f, 0.2f));
+	auto floorTransform3 = Transform(glm::vec3(-7.0f, 0.0f, 0.0f),
+		glm::angleAxis(glm::radians(15.0f), glm::vec3(0.0f, 0.0f, 1.0f)), glm::vec3(0.2f, 0.2f, 0.2f));
 
 	auto templeMesh = ResourceManager<Mesh>::addResource("temple", std::make_unique<Mesh>(&templeLoader));
 	auto dragonMesh = ResourceManager<Mesh>::addResource("dragon", std::make_unique<Mesh>(&dragonLoader));

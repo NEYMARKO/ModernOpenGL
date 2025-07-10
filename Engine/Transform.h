@@ -22,6 +22,12 @@ public:
 	Transform();
 	Transform(glm::vec3 position, glm::quat rotation, glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f));
 
+	virtual void* getBase(std::type_index t) override
+	{
+		if (t == typeid(Transform)) return this;
+		return nullptr;
+	}
+
 	void translate(const glm::vec3& translation);
 	void rotate(const glm::vec3& axis, float angle);
 	void rotate(const glm::quat& rotation);

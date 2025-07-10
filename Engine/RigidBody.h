@@ -22,6 +22,11 @@ public:
 	bool m_addedToWorld = false;
 
 	RigidBody(float mass = 1.0f, float restitution = 0.4f);
+	virtual void* getBase(std::type_index t) override
+	{
+		if (t == typeid(RigidBody)) return this;
+		return nullptr;
+	}
 	void finalizeRigidBody();
 	btVector3 calculateInertia();
 	void setRestitution(float restitution);

@@ -4,6 +4,7 @@
 #include "Material.h"
 #include "RigidBody.h"
 #include "Collider.h"
+#include "SphereCollider.h"
 #include "Component.h"
 //#include "PhysicsWorld.h"
 #include "World.h"
@@ -12,10 +13,11 @@
 
 
 Object::Object(Transform&& transform, MeshRenderer&& meshRenderer, 
-	const std::string& name, Object* parent)
-	: m_transform{ std::move(transform) }, m_meshRenderer{ std::move(meshRenderer) },
-	m_editorCollider { m_meshRenderer.getMesh()->m_minimums, m_meshRenderer.getMesh()->m_maximums },
-	m_parentObject{ parent }, m_name { name }
+	const std::string& name, SceneEntity* parent)
+	: SceneEntity{ std::move(
+		EditorCollider { meshRenderer.getMesh()->m_minimums, meshRenderer.getMesh()->m_maximums }), 
+	std::move( transform ), name, parent },
+	m_meshRenderer{ std::move(meshRenderer) }
 {
 	m_transform.setParentObject(this);
 	m_transform.setScale(m_meshRenderer.getMesh()->scalingFactor * getComponent<Transform>()->getScale());

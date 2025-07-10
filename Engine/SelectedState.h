@@ -1,14 +1,14 @@
 #pragma once
 #include "State.h"
-#include "Object.h"
+#include "SceneEntity.h"
 
 #include <iostream>
 class SelectedState : public State
 {
 private:
-	Object* m_selection;
+	SceneEntity* m_selection;
 public:
-	SelectedState(StateMachine* stateMachine, Object* selectedObject) :
+	SelectedState(StateMachine* stateMachine, SceneEntity* selectedObject) :
 		State { stateMachine }, m_selection { selectedObject }
 	{
 		std::cout << "IN SELECTED\n";

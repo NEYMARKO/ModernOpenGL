@@ -2,7 +2,7 @@
 #include <array>
 #include <glm/glm.hpp>
 
-class Object;
+class SceneEntity;
 
 enum Layer
 {
@@ -13,7 +13,7 @@ enum Layer
 
 struct EditorCollider
 {
-	Object* m_parent = nullptr;
+	SceneEntity* m_parent = nullptr;
 	//min value for each dimension
 	const glm::vec3 m_min;
 	//max value for each dimension
@@ -25,7 +25,7 @@ struct EditorCollider
 	std::array<glm::vec3, 8> m_vertices;
 	std::array<glm::vec3, 24> m_edges;
 	EditorCollider(const glm::vec3& minimums, const glm::vec3& maximums, Layer layer = EC_DEFAULT);
-	void setParent(Object* parent);
+	void setParent(SceneEntity* parent);
 	void setupAABB();
 	//Uses slab algorithm for ray-box(AABB) intersection
 	bool intersects(const glm::vec3& start, const glm::vec3& direction, glm::vec3& intersectionOut);

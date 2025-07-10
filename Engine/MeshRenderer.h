@@ -16,6 +16,11 @@ private:
 	Mesh* m_mesh;
 public:
 	MeshRenderer(Mesh* mesh, Material* material);
+	virtual void* getBase(std::type_index t) override
+	{
+		if (t == typeid(MeshRenderer)) return this;
+		return nullptr;
+	}
 	void changeColor(const glm::vec3& color);
 	Mesh* getMesh() { return m_mesh; }
 	void draw(Camera& camera, Lighting& lighting, Transform* transform = nullptr);

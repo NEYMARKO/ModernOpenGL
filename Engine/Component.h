@@ -1,5 +1,6 @@
 #pragma once
-
+#include <typeinfo>
+#include <typeindex>
 class Object;
 
 /// <summary>
@@ -14,4 +15,5 @@ public:
 	virtual ~Component() = default;
 	void setParentObject(Object* parent) { m_parentObject = parent; };
 	Object* getParentObject() const { return m_parentObject; }
+	virtual void* getBase(std::type_index t) = 0;
 };

@@ -1,7 +1,7 @@
 #include <math.h>
 #include <iostream>
 #include "glm/gtx/string_cast.hpp"
-#include "Object.h"
+#include "SceneEntity.h"
 #include "Transform.h"
 #include "EditorCollider.h"
 
@@ -31,10 +31,10 @@ EditorCollider::EditorCollider(const glm::vec3& minimums, const glm::vec3& maxim
 
 }
 
-void EditorCollider::setParent(Object* parent)
+void EditorCollider::setParent(SceneEntity* parent)
 {
 	m_parent = parent;
-	Transform* t = m_parent->getComponent<Transform>();
+	Transform* t = &m_parent->m_transform;
 
 	glm::mat4 transform = t->getModelMatrix();
 
@@ -54,7 +54,7 @@ void EditorCollider::setupAABB()
 	//follow object
 	if (m_parent)
 	{
-		Transform* t = m_parent->getComponent<Transform>();
+		Transform* t = &m_parent->m_transform;
 		glm::mat4 transform = t->getModelMatrix();
 		
 		int i = 0;
@@ -95,7 +95,7 @@ bool EditorCollider::intersects(const glm::vec3& start, const glm::vec3& directi
 	if (!m_parent)
 		return false;
 
-	glm::mat4 transform = m_parent->getComponent<Transform>()->getModelMatrix();
+	glm::mat4 transform = (&m_parent->m_transform)->getModelMatrix();
 	glm::vec3 _start = glm::vec3(glm::inverse(transform) * glm::vec4(start, 1.0f));
 	glm::vec3 _dir = glm::vec3(glm::inverse(transform) * glm::vec4(direction,0.0f));
 

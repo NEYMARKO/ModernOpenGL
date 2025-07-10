@@ -15,4 +15,9 @@ public:
 	{
 		assignColliderShape(std::make_unique<btStaticPlaneShape>(normal, distance));
 	}
+	virtual void* getBase(std::type_index t) override
+	{
+		if (t == typeid(PlaneCollider)) return this;
+		return Collider::getBase(t);
+	}
 };

@@ -4,8 +4,10 @@
 #include "RotateState.h"
 #include "CameraMoveState.h"
 #include "CameraRotateState.h"
-#include "Object.h"
+//#include "Object.h"
+#include "SceneEntity.h"
 #include "Camera.h"
+#include "Lighting.h"
 #include "Ray.h"
 #include "PhysicsWorld.h"
 #include "StateMachine.h"
@@ -13,8 +15,9 @@
 #define GLFW_HAND_CURSOR 0x00036004
 
 
-StateMachine::StateMachine(Window* window, Camera* m_camera, std::vector<std::unique_ptr<Object>>& objectsInScene, PhysicsWorld* physicsWorld)
-	: m_window{ window },
+StateMachine::StateMachine(Window* window, Camera* camera, Lighting* lightSource,
+	std::vector<std::unique_ptr<Object>>& objectsInScene, PhysicsWorld* physicsWorld)
+	: m_window{ window }, m_camera{ camera }, m_lightSource{ lightSource },
 	m_target { nullptr }, m_objectsInScene{ objectsInScene },
 	m_physicsWorld { physicsWorld }
 {
@@ -47,10 +50,11 @@ void StateMachine::changeState()
 			m_activeState = std::make_unique<SelectedState>(this, m_target);
 			break;
 		case States::GRAB:
-			m_activeState = std::make_unique<GrabState>(this, m_camera, m_target->getComponent<Transform>());
+			/*m_activeState = std::make_unique<GrabState>(this, m_camera, m_target->getComponent<Transform>());*/
+			m_activeState = std::make_unique<GrabState>(this, m_camera, &m_target->m_transform);
 			break;
 		case States::ROTATE:
-			m_activeState = std::make_unique<RotateState>(this, m_camera, m_target->getComponent<Transform>());
+			m_activeState = std::make_unique<RotateState>(this, m_camera, &m_target->m_transform);
 			break;
 		case States::CAMERA_ROTATE:
 			m_activeState = std::make_unique<CameraRotateState>(this, m_camera);

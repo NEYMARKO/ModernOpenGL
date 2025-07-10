@@ -20,7 +20,11 @@ public:
 	//	: m_center{ center }/*, m_material{ material }*/
 	//{
 	//}
-
+	virtual void* getBase(std::type_index t) override
+	{
+		if (t == typeid(Collider)) return this;
+		return nullptr;
+	}
 	void assignColliderShape(std::unique_ptr<btCollisionShape> colliderShape)
 	{
 		m_collisionShape = std::move(colliderShape);
