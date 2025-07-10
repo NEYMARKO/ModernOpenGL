@@ -96,7 +96,7 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 		//This code can't be put in SelectedState::exit() because that will get triggered
 		//both when going to camera move/rotate (as wanted), and when going to transform state
 		//(which will then perform something over nullptr - unwanted behaviour)
-		if (m_stateMachine->m_target && dynamic_cast<Object*>(m_stateMachine->m_target))
+		if (m_stateMachine->m_target)
 		{
 			/*m_stateMachine->m_target->getComponent<MeshRenderer>()->
 				changeColor(DEFAULT_OBJECT_COLOR);*/
