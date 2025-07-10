@@ -1,10 +1,10 @@
+#include "Scene.h"
 #include "StateMachine.h"
 #include "Camera.h"
 #include "Lighting.h"
 #include "Grid.h"
 #include "Gizmos.h"
 #include "Window.h"
-#include "Scene.h"
 #include <memory>
 #include "PhysicsWorld.h"
 #include "Object.h"
@@ -16,9 +16,11 @@
 #include "Ray.h"
 #include "Ragdoll.h"
 #include "BulletGizmos.h"
+#include "SceneEntity.h"
+
 int main()
 {
-	std::vector<std::unique_ptr<Object>> objectsInScene;
+	std::vector<std::unique_ptr<SceneEntity>> objectsInScene;
 	std::vector<std::unique_ptr<MeshLoader>> meshLoaders;
 
 	Camera camera(glm::vec3(-5.0f, 5.0f, 15.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1, 800, 800);
@@ -47,17 +49,20 @@ int main()
 	ResourceManager<Shader>::addResource("gizmos", std::make_unique<Shader>("gizmos.vert", "gizmos.frag"));
 	auto lightBulbTransform = Transform(glm::vec3(-5.0f, 7.0f, 0.0f), glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	
-	auto lightBulb = ResourceManager<Mesh>::addResource("lightBulb", std::make_unique<Mesh>(&lightBulbLoader));
+	/*auto lightBulb = ResourceManager<Mesh>::addResource("lightBulb", std::make_unique<Mesh>(&lightBulbLoader));
 	
 	auto lightBulbMaterial = ResourceManager<Material>::addResource("lightBulb", std::make_unique<Material>(&defaultShaderProgram));
 
-	auto lightBulbRenderer = MeshRenderer(lightBulb, lightBulbMaterial);
-	Lighting light(&lightingShaderProgram, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	auto lightBulbRenderer = MeshRenderer(lightBulb, lightBulbMaterial);*/
+	/*Lighting light(&lightingShaderProgram, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));*/
 
-	StateMachine stateMachine(&window, &camera, &light, objectsInScene, &physicsWorld);
+	objectsInScene.push_back(std::make_unique<Lighting>(&lightingShaderProgram, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
+	//auto* o = objectsInScene.back();
+	StateMachine stateMachine(&window, &camera,/* &light, */objectsInScene, &physicsWorld);
 	//stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
 	window.addStateMachine(&stateMachine);
-	Scene scene{&camera, &light, objectsInScene, &defaultShaderProgram};
+	Scene scene{&camera, 
+		dynamic_cast<Lighting*>(objectsInScene.back().get()), objectsInScene, &defaultShaderProgram};
 	
 	Ragdoll ragdoll(glm::vec3(0.0f, 35.0f, -3.0f), &physicsWorld, 2.5);
 	Ragdoll ragdoll2(glm::vec3(0.0f, 12.0f, -2.5f), &physicsWorld, 2.5);
@@ -69,11 +74,11 @@ int main()
 	for (auto& obj : objectsInScene)
 	{
 		//std::cout << "OBJECT: " << obj.get()->getName() << '\n';
-		gizmos.addEditorCollider(obj.get()->getEditorCollider());
+		gizmos.addEditorCollider(&obj.get()->m_editorCollider);
 	}
-	auto lightBulbObject = std::make_unique<Object>(std::move(lightBulbTransform), std::move(lightBulbRenderer));
-	gizmos.addEditorCollider(&light.m_editorCollider);
-	scene.addObject(std::move(lightBulbObject));
+	/*auto lightBulbObject = std::make_unique<Object>(std::move(lightBulbTransform), std::move(lightBulbRenderer));*/
+	gizmos.addEditorCollider(&objectsInScene.back().get()->m_editorCollider);
+	//scene.addObject(std::move(lightBulbObject));
 
 
 	while (!window.shouldClose())
@@ -89,7 +94,7 @@ int main()
 		//scene.renderRagdoll();
 		//ragdoll.update();
 
-		light.m_editorCollider.setupAABB();
+		//light.m_editorCollider.setupAABB();
 		if (camera.mRay != nullptr)
 		{
 			camera.mRay->Draw(boundingBoxShaderProgram, camera);

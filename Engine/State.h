@@ -2,7 +2,8 @@
 #include <glm/glm.hpp>
 #include <vector>
 //#include "OpenGLIncludes.h"
-class Object;
+//class Object;
+class SceneEntity;
 class StateMachine;
 
 enum States
@@ -22,7 +23,7 @@ enum States
 
 struct Hit
 {
-	Object* obj;
+	SceneEntity* obj;
 	glm::vec3 point;
 };
 

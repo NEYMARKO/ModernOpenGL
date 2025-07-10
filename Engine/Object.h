@@ -27,7 +27,7 @@ public:
 	Object* getParent() const { return m_parentObject; }*/
 	std::string getName() const { return m_name; }
 	EditorCollider* getEditorCollider() { return &m_editorCollider; };
-	void addComponent(std::unique_ptr<Component> component);
+	void addComponent(std::unique_ptr<Component> component) override;
 
 	virtual void* getComponentLow(std::type_index t) override
 	{

@@ -3,6 +3,9 @@
 #include <vector>
 #include <typeinfo>
 #include <typeindex>
+#include <stdexcept>
+#include <memory>
+#include "Component.h"
 #include "Transform.h"
 #include "EditorCollider.h"
 
@@ -31,6 +34,12 @@ struct SceneEntity
 		if (t == typeid(Transform))
 			return &m_transform;
 		return nullptr;
+	}
+
+	virtual void addComponent(std::unique_ptr<Component> component)
+	{
+		if (!component)
+			throw std::runtime_error("Component is null");
 	}
 
 	void changeName(const std::string& name) { m_name = name; }

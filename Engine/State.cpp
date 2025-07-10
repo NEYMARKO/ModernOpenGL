@@ -63,20 +63,20 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 				/*transformInverse = glm::inverse(object->getComponent<Transform>()->getModelMatrix());
 				startHelper = glm::vec3(transformInverse * glm::vec4(start, 1));
 				dirHelper = glm::normalize(glm::vec3(transformInverse * glm::vec4(dir, 0)));*/
-				if (object.get()->getEditorCollider()->intersects(start, dir, intersectionPoint))
+				if (object.get()->m_editorCollider.intersects(start, dir, intersectionPoint))
 					hits.emplace_back(Hit{ object.get(), intersectionPoint });
 			}
 
 			sortObjects(hits, start);
 			std::cout << "SORTED HITS (by priority descending):" << '\n';
-			for (const auto hit: hits)
+			for (const auto& hit: hits)
 			{
-				std::cout << hit.obj->getName() << '\n';
+				std::cout << hit.obj->m_name << '\n';
 			}
 			updateSelection(hits);
-			bool lightIntersects = m_stateMachine->m_lightSource->m_editorCollider.intersects(start, dir, intersectionPoint);
-			std::cout << "LIGHT INTERSECTS: " << (lightIntersects ? "TRUE" : "FALSE") << "\n";
-			if (!m_stateMachine->m_target)
+			/*bool lightIntersects = m_stateMachine->m_lightSource->m_editorCollider.intersects(start, dir, intersectionPoint);
+			std::cout << "LIGHT INTERSECTS: " << (lightIntersects ? "TRUE" : "FALSE") << "\n";*/
+			/*if (!m_stateMachine->m_target)
 			{
 				if (lightIntersects)
 					std::cout << "LIGHT HIT\n";
@@ -85,7 +85,7 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 			{
 				if (lightIntersects && (glm::distance(intersectionPoint, start) < glm::distance(hits[0].point, start)))
 					std::cout << "LIGHT HIT BEFORE OTHER OBJECT\n";
-			}
+			}*/
 
 			/*if (m_stateMachine->m_target)
 				std::cout << "HIT: " << m_stateMachine->m_target->getName() << '\n';*/
@@ -124,8 +124,8 @@ void State::sortObjects(std::vector<Hit>& hits, const glm::vec3& start)
 		[&start](Hit hit1, Hit hit2)
 		{
 			//std::cout << "HIT1: " << hit1.obj->getName() << ", HIT2: " << hit2.obj->getName() << "\n";
-			int layer1 = hit1.obj->getEditorCollider()->m_layer;
-			int layer2 = hit2.obj->getEditorCollider()->m_layer;
+			int layer1 = hit1.obj->m_editorCollider.m_layer;
+			int layer2 = hit2.obj->m_editorCollider.m_layer;
 			//std::cout << "LAYER1: " << layer1 << " LAYER2: " << layer2 << "\n";
 			float distance1 = glm::distance(hit1.point, start);
 			float distance2 = glm::distance(hit2.point, start);

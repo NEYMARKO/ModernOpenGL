@@ -5,7 +5,7 @@
 #include "CameraMoveState.h"
 #include "CameraRotateState.h"
 //#include "Object.h"
-#include "SceneEntity.h"
+//#include "SceneEntity.h"
 #include "Camera.h"
 #include "Lighting.h"
 #include "Ray.h"
@@ -15,9 +15,9 @@
 #define GLFW_HAND_CURSOR 0x00036004
 
 
-StateMachine::StateMachine(Window* window, Camera* camera, Lighting* lightSource,
-	std::vector<std::unique_ptr<Object>>& objectsInScene, PhysicsWorld* physicsWorld)
-	: m_window{ window }, m_camera{ camera }, m_lightSource{ lightSource },
+StateMachine::StateMachine(Window* window, Camera* camera,/* Lighting* lightSource,*/
+	std::vector<std::unique_ptr<SceneEntity>>& objectsInScene, PhysicsWorld* physicsWorld)
+	: m_window{ window }, m_camera{ camera },/* m_lightSource{ lightSource },*/
 	m_target { nullptr }, m_objectsInScene{ objectsInScene },
 	m_physicsWorld { physicsWorld }
 {

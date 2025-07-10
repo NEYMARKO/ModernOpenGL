@@ -5,12 +5,14 @@
 //#include "OpenGLIncludes.h"
 #include "Window.h"
 #include "State.h"
+#include "SceneEntity.h"
+#include "Object.h"
 //#include "Camera.h"
 class Camera;
 class Lighting;
 class Ray;
 //class Object;
-class SceneEntity;
+//struct SceneEntity;
 class PhysicsWorld;
 
 
@@ -31,11 +33,12 @@ class StateMachine
 		double mousePosY;
 		glm::vec4 mouseStartWorld;
 		glm::vec3 mouseDirectionWorld;
-		std::vector<std::unique_ptr<Object>>& m_objectsInScene;
+		//std::vector<std::unique_ptr<Object>>& m_objectsInScene;
+		std::vector<std::unique_ptr<SceneEntity>>& m_objectsInScene;
 		//Object* m_target;
 		SceneEntity* m_target;
-		StateMachine(Window* window, Camera* camera, Lighting* lightSource,
-			std::vector<std::unique_ptr<Object>>& objectsInScene,
+		StateMachine(Window* window, Camera* camera,/* Lighting* lightSource,*/
+			std::vector<std::unique_ptr<SceneEntity>>& objectsInScene,
 			PhysicsWorld* physicsWorld);
 		
 		//Controls state that StateMachine is currently in. SM_State changes on the press of a button

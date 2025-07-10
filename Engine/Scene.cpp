@@ -6,13 +6,14 @@
 #include "Lighting.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
-#include "Object.h"
+//#include "SceneEntity.h"
+//#include "Object.h"
 #include "SphereCollider.h"
 #include "BoxCollider.h"
 #include "RigidBody.h"
 #include "Ragdoll.h"
 #include "Scene.h"
-Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<Object>>& objectsInScene, Shader* objectShader) 
+Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<SceneEntity>>& objectsInScene, Shader* objectShader) 
 	: mCamera{ camera }, mLightSource{ lightSource }, m_objectsInScene{ objectsInScene }, 
 	mObjectShader{ objectShader }
 {
@@ -165,9 +166,9 @@ void Scene::renderObjects()
 {
 	//need to use constant reference to avoid copying elements of mObjectsInScene
 	//into obj
-	for (const std::unique_ptr<Object>& obj : m_objectsInScene)
+	for (const std::unique_ptr<SceneEntity>& obj : m_objectsInScene)
 	{
-		if (Object* object = obj.get())
+		if (SceneEntity* object = obj.get())
 			if (MeshRenderer* mr = object->getComponent<MeshRenderer>())
 				mr->draw(*mCamera, *mLightSource);
 	}
