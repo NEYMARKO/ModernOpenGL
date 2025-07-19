@@ -3,9 +3,10 @@
 #undef GLFW_INCLUDE_NONE
 #include "RigidBody.h"
 #include "Transform.h"
-#include "Object.h"
+//#include "Object.h"
 #include "RigidBodyRegistry.h"
 #include "PhysicsWorld.h"
+#include "SceneEntity.h"
 
 #define DEFAULT_WORLD_ID 1
 
@@ -86,7 +87,7 @@ void PhysicsWorld::updateObjectsTransform()
 {
 	for (RigidBody* rb : m_rigidBodies)
 	{
-		Object* parentObject = rb->getParentObject();
+		SceneEntity* parentObject = rb->getParentObject();
 		Transform* t = parentObject->getComponent<Transform>();
 		t->setPosition(t->bulletToGlmVec3(
 			rb->getRigidBody()->getCenterOfMassPosition()

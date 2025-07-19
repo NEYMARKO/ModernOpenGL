@@ -1,9 +1,11 @@
 #pragma once
 #include <vector>
+#include <array>
 //#include "OpenGLIncludes.h"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-struct Vertex;
+
+#include "Vertex.h"
 //class for vertex buffer object
 //constructor takes in:
 //		vertices - pointer to the array of data that we want to feed VBO with
@@ -18,6 +20,7 @@ class VBO
 		VBO(size_t capacity);
 		VBO(const std::vector<glm::vec3>& verticesPositions);
 		VBO(const std::vector<Vertex>& vertices);
+		VBO(const std::array<VertexTex, 4>& vertices);
 		//~VBO();
 		//returns size of storage occupied by VBO in bytes - needs to be divided
 		//with type of elements that it is holding (for example: Vertex or glm::vec3)

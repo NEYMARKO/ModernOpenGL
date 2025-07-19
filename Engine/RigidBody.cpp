@@ -1,4 +1,5 @@
-#include "Object.h"
+//#include "Object.h"
+#include "SceneEntity.h"
 #include "Transform.h"
 #include "Collider.h"
 #include "RigidBody.h"
@@ -15,7 +16,7 @@ void RigidBody::finalizeRigidBody()
 	//preventing multiple initializations
 	if (m_rigidBody) return;
 
-	Object* parentObject = getParentObject();
+	SceneEntity* parentObject = getParentObject();
 
 	if (!parentObject) throw std::runtime_error("Parent object is null");
 

@@ -2,6 +2,7 @@
 //#include "OpenGLIncludes.h"
 #include <glad/glad.h>
 #include <vector>
+#include <array>
 class EBO
 {
 public:
@@ -10,6 +11,7 @@ public:
 	EBO();
 	// Constructor that generates a Elements Buffer Object and links it to indices
 	EBO(const std::vector<unsigned int>& indices);
+	EBO(const std::array<unsigned int, 6>& indices);
 	//~EBO();
 	// Binds the EBO
 	void Bind();

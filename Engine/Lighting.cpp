@@ -6,8 +6,10 @@
 	// => need to make thickness something really small, x and y values (width and height) should be 1 => [-0.5, 0.5] range - pivot in middle
 Lighting::Lighting(Shader* shaderProgram, const glm::vec3& position, const glm::vec3& color) 
 	: SceneEntity{ EditorCollider { glm::vec3(-0.5f, -0.5f, -THICKNESS / 2), glm::vec3(0.5f, 0.5f, THICKNESS / 2) }, Transform() },
-	mShaderProgram { shaderProgram }, mColor{ color }
+	mShaderProgram { shaderProgram }, mColor{ color },
+	m_spriteRenderer{ std::move(Texture {"container.jpg"}) }
 {
+	m_spriteRenderer.setParentObject(this);
 	m_editorCollider.setParent(this);
 }
 

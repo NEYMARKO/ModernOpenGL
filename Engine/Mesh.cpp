@@ -33,6 +33,20 @@ void Mesh::setupBuffers()
 	mEBO.Unbind();
 }
 
+void Mesh::setupBuffersForTexture()
+{
+	mVAO.Bind();
+	mVBO = VBO(m_verticesTex);
+	mEBO = EBO(m_indicesTex);
+
+	mVAO.LinkVBO(mVBO, 0, 3, sizeof(VertexTex), 0);
+	mVAO.LinkVBO(mVBO, 1, 2, sizeof(VertexTex), (void*)offsetof(VertexTex, texture));
+
+	mVAO.Unbind();
+	mVBO.Unbind();
+	mEBO.Unbind();
+}
+
 int Mesh::GetID()
 {
 	return m_id;

@@ -2,13 +2,15 @@
 
 #include <memory>
 #include <vector>
+#include <array>
 #include <glm/glm.hpp>
 
 #include "VAO.h"
 #include "VBO.h"
 #include "EBO.h"
 
-class Vertex;
+struct Vertex;
+struct VertexTex;
 class Shader;
 class MeshLoader;
 
@@ -27,8 +29,11 @@ class Mesh
 
 		std::vector<Vertex> mVertices;
 		std::vector<unsigned int> mIndices;
+		std::array<VertexTex, 4> m_verticesTex;
+		std::array<unsigned int, 6> m_indicesTex;
 
 		void setupBuffers();
+		void setupBuffersForTexture();
 
 	public:
 		glm::vec3 m_minimums;
@@ -36,6 +41,12 @@ class Mesh
 
 		float scalingFactor;
 
+		Mesh(const std::array<VertexTex, 4>&& vertices,
+			const std::array<unsigned int, 6>&& indices) :
+			m_verticesTex{ std::move(vertices) }, m_indicesTex{ std::move(indices) }
+		{
+			setupBuffersForTexture();
+		}
 		Mesh(MeshLoader* meshLoader);
 		~Mesh();
 		void transferLoadedMeshInfo(MeshLoader* meshLoader);
@@ -43,6 +54,4 @@ class Mesh
 		VAO* getVAO() { return &mVAO; }
 		std::vector<Vertex>* getVertices() { return &mVertices; }
 		std::vector<unsigned int>* getIndices() { return &mIndices; }
-
-
 };

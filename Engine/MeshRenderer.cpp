@@ -30,6 +30,8 @@ void MeshRenderer::draw(Camera& camera, Lighting& lighting, Transform* transform
 	}
 
 	Transform* transformPtr = transform ? transform : getParentObject()->getComponent<Transform>();
+	if (!transformPtr)
+		throw std::runtime_error("Transform is missing");
 	glm::mat4 modelMatrix = transformPtr->getModelMatrix();
 	shaderProgram->Activate();
 	shaderProgram->SetMat4("model", modelMatrix);

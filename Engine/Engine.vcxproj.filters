@@ -141,6 +141,9 @@
     <ClCompile Include="Ragdoll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Joint.h">
@@ -293,6 +296,9 @@
     <ClInclude Include="SceneEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="cone.txt">
@@ -370,6 +376,12 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="gizmos.frag">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="texture.vert">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="texture.frag">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

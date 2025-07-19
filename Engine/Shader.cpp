@@ -104,6 +104,11 @@ void Shader::Delete()
 	std::cout << "DELETED SHADER PROGRAM: " << ID << std::endl;
 }
 
+void Shader::SetInt(const std::string& name, const int value)
+{
+	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+}
+
 void Shader::SetFloat(const std::string& name, const float value)
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);

@@ -6,6 +6,7 @@
 #include "Lighting.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
+#include "SpriteRenderer.h"
 //#include "SceneEntity.h"
 //#include "Object.h"
 #include "SphereCollider.h"
@@ -171,6 +172,8 @@ void Scene::renderObjects()
 		if (SceneEntity* object = obj.get())
 			if (MeshRenderer* mr = object->getComponent<MeshRenderer>())
 				mr->draw(*mCamera, *mLightSource);
+			else if (SpriteRenderer* sr = object->getComponent<SpriteRenderer>())
+				sr->draw(mCamera, mLightSource);
 	}
 }
 

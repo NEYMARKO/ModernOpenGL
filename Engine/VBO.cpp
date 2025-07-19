@@ -29,6 +29,14 @@ VBO::VBO(const std::vector<Vertex>& vertices) :
 	
 }
 
+VBO::VBO(const std::array<VertexTex, 4>& vertices) :
+	m_storageCapacity { vertices.size() * sizeof(VertexTex) }
+{
+	glGenBuffers(1, &ID);
+	glBindBuffer(GL_ARRAY_BUFFER, ID);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(VertexTex), &vertices[0], GL_STATIC_DRAW);
+}
+
 int VBO::getSizeInBytes()
 {
 	int size;
