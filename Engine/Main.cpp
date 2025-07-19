@@ -61,7 +61,8 @@ int main()
 
 	objectsInScene.push_back(std::make_unique<Lighting>(&lightingShaderProgram, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 	//auto* o = objectsInScene.back();
-	StateMachine stateMachine(&window, &camera,/* &light, */objectsInScene, &physicsWorld);
+	StateMachine stateMachine(&window, &camera, 
+		objectsInScene.back().get(), objectsInScene, &physicsWorld);
 	//stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
 	window.addStateMachine(&stateMachine);
 	Scene scene{&camera, 

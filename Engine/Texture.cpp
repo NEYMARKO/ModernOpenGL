@@ -16,7 +16,19 @@ Texture::Texture(const char* image)
 	unsigned char* data = stbi_load(image, &texWidth, &texHeight, &nrChannels, 0);
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		GLenum format;
+		std::string filename(image);
+
+		size_t dotPos = filename.find_last_of('.');
+		std::string extension = (dotPos != std::string::npos) ? 
+			filename.substr(dotPos + 1) : "";
+		if (extension == "png")
+			format = GL_RGBA;
+		else if (extension == "jpg")
+			format = GL_RGB;
+		else
+			throw std::runtime_error("File type not supported\n");
+		glTexImage2D(GL_TEXTURE_2D, 0, format, texWidth, texHeight, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else

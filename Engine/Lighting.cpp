@@ -7,7 +7,7 @@
 Lighting::Lighting(Shader* shaderProgram, const glm::vec3& position, const glm::vec3& color) 
 	: SceneEntity{ EditorCollider { glm::vec3(-0.5f, -0.5f, -THICKNESS / 2), glm::vec3(0.5f, 0.5f, THICKNESS / 2) }, Transform() },
 	mShaderProgram { shaderProgram }, mColor{ color },
-	m_spriteRenderer{ std::move(Texture {"container.jpg"}) }
+	m_spriteRenderer{ std::move(Texture {"light-bulb.png"}) }
 {
 	m_spriteRenderer.setParentObject(this);
 	m_editorCollider.setParent(this);

@@ -37,7 +37,7 @@ class StateMachine
 		std::vector<std::unique_ptr<SceneEntity>>& m_objectsInScene;
 		//Object* m_target;
 		SceneEntity* m_target;
-		StateMachine(Window* window, Camera* camera,/* Lighting* lightSource,*/
+		StateMachine(Window* window, Camera* camera, SceneEntity* lightSource,
 			std::vector<std::unique_ptr<SceneEntity>>& objectsInScene,
 			PhysicsWorld* physicsWorld);
 		

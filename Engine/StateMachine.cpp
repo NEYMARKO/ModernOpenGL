@@ -15,9 +15,9 @@
 #define GLFW_HAND_CURSOR 0x00036004
 
 
-StateMachine::StateMachine(Window* window, Camera* camera,/* Lighting* lightSource,*/
+StateMachine::StateMachine(Window* window, Camera* camera, SceneEntity* lightSource,
 	std::vector<std::unique_ptr<SceneEntity>>& objectsInScene, PhysicsWorld* physicsWorld)
-	: m_window{ window }, m_camera{ camera },/* m_lightSource{ lightSource },*/
+	: m_window{ window }, m_camera{ camera }, m_lightSource{ (Lighting*)lightSource },
 	m_target { nullptr }, m_objectsInScene{ objectsInScene },
 	m_physicsWorld { physicsWorld }
 {
