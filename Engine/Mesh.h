@@ -41,8 +41,8 @@ class Mesh
 
 		float scalingFactor;
 
-		Mesh(const std::array<VertexTex, 4>&& vertices,
-			const std::array<unsigned int, 6>&& indices) :
+		Mesh(std::array<VertexTex, 4>&& vertices,
+			std::array<unsigned int, 6>&& indices) :
 			m_verticesTex{ std::move(vertices) }, m_indicesTex{ std::move(indices) }
 		{
 			setupBuffersForTexture();

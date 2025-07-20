@@ -39,7 +39,11 @@ void Object::addComponent(std::unique_ptr<Component> component)
 
 	m_components.push_back(std::move(component));
 	m_components.back().get()->setParentObject(this);
-
+	
+	if (auto* casted = dynamic_cast<Collider*>(m_components.back().get()))
+	{
+		casted->alignBoundsToObject();
+	}
 	//if currently added component is RigidBody, finalize it
 	if (auto* casted = dynamic_cast<RigidBody*>(m_components.back().get()))
 	{

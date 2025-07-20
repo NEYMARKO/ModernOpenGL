@@ -97,6 +97,7 @@ bool EditorCollider::intersects(const glm::vec3& start, const glm::vec3& directi
 
 	glm::mat4 transform = (&m_parent->m_transform)->getModelMatrix();
 	glm::vec3 _start = glm::vec3(glm::inverse(transform) * glm::vec4(start, 1.0f));
+	//2nd argument in vec4 has to be 0.0f because _dir is line, not a point
 	glm::vec3 _dir = glm::vec3(glm::inverse(transform) * glm::vec4(direction,0.0f));
 
 	float t_close[3]{ 0.0f };

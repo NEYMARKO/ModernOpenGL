@@ -1,26 +1,12 @@
-#include "Camera.h"
-#include "Lighting.h"
+#include "Mesh.h"
 #include "Object.h"
 #include "Transform.h"
-#include "Mesh.h"
-#include "Material.h"
+#include "Camera.h"
+#include "Lighting.h"
 #include "MeshRenderer.h"
-
-MeshRenderer::MeshRenderer(Mesh* mesh, Material* material)
-	: m_mesh{ mesh }, m_material{ material }
-{
-	//mesh needs to be scaled to [-1,1] range
-	//m_parentObject->getComponent<Transform>()->setScale(m_mesh.get()->scalingFactor);
-}
-
-void MeshRenderer::changeColor(const glm::vec3& color)
-{
-	m_material->setDiffuse(color);
-}
 
 void MeshRenderer::draw(Camera& camera, Lighting& lighting, Transform* transform)
 {
-	//std::cout << "PARENT OBJECT DOES " + std::string(m_parentObject != nullptr ? "" : "NOT") + " EXIST!" << std::endl;
 	Shader* shaderProgram = m_material->getShaderProgram();
 
 	if (!shaderProgram)
@@ -32,6 +18,7 @@ void MeshRenderer::draw(Camera& camera, Lighting& lighting, Transform* transform
 	Transform* transformPtr = transform ? transform : getParentObject()->getComponent<Transform>();
 	if (!transformPtr)
 		throw std::runtime_error("Transform is missing");
+
 	glm::mat4 modelMatrix = transformPtr->getModelMatrix();
 	shaderProgram->Activate();
 	shaderProgram->SetMat4("model", modelMatrix);
@@ -45,15 +32,10 @@ void MeshRenderer::draw(Camera& camera, Lighting& lighting, Transform* transform
 
 	if (!VAO)
 	{
-		std::cout << "VAO DOESN'T EXISTS" << std::endl;
-		return;
+		throw std::runtime_error("VAO missing\n");
 	}
 
 	VAO->Bind();
-	//mVAO.Bind();
-	//std::cout << "SHOULD CALL DRAW ELEMENTS" << std::endl;
 	glDrawElements(GL_TRIANGLES, m_mesh->getIndices()->size(), GL_UNSIGNED_INT, 0);
-	//std::cout << "FINISHED CALLING DRAW ELEMENTS" << std::endl;
-	//mVAO.Unbind();
 	VAO->Unbind();
 }

@@ -1,8 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "Component.h"
+#include "Material.h"
 
-class Material;
 class Mesh;
 class Camera;
 class Lighting;
@@ -15,13 +15,16 @@ private:
 	Material* m_material;
 	Mesh* m_mesh;
 public:
-	MeshRenderer(Mesh* mesh, Material* material);
+	MeshRenderer(Mesh* mesh, Material* material) :
+		m_mesh{ mesh }, m_material{ material }
+	{}
+
 	virtual void* getBase(std::type_index t) override
 	{
 		if (t == typeid(MeshRenderer)) return this;
 		return nullptr;
 	}
-	void changeColor(const glm::vec3& color);
 	Mesh* getMesh() { return m_mesh; }
+	void changeColor(const glm::vec3& color) { m_material->setDiffuse(color); };
 	void draw(Camera& camera, Lighting& lighting, Transform* transform = nullptr);
 };

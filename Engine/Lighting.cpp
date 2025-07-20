@@ -18,14 +18,8 @@ Lighting::~Lighting()
 	std::cout << "DELETED LIGHTING" << std::endl;
 }
 
-glm::vec3 Lighting::getColor()
+void Lighting::Draw(Camera& camera)
 {
-	return mColor;
-}
-
-void Lighting::Draw(/*Shader& boundingBoxShaderProgram, */Camera& camera)
-{
-	//std::cout << "Drawing light" << std::endl;
 	mShaderProgram->Activate();
 
 	glm::mat4 model = m_transform.getModelMatrix();
@@ -33,13 +27,4 @@ void Lighting::Draw(/*Shader& boundingBoxShaderProgram, */Camera& camera)
 	camera.generateViewProjectionMatrices(*mShaderProgram);
 
 	mShaderProgram->SetVec3("lightColor", mColor);
-
-
-	//there is no point in drawing same mesh again
-	
-	/*lightVAO.Bind();
-	glDrawElements(GL_TRIANGLES, this->meshContainer.meshLoader->indices.size(), GL_UNSIGNED_INT, 0);
-	lightVAO.Unbind();*/
-
-	//this->meshContainer.boundingBox->Draw(boundingBoxShaderProgram, camera);
 }

@@ -1,9 +1,10 @@
 #include "Joint.h"
+#include "Mesh.h"
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include "KinematicChain.h"
 
-#define DISTANCE_BETWEEN_JOINTS 0.1f
+#define DISTANCE_BETWEEN_JOINTS 0.025f
 #define ERROR_MARGIN 0.1f
 
 KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint, 
@@ -31,6 +32,13 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint,
 void KinematicChain::setMeshRenderer(std::unique_ptr<MeshRenderer> meshRenderer)
 {
 	m_jointsMeshRenderer = std::move(meshRenderer);
+	std::cout << "SCALING FACTOR: " << m_jointsMeshRenderer.get()->getMesh()->scalingFactor << "\n";
+	for (auto& joint : m_chain)
+	{
+		Transform* t = joint.get()->getTransform();
+		t->setScale(m_jointsMeshRenderer.get()->getMesh()->scalingFactor 
+			* t->getScale());
+	}
 }
 
 void KinematicChain::BackwardsPass()

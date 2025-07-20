@@ -29,6 +29,6 @@ public:
 	{
 		m_collisionShape = std::move(colliderShape);
 	}
-
+	virtual void alignBoundsToObject() {};
 	btCollisionShape* getCollisionShape() { return m_collisionShape.get(); }
 };

@@ -27,28 +27,30 @@ void Scene::loadDefaultScene()
 	//forward: -X, up: Z - file: joint.blend
 
 	MeshLoader templeLoader("templeFlat.txt");
+	std::cout << "DRAGON: \n";
 	MeshLoader dragonLoader("dragonSmooth.txt");
 	MeshLoader frogLoader("frogSmooth.txt");
+	std::cout << "FLOOR: \n";
 	MeshLoader floorLoader("planeFlat.txt");
 
 	auto templeTransform = Transform(glm::vec3(-5.0f, 4.0f, 0.0f), 
-		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::quat(), glm::vec3(1.25f, 1.25f, 1.25f));
 	auto templeTransform2 = Transform(glm::vec3(-5.0f, 4.0f, -2.0f),
-		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	auto dragonTransform = Transform(glm::vec3(5.0f, 50.0f, 0.0f), 
+		glm::quat(), glm::vec3(4.0f, 4.0f, 4.0f));
+	auto dragonTransform = Transform(glm::vec3(5.2f, 50.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 	auto dragonTransform2 = Transform(glm::vec3(-2.0f, 3.0f, 0.0f),
-		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::quat(), glm::vec3(1.5f, 1.5f, 1.5f));
 	auto dragonTransform3 = Transform(glm::vec3(-5.0f, 4.0f, 2.5f),
-		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::quat(), glm::vec3(1.2f, 1.2f, 1.2f));
 	auto frogTransform = Transform(glm::vec3(5.0f, 35.0f, 0.0f), 
-		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::quat(), glm::vec3(2.5f, 2.5f, 2.5f));
 	auto floorTransform = Transform(glm::vec3(0.0f, -4.0f, 0.0f),
-		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
+		glm::quat(), glm::vec3(40.0f, 1.0f, 40.0f));
 	auto floorTransform2 = Transform(glm::vec3(0.0f, 7.0f, 0.0f),
-		glm::angleAxis(glm::radians(25.0f), glm::vec3(0.0f, 0.0f, 1.0f)), glm::vec3(0.2f, 0.2f, 0.2f));
+		glm::angleAxis(glm::radians(25.0f), glm::vec3(0.0f, 0.0f, 1.0f)), glm::vec3(8.0f, 1.0f, 8.0f));
 	auto floorTransform3 = Transform(glm::vec3(-7.0f, 0.0f, 0.0f),
-		glm::angleAxis(glm::radians(15.0f), glm::vec3(0.0f, 0.0f, 1.0f)), glm::vec3(0.2f, 0.2f, 0.2f));
+		glm::angleAxis(glm::radians(15.0f), glm::vec3(0.0f, 0.0f, 1.0f)), glm::vec3(8.0f, 1.0f, 8.0f));
 
 	auto templeMesh = ResourceManager<Mesh>::addResource("temple", std::make_unique<Mesh>(&templeLoader));
 	auto dragonMesh = ResourceManager<Mesh>::addResource("dragon", std::make_unique<Mesh>(&dragonLoader));
@@ -100,7 +102,7 @@ void Scene::loadDefaultScene()
 	m_objectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform2), std::move(floorRenderer2), "floor2"));
 
 	//Transform* floorTransformPtr2 = m_objectsInScene.back()->getComponent<Transform>();
-	auto floorCollider2 = std::make_unique<BoxCollider>(4.0f, 0.05f, 4.0f);
+	auto floorCollider2 = std::make_unique<BoxCollider>();
 	m_objectsInScene.back()->addComponent(std::move(floorCollider2));
 	auto floorRigidBody2 = std::make_unique<RigidBody>(0.0f, 0.8f);
 	m_objectsInScene.back()->addComponent(std::move(floorRigidBody2));
@@ -109,13 +111,13 @@ void Scene::loadDefaultScene()
 	m_objectsInScene.push_back(std::make_unique<Object>(std::move(floorTransform3), std::move(floorRenderer3), "floor3"));
 
 	//Transform* floorTransformPtr3 = m_objectsInScene.back()->getComponent<Transform>();
-	auto floorCollider3 = std::make_unique<BoxCollider>(4.0f, 0.05f, 4.0f);
+	auto floorCollider3 = std::make_unique<BoxCollider>();
 	m_objectsInScene.back()->addComponent(std::move(floorCollider3));
 	auto floorRigidBody3 = std::make_unique<RigidBody>(0.0f, 0.8f);
 	m_objectsInScene.back()->addComponent(std::move(floorRigidBody3));
 
 	MeshLoader cubeLoader("cubeFlat.txt");
-	MeshLoader jointLoader("joint4.txt");
+	MeshLoader jointLoader("CapsuleJoint.txt");
 
 	auto cubeTransform = Transform(glm::vec3(3.2f, 1.7f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));

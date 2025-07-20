@@ -1,5 +1,5 @@
 #include "MeshLoader.h"
-
+#include <glm/gtx/string_cast.hpp>
 MeshLoader::MeshLoader(const char* filePath)
 {
     std::ifstream file;
@@ -132,14 +132,17 @@ void MeshLoader::CalculateScalingFactor()
     float yScale = (ymax - ymin) == 0 ? 1 : 1 / (ymax - ymin);
     float zScale = (zmax - zmin) == 0 ? 1 : 1 / (zmax - zmin);
 
-    float firstComparison = std::max(xScale, yScale);
-    this->scalingFactor = std::max(firstComparison, zScale);
+    float firstComparison = std::min(xScale, yScale);
+    this->scalingFactor = std::min(firstComparison, zScale);
 
     /*minExtremes *= scalingFactor;
     maxExtremes *= scalingFactor;*/
 
-    //std::cout << "ScalingFactor: " << scalingFactor << std::endl;
-
+    glm::vec3 scaledmax = glm::vec3(xmax, ymax, zmax) * scalingFactor;
+    glm::vec3 scaledmin = glm::vec3(xmin, ymin, zmin) * scalingFactor;
+    std::cout << "ScalingFactor: " << scalingFactor << std::endl;
+    std::cout << "SCALED MINIMUMS: " << glm::to_string(scaledmin) << "\n";
+    std::cout << "SCALED MAXIMUMS: " << glm::to_string(scaledmax) << "\n";
 }
 
 MeshLoader::~MeshLoader()
