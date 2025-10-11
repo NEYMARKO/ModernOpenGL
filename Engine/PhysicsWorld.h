@@ -1,12 +1,19 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <btBulletDynamicsCommon.h>
 #include <memory>
+#include <glm/common.hpp>
+#include <btBulletDynamicsCommon.h>
 //#include "OpenGLIncludes.h"
 
+class SceneEntity;
 class RigidBody;
-class PhysicsObject;
+
+struct BulletRayHit
+{
+	btRigidBody* rb;
+	glm::vec3 point;
+};
 
 class PhysicsWorld
 {
@@ -45,5 +52,6 @@ public:
 	void handleDiscardedRigidBodies();
 	float getDeltaTime() { return mDeltaTime; }
 	//std::vector<std::unique_ptr<PhysicsObject>>* getPhysicsObjects() { return &m_rigidBodies; };
+	BulletRayHit getIntersection(const glm::vec3& start, const glm::vec3& end);
 	btDiscreteDynamicsWorld* getDynamicsWorld() { return mDynamicsWorld; }
 };

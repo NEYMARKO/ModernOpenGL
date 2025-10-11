@@ -51,7 +51,14 @@ void StateMachine::changeState()
 			break;
 		case States::GRAB:
 			/*m_activeState = std::make_unique<GrabState>(this, m_camera, m_target->getComponent<Transform>());*/
-			m_activeState = std::make_unique<GrabState>(this, m_camera, &(m_target->m_transform));
+			if (m_rbTarget)
+			{
+				m_activeState = std::make_unique<GrabState>(this, m_camera, m_rbPickPos);
+			}
+			else
+			{
+				m_activeState = std::make_unique<GrabState>(this, m_camera, &(m_target->m_transform));
+			}
 			break;
 		case States::ROTATE:
 			m_activeState = std::make_unique<RotateState>(this, m_camera, &(m_target->m_transform));

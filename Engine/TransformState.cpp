@@ -4,6 +4,7 @@
 #include "Object.h"
 #include "EditorCollider.h"
 #include "StateMachine.h"
+#include "PhysicsWorld.h"
 #include "TransformState.h"
 
 #ifndef EC_ENABLE_VISUAL_DEBUG
@@ -31,9 +32,28 @@ TransformState::TransformState(StateMachine* stateMachine, Camera* camera, Trans
 		m_stateMachine->mouseDirectionWorld);*/
 }
 
+TransformState::TransformState(StateMachine* stateMachine, Camera* camera, const btVector3& pos) :
+	State{ stateMachine, true }, m_camera{ camera }, 
+	m_transformPlane { glm::vec3(pos.getX(), pos.getY(), pos.getZ()) }
+{
+	glm::vec3 cameraNormal = m_camera->GetCameraForward();
+	cameraNormal *= -1;
+	m_transformPlane.calculatePlaneParameters(cameraNormal);
+}
+
 void TransformState::enter()
 {
-	
+	if (m_stateMachine->m_rbTarget)
+	{
+		m_rbPicker.m_dynamicsWorld = m_stateMachine->m_physicsWorld->getDynamicsWorld();
+		m_rbPicker.m_pickedBody = m_stateMachine->m_rbTarget;
+		m_rbPicker.m_pickPos = m_stateMachine->m_rbPickPos;
+		glm::vec3 start = m_stateMachine->mouseStartWorld;
+		glm::vec3 end = start + m_stateMachine->mouseDirectionWorld * m_stateMachine->m_rayLen;
+		btVector3 rayFrom = btVector3(start.x, start.y, start.z);
+		btVector3 rayTo = btVector3(end.x, end.y, end.z);
+		m_rbPicker.pickBody(rayFrom, rayTo);
+	}
 }
 
 void TransformState::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
@@ -48,6 +68,10 @@ void TransformState::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 			m_transformAxis = TransformAxis::NONE;
 			//Finished transforming, stop tracking mouse and updating transform values
 			std::cout << "FINISHED TRANSFORMING - CLICKED TO CONFIRM TRANSFORM\n";
+			if (m_stateMachine->m_rbTarget)
+			{
+				m_rbPicker.removePickingConstraint();
+			}
 		}
 		else
 		{

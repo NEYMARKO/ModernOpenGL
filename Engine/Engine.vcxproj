@@ -195,10 +195,12 @@
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="GrabState.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="Hit.h" />
     <ClInclude Include="MyBulletDebugDrawer.h" />
     <ClInclude Include="OpenGLIncludes.h" />
     <ClInclude Include="Ragdoll.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="RigidBodyPicker.h" />
     <ClInclude Include="RotateState.h" />
     <ClInclude Include="SceneEntity.h" />
     <ClInclude Include="SelectedState.h" />

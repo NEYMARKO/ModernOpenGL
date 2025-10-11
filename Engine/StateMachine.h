@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include <glm/glm.hpp>
+#include <btBulletDynamicsCommon.h>
 //#include "OpenGLIncludes.h"
 #include "Window.h"
 #include "State.h"
@@ -22,7 +23,6 @@ class StateMachine
 
 		std::unique_ptr<State> m_activeState;
 
-		PhysicsWorld* m_physicsWorld;
 
 	public:
 		int m_lastKey;
@@ -33,10 +33,14 @@ class StateMachine
 		double mousePosY;
 		glm::vec4 mouseStartWorld;
 		glm::vec3 mouseDirectionWorld;
+		float m_rayLen{ 100.0f };
 		//std::vector<std::unique_ptr<Object>>& m_objectsInScene;
 		std::vector<std::unique_ptr<SceneEntity>>& m_objectsInScene;
 		//Object* m_target;
-		SceneEntity* m_target;
+		SceneEntity* m_target{ nullptr };
+		btRigidBody* m_rbTarget{ nullptr };
+		btVector3 m_rbPickPos;
+		PhysicsWorld* m_physicsWorld;
 		StateMachine(Window* window, Camera* camera, SceneEntity* lightSource,
 			std::vector<std::unique_ptr<SceneEntity>>& objectsInScene,
 			PhysicsWorld* physicsWorld);

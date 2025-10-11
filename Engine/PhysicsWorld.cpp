@@ -10,6 +10,7 @@
 
 #define DEFAULT_WORLD_ID 1
 
+
 PhysicsWorld::PhysicsWorld() :
 	mBroadPhase{ new btDbvtBroadphase() }, mCollisionConfig{ new btDefaultCollisionConfiguration() },
 	mCollisionDispatcher{ new btCollisionDispatcher(mCollisionConfig) }, 
@@ -163,4 +164,40 @@ void PhysicsWorld::removeObjectFromWorld(RigidBody* rbComponent)
 			mDynamicsWorld->removeCollisionObject(obj);
 		m_rigidBodies.erase(iterator);
 	}
+}
+
+BulletRayHit PhysicsWorld::getIntersection(const glm::vec3& start, const glm::vec3& end)
+{
+	btVector3 rayFrom{start.x, start.y, start.z};
+	btVector3 rayTo{ end.x, end.y, end.z };
+
+	btCollisionWorld::AllHitsRayResultCallback allResults(rayFrom, rayTo);
+	mDynamicsWorld->rayTest(rayFrom, rayTo, allResults);
+
+	std::cout << "AllHits count = " << allResults.m_collisionObjects.size() << "\n";
+	for (int i = 0; i < allResults.m_hitPointWorld.size(); ++i) {
+        btVector3 hitPoint = allResults.m_hitPointWorld[i];
+        btScalar fraction = allResults.m_hitFractions[i];
+
+        // Compute distance along the ray
+        btScalar distance = (rayTo - rayFrom).length() * fraction;
+
+        std::cout << "Hit " << i
+                  << " at distance: " << distance
+                  << " position: (" 
+                  << hitPoint.getX() << ", " 
+                  << hitPoint.getY() << ", " 
+                  << hitPoint.getZ() << ")\n";
+    }
+
+	btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom, rayTo);
+	mDynamicsWorld->rayTest(rayFrom, rayTo, rayCallback);
+	if (rayCallback.hasHit())
+	{
+		btRigidBody* hit = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
+		glm::vec3 hitPoint = glm::vec3(rayCallback.m_hitPointWorld.getX(),
+			rayCallback.m_hitPointWorld.getY(), rayCallback.m_hitPointWorld.getZ());
+		return BulletRayHit{ hit, hitPoint };
+	}
+	else return BulletRayHit{ nullptr, glm::vec3(0.0f, 0.0f, 0.0f) };
 }

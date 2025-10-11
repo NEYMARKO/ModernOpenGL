@@ -6,6 +6,8 @@
 
 #include "State.h"
 #include "TransformPlane.h"
+#include "RigidBodyPicker.h"
+
 //#include "OpenGLIncludes.h"
 
 class Camera;
@@ -43,6 +45,7 @@ protected:
 	Transform* m_selectedTransform;
 	TransformPlane m_transformPlane;
 	TransformAxis m_transformAxis{NONE};
+	RigidBodyPicker m_rbPicker;
 	bool m_freeMode{ false };
 	/*glm::vec4 mouseWorldPos;
 	glm::vec3 mouseWorldDirection;*/
@@ -50,8 +53,11 @@ protected:
 	void update();
 public:
 	TransformState(StateMachine* stateMachine, Camera* camera, Transform* objectTransform);
+	TransformState(StateMachine* stateMachine, Camera* camera, 
+		const btVector3& pos
+	);
 
-	virtual void enter();
+	virtual void enter() override;
 	//virtual void exit();
 	virtual void onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld) override;
 	virtual void onMouseClick(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld,

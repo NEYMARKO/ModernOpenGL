@@ -9,6 +9,7 @@
 #include "Transform.h"
 #include "MeshRenderer.h"
 #include "EditorCollider.h"
+#include "PhysicsWorld.h"
 #include "State.h"
 
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
@@ -58,6 +59,8 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 			glm::vec3 dirHelper;
 
 			glm::mat4 transformInverse;*/
+			BulletRayHit physicsHit = m_stateMachine->m_physicsWorld->getIntersection(start, start + dir * m_stateMachine->m_rayLen);
+			m_stateMachine->m_rbPickPos = btVector3(physicsHit.point.x, physicsHit.point.y, physicsHit.point.z);
 			for (const auto& object : m_stateMachine->m_objectsInScene)
 			{
 				/*transformInverse = glm::inverse(object->getComponent<Transform>()->getModelMatrix());
@@ -66,14 +69,25 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 				if (object.get()->m_editorCollider.intersects(start, dir, intersectionPoint))
 					hits.emplace_back(Hit{ object.get(), intersectionPoint });
 			}
-
+			/*if (physicsHit.obj != nullptr)
+			{
+				hits.emplace_back(physicsHit);
+			}*/
 			sortObjects(hits, start);
 			std::cout << "SORTED HITS (by priority descending):" << '\n';
 			for (const auto& hit: hits)
 			{
 				std::cout << hit.obj->m_name << '\n';
 			}
-			updateSelection(hits);
+			if (hits.size() > 0)
+			{
+				// check whether rigidbody will be modified or SceneEntity
+				if (glm::distance(start, physicsHit.point) < glm::distance(start, hits[0].point))
+					m_activeRigid = true;
+				else m_activeRigid = false;
+			}
+			updateSelection(hits, physicsHit.rb);
+			//std::cout << "Hit distance: " << glm::distance(hits[0].point, start) << "\n";
 			/*bool lightIntersects = m_stateMachine->m_lightSource->m_editorCollider.intersects(start, dir, intersectionPoint);
 			std::cout << "LIGHT INTERSECTS: " << (lightIntersects ? "TRUE" : "FALSE") << "\n";*/
 			/*if (!m_stateMachine->m_target)
@@ -102,6 +116,8 @@ void State::onMouseClick(const glm::vec3& start, const glm::vec3& dir,
 				changeColor(DEFAULT_OBJECT_COLOR);*/
 			m_stateMachine->m_target = nullptr;
 		}
+
+		if (m_stateMachine->m_rbTarget) m_stateMachine->m_rbTarget = nullptr;
 		//std::cout << "RM CLICKED\n";
 
 		//TODO: AVOID CHANGING STATE IF CAMERA_ROTATE_STATE CALLED THIS CODE - IT SHOULD REMAIN IN 
@@ -139,12 +155,13 @@ void State::sortObjects(std::vector<Hit>& hits, const glm::vec3& start)
 	);
 }
 
-void State::updateSelection(const std::vector<Hit>& hits)
+void State::updateSelection(const std::vector<Hit>& hits, btRigidBody* rb)
 {
 	SceneEntity* currentSelection = m_stateMachine->m_target;
 	//ray has hit something - objects is bound to have atleast 1 element
-	if (hits.size() > 0)
+	if (hits.size() > 0 && !m_activeRigid)
 	{
+		m_stateMachine->m_rbTarget = nullptr;
 		//there isn't active selection
 		if (!currentSelection)
 		{
@@ -172,10 +189,24 @@ void State::updateSelection(const std::vector<Hit>& hits)
 		}
 		
 	}
+	else if (rb != nullptr)
+	{
+		if (m_stateMachine->m_rbTarget && m_stateMachine->m_rbTarget == rb)
+		{
+			m_transitionState = States::NO_TRANSITION;
+		}
+		//rb target either non existent or not equal to rb - must be updated
+		else
+		{
+			m_stateMachine->m_rbTarget = rb;
+			m_transitionState = States::SELECTED;
+		}
+	}
 	//ray missed everything
 	else
 	{
-		std::cout << "WILL BE IN DEFAULT STATE\n";
+		m_stateMachine->m_rbTarget = nullptr;
+		std::cout << "RAY MISSED EVERYTHING, RETURNING TO DEFAULT STATE\n";
 		if (currentSelection)
 			/*currentSelection->getComponent<MeshRenderer>()->changeColor(DEFAULT_OBJECT_COLOR);*/
 		m_stateMachine->m_target = nullptr;

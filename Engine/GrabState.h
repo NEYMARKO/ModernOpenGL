@@ -12,6 +12,12 @@ public:
 		std::cout << "CONVERT TO 3D: " << m_convertMouseTo3D << "\n";
 	}
 
+	GrabState(StateMachine* stateMachine, Camera* camera, const btVector3& pos) :
+		TransformState{ stateMachine, camera, pos }
+	{
+
+	}
+
 	virtual void onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& mouseDirectionWorld) override;
 	//Constructs vector going from plane origin to point. That vector gets projected
 	//onto vector passed as an argument to the function. Result is vector going from origin to the end of projected vector

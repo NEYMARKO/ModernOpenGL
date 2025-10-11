@@ -20,6 +20,14 @@ void GrabState::onMouseMove(const glm::vec3& mouseStartWorld, const glm::vec3& m
 	glm::vec3 planeIntersectionPoint = m_transformPlane.calculateRayIntersectionPoint(mouseStartWorld, mouseDirectionWorld);
 	if (m_transformAxis == TransformAxis::NONE)
 	{
+		if (m_rbPicker.m_pickedBody)
+		{
+			glm::vec3 end = mouseStartWorld + mouseDirectionWorld * 100.0f;
+			btVector3 rayFrom = btVector3(mouseStartWorld.x, mouseStartWorld.y, mouseStartWorld.z);
+			btVector3 rayTo = btVector3(end.x, end.y, end.z);
+			m_rbPicker.movePickedBody(rayFrom, rayTo);
+			return;
+		}
 		m_selectedTransform->setPosition(planeIntersectionPoint);
 	}
 	else
