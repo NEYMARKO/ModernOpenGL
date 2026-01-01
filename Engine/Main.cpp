@@ -24,20 +24,20 @@ int main()
 	std::vector<std::unique_ptr<MeshLoader>> meshLoaders;
 
 	Camera camera(glm::vec3(-5.0f, 5.0f, 15.0f), glm::vec3(0.0f, 0.0f, 0.0f), 5.5f, 1, 800, 800);
-	
-	Window window{&camera, 1920, 1080};
+
+	Window window{ &camera, 1920, 1080 };
 	if (!window.loaded()) return -1;
 
 	Shader defaultShaderProgram("default.vert", "default.frag");
 	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
 	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
 	Shader pointShader("point.vert", "point.frag");
-	
+
 	PhysicsWorld physicsWorld{};
 
 	BulletGizmos bulletGizmos(&physicsWorld);
-	
-	
+
+
 	Grid grid(100);
 
 	MeshLoader lightBulbLoader("lightBulb.txt");
@@ -51,9 +51,9 @@ int main()
 		"texture.vert", "texture.frag"
 	));
 	auto lightBulbTransform = Transform(glm::vec3(-5.0f, 7.0f, 0.0f), glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
-	
+
 	/*auto lightBulb = ResourceManager<Mesh>::addResource("lightBulb", std::make_unique<Mesh>(&lightBulbLoader));
-	
+
 	auto lightBulbMaterial = ResourceManager<Material>::addResource("lightBulb", std::make_unique<Material>(&defaultShaderProgram));
 
 	auto lightBulbRenderer = MeshRenderer(lightBulb, lightBulbMaterial);*/
@@ -61,17 +61,29 @@ int main()
 
 	objectsInScene.push_back(std::make_unique<Lighting>(&lightingShaderProgram, glm::vec3(-5.0f, 3.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)));
 	//auto* o = objectsInScene.back();
-	StateMachine stateMachine(&window, &camera, 
+	StateMachine stateMachine(&window, &camera,
 		objectsInScene.back().get(), objectsInScene, &physicsWorld);
 	//stateMachine.AddShaderPrograms(&defaultShaderProgram, &boundingBoxShaderProgram);
 	window.addStateMachine(&stateMachine);
-	Scene scene{&camera, 
-		dynamic_cast<Lighting*>(objectsInScene.back().get()), objectsInScene, &defaultShaderProgram};
-	
-	Ragdoll ragdoll(glm::vec3(0.0f, 35.0f, -3.0f), &physicsWorld, 2.5);
+	Scene scene{ &camera,
+		dynamic_cast<Lighting*>(objectsInScene.back().get()), objectsInScene, &defaultShaderProgram };
+
+	const int ragdoll_count = 30;
+	std::vector<std::unique_ptr<Ragdoll>> rags;
+	for (int i = 0; i < ragdoll_count; i++)
+	{
+		rags.push_back(std::make_unique<Ragdoll>(
+			glm::vec3(0.0f, 10.0f + i * 2.0f, -3.0f),
+			&physicsWorld,
+			2.5f
+		));
+
+		scene.addRagdoll(rags.back().get());
+	}
+	/*Ragdoll ragdoll(glm::vec3(0.0f, 35.0f, -3.0f), &physicsWorld, 2.5);
 	Ragdoll ragdoll2(glm::vec3(0.0f, 12.0f, -2.5f), &physicsWorld, 2.5);
 	scene.addRagdoll(&ragdoll);
-	scene.addRagdoll(&ragdoll2);
+	scene.addRagdoll(&ragdoll2);*/
 	
 	Gizmos gizmos(&camera);
 
@@ -95,7 +107,7 @@ int main()
 		bulletGizmos.updateBufferContent();
 		bulletGizmos.renderColliders(&camera);
 		grid.Draw(boundingBoxShaderProgram, camera);
-		//scene.renderRagdoll();
+		scene.renderRagdoll();
 		//ragdoll.update();
 
 		//light.m_editorCollider.setupAABB();
@@ -111,7 +123,6 @@ int main()
 
 		physicsWorld.fixedUpdate();
 	}
-
 	//defaultShaderProgram.Delete();
 	//lightingShaderProgram.Delete();
 	//boundingBoxShaderProgram.Delete();

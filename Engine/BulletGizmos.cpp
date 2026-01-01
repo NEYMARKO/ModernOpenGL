@@ -32,32 +32,37 @@ void BulletGizmos::updateBufferContent()
 	if (!m_physicsWorld)
 		return;
 
-	//clear info about lines from the previous frame
 	m_bulletDebugDrawer.resetLines();
 	m_physicsWorld->getDynamicsWorld()->debugDrawWorld();
-	const std::vector<glm::vec3>& lines = *m_bulletDebugDrawer.getLinesPoints();
-	if (lines.size() == 0) return;
-	//VBO's can't handle store more information - new VBO with more capacity has to be
-	//initialized
-	if ((m_VBO.m_storageCapacity / sizeof(glm::vec3)) < lines.size())
+
+	const auto& lines = *m_bulletDebugDrawer.getLinesPoints();
+	if (lines.empty())
+		return;
+
+	size_t neededBytes = lines.size() * sizeof(glm::vec3);
+
+	if (neededBytes > m_VBO.m_storageCapacity)
 	{
-		size_t currentCapacity = m_VBO.m_storageCapacity;
-		m_VBO.Delete();
+		m_VBO.m_storageCapacity = static_cast<size_t>(neededBytes * 1.5f);
 
-		//make another VBO that has increased capacity
-		m_VBO = VBO(1.5 * m_VBO.m_storageCapacity);
-
-		m_VAO.LinkVBO(m_VBO, 0, 3, sizeof(glm::vec3), 0);
-
-		m_VAO.Unbind();
-		m_VBO.Unbind();
-		std::cout << "RESIZED VBO" << '\n';
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO.ID);
+		glBufferData(GL_ARRAY_BUFFER,
+			m_VBO.m_storageCapacity,
+			nullptr,
+			GL_DYNAMIC_DRAW);
 	}
-	m_VBO.Bind();
+
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO.ID);
 	void* ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	memcpy(ptr, lines.data(), lines.size() * sizeof(glm::vec3));
+
+	if (!ptr)
+	{
+		std::cerr << "Failed to map VBO\n";
+		return;
+	}
+
+	memcpy(ptr, lines.data(), neededBytes);
 	glUnmapBuffer(GL_ARRAY_BUFFER);
-	m_VBO.Unbind();
 }
 
 void BulletGizmos::renderColliders(Camera* camera)
