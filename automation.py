@@ -39,7 +39,7 @@ def get_file_content(source_file_path : Path) -> list[str]:
 
 def process_mid_results(results : list[str]) -> float:
     total = 0
-    print(f"{results=}")
+    # print(f"{results=}")
     for r in results:
         total += float(r)
     return total / len(results)
@@ -48,6 +48,11 @@ def plot_results(final_results : dict[int, float]) -> None:
     x = np.array(list(final_results.keys()))
     y = np.array(list(final_results.values()))
     plt.plot(x, y)
+    plt.xticks(np.arange(min(x), max(x)+1, 2))
+    plt.yticks(np.arange(min(y), max(y)+10, 50))
+    plt.xlabel("Ragdoll count")
+    plt.ylabel("FPS")
+    plt.savefig("result.png", bbox_inches='tight')
     plt.show()
     return
 
@@ -88,10 +93,10 @@ def main():
         quit_signal_path.touch()
 
         stdout, _ = proc.communicate()
-        print(f"{stdout=}")
+        # print(f"{stdout=}")
         final_results[i * RAGDOLLS_PER_ITERATION] = process_mid_results(stdout.strip().split("\n"))
     plot_results(final_results)
-    # print(f"{final_results=}")
+    print(f"{final_results=}")
     return
 
 if __name__ == "__main__":
