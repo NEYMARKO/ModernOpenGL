@@ -1,9 +1,12 @@
-from pathlib import Path
-import subprocess
-import time
 import re
+import time
+import subprocess
+import numpy as np
+from pathlib import Path
+import matplotlib.pyplot as plt
 
 WAIT_TIME = 15
+RAGDOLLS_PER_ITERATION = 2
 
 def get_varying_line_idx(file_content : list[str], keyword : str) -> int:
     for i in range(len(file_content)):
@@ -34,6 +37,20 @@ def get_file_content(source_file_path : Path) -> list[str]:
         lines = f.readlines()
     return lines
 
+def process_mid_results(results : list[str]) -> float:
+    total = 0
+    print(f"{results=}")
+    for r in results:
+        total += float(r)
+    return total / len(results)
+
+def plot_results(final_results : dict[int, float]) -> None:
+    x = np.array(list(final_results.keys()))
+    y = np.array(list(final_results.values()))
+    plt.plot(x, y)
+    plt.show()
+    return
+
 def main():
     script_path = Path()
     build_command = f"devenv Engine.sln /Build"
@@ -44,18 +61,17 @@ def main():
                             text=True,
                             cwd=project_folder_path)
     exe_path = project_folder_path / "x64/Debug/Engine.exe"
-    terminate_command = "TASKKILL /F /IM Engine.exe"
     target_file_path = str((project_folder_path / "Main.cpp").absolute())
     print(f"{target_file_path=}")
-    result_file_path = script_path.parent / "results.txt"
-    result_file = open(result_file_path, "a")
     source_file_content = get_file_content(source_file_path=target_file_path)
     idx = get_varying_line_idx(source_file_content, "ragdoll_count")
     quit_signal_path = Path(script_path / "quit.flag")
     quit_signal_path.touch()
-    for i in range(1, 10):
+
+    final_results ={}
+    for i in range(1, 40):
         quit_signal_path.unlink()
-        modify_source_file(target_file_path, idx, i * 5, source_file_content)
+        modify_source_file(target_file_path, idx, i * RAGDOLLS_PER_ITERATION, source_file_content)
         subprocess.run(build_command, 
                                 shell=True, 
                                 capture_output=True, 
@@ -71,12 +87,11 @@ def main():
         time.sleep(WAIT_TIME)
         quit_signal_path.touch()
 
-        # proc.terminate()
         stdout, _ = proc.communicate()
-
         print(f"{stdout=}")
-        result_file.write(result.stdout)
-    result_file.close()
+        final_results[i * RAGDOLLS_PER_ITERATION] = process_mid_results(stdout.strip().split("\n"))
+    plot_results(final_results)
+    # print(f"{final_results=}")
     return
 
 if __name__ == "__main__":

@@ -70,7 +70,7 @@ int main()
 	Scene scene{ &camera,
 		dynamic_cast<Lighting*>(objectsInScene.back().get()), objectsInScene, &defaultShaderProgram };
 
-	const int ragdoll_count = 10;
+	const int ragdoll_count = 5;
 	std::vector<std::unique_ptr<Ragdoll>> rags;
 	for (int i = 0; i < ragdoll_count; i++)
 	{
@@ -99,8 +99,9 @@ int main()
 	//scene.addObject(std::move(lightBulbObject));
 
 	std::filesystem::path p = std::filesystem::current_path() / ".." / ".." / ".." / "quit.flag";
-	std::cout << "Path: " << p.string() << "\n";
-
+	float fps = 0;
+	//std::cout << "Path: " << p.string() << "\n";
+	glfwSwapInterval(0); // disable vsync
 	while (!window.shouldClose() && !std::filesystem::exists(p))
 	{
 		scene.renderScene();
@@ -115,6 +116,8 @@ int main()
 		//ragdoll.update();
 
 		//light.m_editorCollider.setupAABB();
+		fps = 1 / physicsWorld.getDeltaTime();
+		if (fps > 0.0f && fps < 10000.0f) std::cout << fps << "\n";
 		if (camera.mRay != nullptr)
 		{
 			camera.mRay->Draw(boundingBoxShaderProgram, camera);
