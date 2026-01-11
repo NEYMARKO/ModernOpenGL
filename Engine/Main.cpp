@@ -18,6 +18,8 @@
 #include "BulletGizmos.h"
 #include "SceneEntity.h"
 
+#include <filesystem>
+
 int main()
 {
 	std::vector<std::unique_ptr<SceneEntity>> objectsInScene;
@@ -68,7 +70,7 @@ int main()
 	Scene scene{ &camera,
 		dynamic_cast<Lighting*>(objectsInScene.back().get()), objectsInScene, &defaultShaderProgram };
 
-	const int ragdoll_count = 30;
+	const int ragdoll_count = 10;
 	std::vector<std::unique_ptr<Ragdoll>> rags;
 	for (int i = 0; i < ragdoll_count; i++)
 	{
@@ -96,8 +98,10 @@ int main()
 	gizmos.addEditorCollider(&objectsInScene.back().get()->m_editorCollider);
 	//scene.addObject(std::move(lightBulbObject));
 
+	std::filesystem::path p = std::filesystem::current_path() / ".." / ".." / ".." / "quit.flag";
+	std::cout << "Path: " << p.string() << "\n";
 
-	while (!window.shouldClose())
+	while (!window.shouldClose() && !std::filesystem::exists(p))
 	{
 		scene.renderScene();
 		/*for (auto& obj : objectsInScene)

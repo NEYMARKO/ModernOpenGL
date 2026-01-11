@@ -37,7 +37,7 @@ def get_file_content(source_file_path : Path) -> list[str]:
 def main():
     script_path = Path()
     build_command = f"devenv Engine.sln /Build"
-    project_folder_path = script_path.parent / "ModernOpenGL/Engine"
+    project_folder_path = script_path / "Engine"
     result = subprocess.run(build_command, 
                             shell=True, 
                             capture_output=True, 
@@ -51,8 +51,11 @@ def main():
     result_file = open(result_file_path, "a")
     source_file_content = get_file_content(source_file_path=target_file_path)
     idx = get_varying_line_idx(source_file_content, "ragdoll_count")
-    for i in range(1, 4):
-        modify_source_file(target_file_path, idx, i * 10, source_file_content)
+    quit_signal_path = Path(script_path / "quit.flag")
+    quit_signal_path.touch()
+    for i in range(1, 10):
+        quit_signal_path.unlink()
+        modify_source_file(target_file_path, idx, i * 5, source_file_content)
         subprocess.run(build_command, 
                                 shell=True, 
                                 capture_output=True, 
@@ -66,7 +69,9 @@ def main():
             text=True,
         )
         time.sleep(WAIT_TIME)
-        proc.terminate()
+        quit_signal_path.touch()
+
+        # proc.terminate()
         stdout, _ = proc.communicate()
 
         print(f"{stdout=}")
