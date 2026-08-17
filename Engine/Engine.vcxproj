@@ -138,12 +138,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Buffers\EBO.cpp" />
+    <ClCompile Include="Buffers\VAO.cpp" />
+    <ClCompile Include="Buffers\VBO.cpp" />
     <ClCompile Include="BulletGizmos.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraMoveState.cpp" />
     <ClCompile Include="CameraRotateState.cpp" />
     <ClCompile Include="Component.cpp" />
-    <ClCompile Include="EBO.cpp" />
     <ClCompile Include="EditorCollider.cpp" />
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="glad.c" />
@@ -176,12 +178,13 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformPlane.cpp" />
     <ClCompile Include="TransformState.cpp" />
-    <ClCompile Include="VAO.cpp" />
-    <ClCompile Include="VBO.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="Buffers\EBO.h" />
+    <ClInclude Include="Buffers\VAO.h" />
+    <ClInclude Include="Buffers\VBO.h" />
     <ClInclude Include="BulletGizmos.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraMoveState.h" />
@@ -189,7 +192,6 @@
     <ClInclude Include="CapsuleCollider.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="EBO.h" />
     <ClInclude Include="EditorCollider.h" />
     <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="Gizmos.h" />
@@ -230,8 +232,6 @@
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Transform.h" />
-    <ClInclude Include="VAO.h" />
-    <ClInclude Include="VBO.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

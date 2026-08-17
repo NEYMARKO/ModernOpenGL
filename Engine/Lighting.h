@@ -1,6 +1,6 @@
 #pragma once
 #include "glm/glm.hpp"
-#include "VAO.h"
+#include "./Buffers/VAO.h"
 #include "SceneEntity.h"
 #include "SpriteRenderer.h"
 #include "Texture.h"
