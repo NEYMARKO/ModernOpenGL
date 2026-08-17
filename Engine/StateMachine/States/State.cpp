@@ -1,16 +1,16 @@
 #include <iostream>
 #include <algorithm>
 
-#include "StateMachine.h"
-#include "Camera.h"
-#include "Lighting.h"
-#include "Ray.h"
-#include "Object.h"
-#include "Transform.h"
-#include "MeshRenderer.h"
-#include "EditorCollider.h"
-#include "PhysicsWorld.h"
-#include "State.h"
+#include "../StateMachine.h"
+#include "../../Camera.h"
+#include "../../Lighting.h"
+#include "../../Ray.h"
+#include "../../Object.h"
+#include "../../Transform.h"
+#include "../../MeshRenderer.h"
+#include "../../EditorCollider.h"
+#include "../../PhysicsWorld.h"
+#include "./State.h"
 
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)
 #define SELECTED_OBJECT_COLOR glm::vec3(0.0f, 1.0f, 0.0f)

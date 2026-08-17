@@ -1,5 +1,5 @@
-#include "Object.h"
-#include "Transform.h"
+#include "../../Object.h"
+#include "../../Transform.h"
 #include "GrabState.h"
 
 glm::vec3 GrabState::projectPointToVector(const glm::vec3& point, const glm::vec3& vector)

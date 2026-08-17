@@ -2,7 +2,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <btBulletDynamicsCommon.h>
-#include "Hit.h"
+#include "../../Hit.h"
 //#include "OpenGLIncludes.h"
 //class Object;
 class SceneEntity;

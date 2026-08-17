@@ -4,9 +4,9 @@
 //#include <GLFW/glfw3.h>
 //#undef GLFW_INCLUDE_NONE
 
-#include "State.h"
-#include "TransformPlane.h"
-#include "RigidBodyPicker.h"
+#include "./State.h"
+#include "../../TransformPlane.h"
+#include "../../RigidBodyPicker.h"
 
 //#include "OpenGLIncludes.h"
 

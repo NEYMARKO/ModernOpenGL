@@ -1,11 +1,11 @@
 #include <iostream>
-#include "Camera.h"
-#include "Transform.h"
-#include "Object.h"
-#include "EditorCollider.h"
-#include "StateMachine.h"
-#include "PhysicsWorld.h"
-#include "TransformState.h"
+#include "../../Camera.h"
+#include "../../Transform.h"
+#include "../../Object.h"
+#include "../../EditorCollider.h"
+#include "../StateMachine.h"
+#include "../../PhysicsWorld.h"
+#include "./TransformState.h"
 
 #ifndef EC_ENABLE_VISUAL_DEBUG
 #define EC_ENABLE_VISUAL_DEBUG

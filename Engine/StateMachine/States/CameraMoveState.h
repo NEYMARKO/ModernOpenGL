@@ -1,7 +1,7 @@
 #pragma once
-#include "StateMachine.h"
-#include "Camera.h"
-#include "State.h"
+#include "../StateMachine.h"
+#include "../../Camera.h"
+#include "./State.h"
 
 #define MIN_LENGTH 0.01f
 

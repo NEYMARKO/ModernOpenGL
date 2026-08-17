@@ -1,6 +1,6 @@
 #pragma once
-#include "State.h"
-#include "SceneEntity.h"
+#include "./State.h"
+#include "../../SceneEntity.h"
 
 #include <iostream>
 class SelectedState : public State

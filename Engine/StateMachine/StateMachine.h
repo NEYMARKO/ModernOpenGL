@@ -4,10 +4,10 @@
 #include <glm/glm.hpp>
 #include <btBulletDynamicsCommon.h>
 //#include "OpenGLIncludes.h"
-#include "Window.h"
-#include "State.h"
-#include "SceneEntity.h"
-#include "Object.h"
+#include "../Window.h"
+#include "./States/State.h"
+#include "../SceneEntity.h"
+#include "../Object.h"
 //#include "Camera.h"
 class Camera;
 class Lighting;

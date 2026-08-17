@@ -1,5 +1,5 @@
-#include "StateMachine.h"
-#include "MeshRenderer.h"
+#include "../StateMachine.h"
+#include "../../MeshRenderer.h"
 #include "SelectedState.h"
 
 #include <iostream>

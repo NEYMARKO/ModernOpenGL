@@ -1,4 +1,4 @@
-#include "StateMachine.h"
+#include "./StateMachine/StateMachine.h"
 #include "Camera.h"
 #include "Window.h"
 

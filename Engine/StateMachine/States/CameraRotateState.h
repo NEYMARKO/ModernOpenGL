@@ -1,9 +1,9 @@
 #pragma once
-#include "StateMachine.h"
-#include "Camera.h"
-#include "State.h"
-#include "Lighting.h"
-#include "Transform.h"
+#include "../StateMachine.h"
+#include "../../Camera.h"
+#include "./State.h"
+#include "../../Lighting.h"
+#include "../../Transform.h"
 
 class CameraRotateState : public State
 {

@@ -1,5 +1,5 @@
 #include "Scene.h"
-#include "StateMachine.h"
+#include "./StateMachine/StateMachine.h"
 #include "Camera.h"
 #include "Lighting.h"
 #include "Grid.h"
