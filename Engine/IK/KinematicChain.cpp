@@ -1,5 +1,5 @@
 #include "./IKJoint.h"
-#include "../Mesh.h"
+#include "../Rendering/Mesh.h"
 #include "../Components/Transform.h"
 #include "../Components/MeshRenderer.h"
 #include "./KinematicChain.h"

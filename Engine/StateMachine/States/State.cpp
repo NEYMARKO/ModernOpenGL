@@ -2,14 +2,14 @@
 #include <algorithm>
 
 #include "../StateMachine.h"
-#include "../../Camera.h"
-#include "../../Lighting.h"
+#include "../../Rendering/Camera.h"
+#include "../../Rendering/Lighting.h"
 #include "../../Ray.h"
 #include "../../Object.h"
 #include "../../Components/Transform.h"
 #include "../../Components/MeshRenderer.h"
 #include "../../Components/EditorCollider.h"
-#include "../../PhysicsWorld.h"
+#include "../../Physics/PhysicsWorld.h"
 #include "./State.h"
 
 #define DEFAULT_OBJECT_COLOR glm::vec3(0.862745f, 0.862745f, 0.862745f)

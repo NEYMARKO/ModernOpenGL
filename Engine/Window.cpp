@@ -1,6 +1,6 @@
 #include "./StateMachine/StateMachine.h"
-#include "Camera.h"
-#include "Window.h"
+#include "./Rendering/Camera.h"
+#include "./Window.h"
 
 #define GLFW_HAND_CURSOR 0x00036004
 

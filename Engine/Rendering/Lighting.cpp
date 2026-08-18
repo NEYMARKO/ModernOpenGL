@@ -1,6 +1,6 @@
-#include "Shader.h"
-#include "Camera.h"
-#include "Lighting.h"
+#include "./Shader.h"
+#include "./Camera.h"
+#include "./Lighting.h"
 
 	// Making 3D bounding box for quad (2D shape), for rayBoxIntersection code to work on 2D quad
 	// => need to make thickness something really small, x and y values (width and height) should be 1 => [-0.5, 0.5] range - pivot in middle

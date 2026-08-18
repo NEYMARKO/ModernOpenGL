@@ -1,6 +1,6 @@
-#include "Shader.h"
-#include "Camera.h"
-#include "Grid.h"
+#include "./Shader.h"
+#include "./Camera.h"
+#include "./Grid.h"
 #define STEP 0.5
 Grid::Grid(int size)
 {

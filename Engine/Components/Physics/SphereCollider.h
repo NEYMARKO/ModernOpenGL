@@ -4,7 +4,7 @@
 #include "Object.h"
 #include "./Components/Transform.h"
 #include "./Components/MeshRenderer.h"
-#include "Mesh.h"
+#include "../../Rendering/Mesh.h"
 class SphereCollider : public Collider
 {
 private:

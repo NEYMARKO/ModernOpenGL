@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include "./Component.h"
-#include "../Material.h"
+#include "../Rendering/Material.h"
 
 class Mesh;
 class Camera;

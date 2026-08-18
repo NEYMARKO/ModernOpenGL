@@ -1,8 +1,8 @@
 #pragma once
 #include "../StateMachine.h"
-#include "../../Camera.h"
+#include "../../Rendering/Camera.h"
 #include "./State.h"
-#include "../../Lighting.h"
+#include "../../Rendering/Lighting.h"
 #include "../../Components/Transform.h"
 
 class CameraRotateState : public State

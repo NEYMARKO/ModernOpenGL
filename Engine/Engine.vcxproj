@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Marko\Desktop\SEMINAR\ModernOpenGL\Engine\Libraries\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\SEMINAR\ModernOpenGL\Engine\Libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Marko\Desktop\ModernOpenGL\Engine\Libraries\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Marko\Desktop\ModernOpenGL\Engine\Libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Marko\Desktop\SEMINAR\ModernOpenGL\Engine\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Marko\Desktop\SEMINAR\ModernOpenGL\Engine\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMAKE\lib\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\Marko\Desktop\ModernOpenGL\Engine\Libraries\include;C:\Users\Marko\Desktop\bullet3\src;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Marko\Desktop\ModernOpenGL\Engine\Libraries\lib;C:\Users\Marko\Desktop\bullet3\buildCMAKE\lib\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -141,32 +141,33 @@
     <ClCompile Include="Buffers\EBO.cpp" />
     <ClCompile Include="Buffers\VAO.cpp" />
     <ClCompile Include="Buffers\VBO.cpp" />
-    <ClCompile Include="BulletGizmos.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Components\Component.cpp" />
     <ClCompile Include="Components\EditorCollider.cpp" />
     <ClCompile Include="Components\MeshRenderer.cpp" />
     <ClCompile Include="Components\Physics\RigidBody.cpp" />
     <ClCompile Include="Components\SpriteRenderer.cpp" />
     <ClCompile Include="Components\Transform.cpp" />
-    <ClCompile Include="Gizmos.cpp" />
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="Grid.cpp" />
     <ClCompile Include="IK\IKJoint.cpp" />
     <ClCompile Include="IK\KinematicChain.cpp" />
-    <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="Object.cpp" />
-    <ClCompile Include="PhysicsWorld.cpp" />
+    <ClCompile Include="Physics\PhysicsWorld.cpp" />
+    <ClCompile Include="Physics\Ragdoll.cpp" />
+    <ClCompile Include="Physics\RigidBodyRegistry.cpp" />
     <ClCompile Include="PrintClass.cpp" />
-    <ClCompile Include="Ragdoll.cpp" />
     <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="RigidBodyRegistry.cpp" />
+    <ClCompile Include="Rendering\BulletGizmos.cpp" />
+    <ClCompile Include="Rendering\Camera.cpp" />
+    <ClCompile Include="Rendering\Gizmos.cpp" />
+    <ClCompile Include="Rendering\glad.c" />
+    <ClCompile Include="Rendering\Grid.cpp" />
+    <ClCompile Include="Rendering\Lighting.cpp" />
+    <ClCompile Include="Rendering\Material.cpp" />
+    <ClCompile Include="Rendering\Mesh.cpp" />
+    <ClCompile Include="Rendering\MeshLoader.cpp" />
+    <ClCompile Include="Rendering\Shader.cpp" />
+    <ClCompile Include="Rendering\Texture.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="StateMachine\StateMachine.cpp" />
     <ClCompile Include="StateMachine\States\CameraMoveState.cpp" />
     <ClCompile Include="StateMachine\States\CameraRotateState.cpp" />
@@ -176,7 +177,6 @@
     <ClCompile Include="StateMachine\States\State.cpp" />
     <ClCompile Include="StateMachine\States\TransformState.cpp" />
     <ClCompile Include="stb_image.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TransformPlane.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -184,8 +184,6 @@
     <ClInclude Include="Buffers\EBO.h" />
     <ClInclude Include="Buffers\VAO.h" />
     <ClInclude Include="Buffers\VBO.h" />
-    <ClInclude Include="BulletGizmos.h" />
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Components\EditorCollider.h" />
     <ClInclude Include="Components\MeshRenderer.h" />
@@ -198,19 +196,29 @@
     <ClInclude Include="Components\SpriteRenderer.h" />
     <ClInclude Include="Components\Transform.h" />
     <ClInclude Include="EmptyObject.h" />
-    <ClInclude Include="Gizmos.h" />
-    <ClInclude Include="Grid.h" />
     <ClInclude Include="Hit.h" />
     <ClInclude Include="IK\IKJoint.h" />
     <ClInclude Include="IK\KinematicChain.h" />
-    <ClInclude Include="MyBulletDebugDrawer.h" />
-    <ClInclude Include="OpenGLIncludes.h" />
-    <ClInclude Include="Ragdoll.h" />
+    <ClInclude Include="Physics\PhysicsWorld.h" />
+    <ClInclude Include="Physics\Ragdoll.h" />
+    <ClInclude Include="Physics\RigidBodyPicker.h" />
+    <ClInclude Include="Physics\RigidBodyRegistry.h" />
+    <ClInclude Include="Rendering\BulletGizmos.h" />
+    <ClInclude Include="Rendering\Camera.h" />
+    <ClInclude Include="Rendering\Gizmos.h" />
+    <ClInclude Include="Rendering\Grid.h" />
+    <ClInclude Include="Rendering\Lighting.h" />
+    <ClInclude Include="Rendering\Material.h" />
+    <ClInclude Include="Rendering\Mesh.h" />
+    <ClInclude Include="Rendering\MeshLoader.h" />
+    <ClInclude Include="Rendering\MyBulletDebugDrawer.h" />
+    <ClInclude Include="Rendering\OpenGLIncludes.h" />
+    <ClInclude Include="Rendering\Shader.h" />
+    <ClInclude Include="Rendering\Texture.h" />
+    <ClInclude Include="Rendering\Vertex.h" />
     <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="RigidBodyPicker.h" />
     <ClInclude Include="SceneEntity.h" />
     <ClInclude Include="SortingAlgorithms.h" />
-    <ClInclude Include="RigidBodyRegistry.h" />
     <ClInclude Include="StateMachine\StateMachine.h" />
     <ClInclude Include="StateMachine\States\CameraMoveState.h" />
     <ClInclude Include="StateMachine\States\CameraRotateState.h" />
@@ -221,18 +229,10 @@
     <ClInclude Include="StateMachine\States\TransformState.h" />
     <ClInclude Include="TransformPlane.h" />
     <ClInclude Include="World.h" />
-    <ClInclude Include="Lighting.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="PrintClass.h" />
     <ClInclude Include="Ray.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -247,30 +247,30 @@
     <Text Include="Assets\Models\joint2.txt" />
     <Text Include="Assets\Models\joint3.txt" />
     <Text Include="Assets\Models\joint4.txt" />
+    <Text Include="Assets\Models\lightBulb.txt" />
     <Text Include="Assets\Models\planeFlat.txt" />
     <Text Include="Assets\Models\sphere.txt" />
     <Text Include="Assets\Models\teddyFlat.txt" />
     <Text Include="Assets\Models\templeFlat.txt" />
-    <Text Include="lightBulb.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="borderBox.frag" />
-    <None Include="borderBox.vert" />
-    <None Include="default.frag" />
-    <None Include="default.vert" />
-    <None Include="gizmos.frag" />
-    <None Include="gizmos.vert" />
-    <None Include="lighting.frag" />
-    <None Include="lighting.vert" />
-    <None Include="point.frag" />
-    <None Include="point.vert" />
-    <None Include="texture.frag" />
-    <None Include="texture.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Textures\container.jpg" />
     <Image Include="Assets\Textures\light-bulb.png" />
     <Image Include="Assets\Textures\sun.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\borderBox.frag" />
+    <None Include="Shaders\borderBox.vert" />
+    <None Include="Shaders\default.frag" />
+    <None Include="Shaders\default.vert" />
+    <None Include="Shaders\gizmos.frag" />
+    <None Include="Shaders\gizmos.vert" />
+    <None Include="Shaders\lighting.frag" />
+    <None Include="Shaders\lighting.vert" />
+    <None Include="Shaders\point.frag" />
+    <None Include="Shaders\point.vert" />
+    <None Include="Shaders\texture.frag" />
+    <None Include="Shaders\texture.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

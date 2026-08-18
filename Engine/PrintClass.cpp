@@ -1,4 +1,4 @@
-#include "PrintClass.h"
+#include "./PrintClass.h"
 
 void PrintClass::PrintVec3(const glm::vec3& vector)
 {

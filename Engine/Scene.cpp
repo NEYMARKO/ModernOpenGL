@@ -1,9 +1,9 @@
 #include <string>
-#include "MeshLoader.h"
-#include "Mesh.h"
-#include "Camera.h"
-#include "Shader.h"
-#include "Lighting.h"
+#include "./Rendering/MeshLoader.h"
+#include "./Rendering/Mesh.h"
+#include "./Rendering/Camera.h"
+#include "./Rendering/Shader.h"
+#include "./Rendering/Lighting.h"
 #include "./Components/Transform.h"
 #include "./Components/MeshRenderer.h"
 #include "./Components/SpriteRenderer.h"
@@ -12,8 +12,8 @@
 #include "./Components/Physics/SphereCollider.h"
 #include "./Components/Physics/BoxCollider.h"
 #include "./Components/Physics/RigidBody.h"
-#include "Ragdoll.h"
-#include "Scene.h"
+#include "./Physics/Ragdoll.h"
+#include "./Scene.h"
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<SceneEntity>>& objectsInScene, Shader* objectShader) 
 	: mCamera{ camera }, mLightSource{ lightSource }, m_objectsInScene{ objectsInScene }, 
 	mObjectShader{ objectShader }

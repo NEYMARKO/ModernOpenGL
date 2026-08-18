@@ -1,14 +1,14 @@
 #include "./Components/Transform.h"
 #include "./Components/MeshRenderer.h"
-#include "Mesh.h"
-#include "Material.h"
+#include "./Rendering/Mesh.h"
+#include "./Rendering/Material.h"
 #include "./Components/Physics/RigidBody.h"
 #include "./Components/Physics/Collider.h"
 #include "./Components/Physics/SphereCollider.h"
 #include "./Components/Component.h"
 //#include "PhysicsWorld.h"
 #include "World.h"
-#include "RigidBodyRegistry.h"
+#include "./Physics/RigidBodyRegistry.h"
 #include "Object.h"
 
 

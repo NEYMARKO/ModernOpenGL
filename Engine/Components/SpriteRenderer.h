@@ -2,9 +2,9 @@
 
 #include <array>
 #include "./Component.h"
-#include "../Texture.h"
-#include "../Mesh.h"
-#include "../Vertex.h"
+#include "../Rendering/Texture.h"
+#include "../Rendering/Mesh.h"
+#include "../Rendering/Vertex.h"
 
 class Camera;
 class Lighting;

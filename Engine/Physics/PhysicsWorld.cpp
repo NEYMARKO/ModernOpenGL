@@ -1,12 +1,12 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 #undef GLFW_INCLUDE_NONE
-#include "./Components/Physics/RigidBody.h"
-#include "./Components/Transform.h"
+#include "../Components/Physics/RigidBody.h"
+#include "../Components/Transform.h"
 //#include "Object.h"
-#include "RigidBodyRegistry.h"
-#include "PhysicsWorld.h"
-#include "SceneEntity.h"
+#include "./RigidBodyRegistry.h"
+#include "./PhysicsWorld.h"
+#include "../SceneEntity.h"
 
 #define DEFAULT_WORLD_ID 1
 

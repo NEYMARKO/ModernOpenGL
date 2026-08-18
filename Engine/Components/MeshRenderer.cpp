@@ -1,8 +1,8 @@
-#include "../Mesh.h"
+#include "../Rendering/Mesh.h"
 #include "../Object.h"
 #include "./Transform.h"
-#include "../Camera.h"
-#include "../Lighting.h"
+#include "../Rendering/Camera.h"
+#include "../Rendering/Lighting.h"
 #include "./MeshRenderer.h"
 
 void MeshRenderer::draw(Camera& camera, Lighting& lighting, Transform* transform)

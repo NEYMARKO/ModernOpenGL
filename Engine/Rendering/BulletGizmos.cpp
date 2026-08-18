@@ -1,8 +1,8 @@
 #include <glm/glm.hpp>
-#include "Camera.h"
-#include "PhysicsWorld.h"
-#include "ResourceManager.h"
-#include "BulletGizmos.h"
+#include "../Rendering/Camera.h"
+#include "../Physics/PhysicsWorld.h"
+#include "../ResourceManager.h"
+#include "./BulletGizmos.h"
 
 BulletGizmos::BulletGizmos(PhysicsWorld* physicsWorld) :
 	m_physicsWorld { physicsWorld }

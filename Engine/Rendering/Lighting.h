@@ -1,10 +1,10 @@
 #pragma once
 #include "glm/glm.hpp"
-#include "./Buffers/VAO.h"
-#include "SceneEntity.h"
-#include "./Components/SpriteRenderer.h"
-#include "./Components/Transform.h"
-#include "Texture.h"
+#include "../Buffers/VAO.h"
+#include "../SceneEntity.h"
+#include "../Components/SpriteRenderer.h"
+#include "../Components/Transform.h"
+#include "./Texture.h"
 
 class Shader;
 class Camera;

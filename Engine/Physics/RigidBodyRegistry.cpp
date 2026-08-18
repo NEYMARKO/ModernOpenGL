@@ -1,5 +1,5 @@
-#include "./Components/Physics/RigidBody.h"
-#include "RigidBodyRegistry.h"
+#include "../Components/Physics/RigidBody.h"
+#include "./RigidBodyRegistry.h"
 
 std::vector<RigidBodyQueueItem> RigidBodyRegistry::m_queue;
 std::unordered_map<int, int> RigidBodyRegistry::m_worldRequests;

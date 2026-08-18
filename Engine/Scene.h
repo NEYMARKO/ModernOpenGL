@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "./IK/KinematicChain.h"
-#include "RigidBodyRegistry.h"
+#include "./Physics/RigidBodyRegistry.h"
 #include "ResourceManager.h"
 #include "Object.h"
 #include "SceneEntity.h"

@@ -3,8 +3,8 @@
 #include <glm/glm.hpp>
 
 #include "Scene.h"
-#include "PhysicsWorld.h"
-#include "RigidBodyRegistry.h"
+#include "./Physics/PhysicsWorld.h"
+#include "./Physics/RigidBodyRegistry.h"
 #include "ResourceManager.h"
 
 class World

@@ -1,5 +1,5 @@
 #include "Shader.h"
-#include "Material.h"
+#include "./Material.h"
 
 Material::Material(Shader* shaderProgram, glm::vec3 diffuse)
 	: mShaderProgram{ shaderProgram }, mDiffuse{ diffuse }

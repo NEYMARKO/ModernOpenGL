@@ -6,7 +6,7 @@
 
 #include "./State.h"
 #include "../../TransformPlane.h"
-#include "../../RigidBodyPicker.h"
+#include "../../Physics/RigidBodyPicker.h"
 
 //#include "OpenGLIncludes.h"
 

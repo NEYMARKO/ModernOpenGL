@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "./Rendering/Camera.h"
 #include "Ray.h"
 
 Ray::Ray(glm::vec3 rayStart, glm::vec3 rayDirection, float rayLength)

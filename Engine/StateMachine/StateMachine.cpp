@@ -6,10 +6,10 @@
 #include "./States/CameraRotateState.h"
 //#include "Object.h"
 //#include "SceneEntity.h"
-#include "../Camera.h"
-#include "../Lighting.h"
+#include "../Rendering/Camera.h"
+#include "../Rendering/Lighting.h"
 #include "../Ray.h"
-#include "../PhysicsWorld.h"
+#include "../Physics/PhysicsWorld.h"
 #include "./StateMachine.h"
 
 #define GLFW_HAND_CURSOR 0x00036004

@@ -1,21 +1,21 @@
 #include "Scene.h"
 #include "./StateMachine/StateMachine.h"
-#include "Camera.h"
-#include "Lighting.h"
-#include "Grid.h"
-#include "Gizmos.h"
+#include "./Rendering/Camera.h"
+#include "./Rendering/Lighting.h"
+#include "./Rendering/Grid.h"
+#include "./Rendering/Gizmos.h"
 #include "Window.h"
 #include <memory>
-#include "PhysicsWorld.h"
+#include "./Physics/PhysicsWorld.h"
 #include "Object.h"
 #include "./Components/Transform.h"
 #include "./Components/MeshRenderer.h"
-#include "MeshLoader.h"
-#include "Mesh.h"
-#include "Material.h"
+#include "./Rendering/MeshLoader.h"
+#include "./Rendering/Mesh.h"
+#include "./Rendering/Material.h"
 #include "Ray.h"
-#include "Ragdoll.h"
-#include "BulletGizmos.h"
+#include "./Physics/Ragdoll.h"
+#include "./Rendering/BulletGizmos.h"
 #include "SceneEntity.h"
 
 #include <filesystem>
@@ -30,10 +30,10 @@ int main()
 	Window window{ &camera, 1920, 1080 };
 	if (!window.loaded()) return -1;
 
-	Shader defaultShaderProgram("default.vert", "default.frag");
-	Shader lightingShaderProgram("lighting.vert", "lighting.frag");
-	Shader boundingBoxShaderProgram("borderBox.vert", "borderBox.frag");
-	Shader pointShader("point.vert", "point.frag");
+	Shader defaultShaderProgram("Shaders/default.vert", "Shaders/default.frag");
+	Shader lightingShaderProgram("Shaders/lighting.vert", "Shaders/lighting.frag");
+	Shader boundingBoxShaderProgram("Shaders/borderBox.vert", "Shaders/borderBox.frag");
+	Shader pointShader("Shaders/point.vert", "Shaders/point.frag");
 
 	PhysicsWorld physicsWorld{};
 
@@ -48,9 +48,9 @@ int main()
 	ResourceManager<Material> m_materialResourceManager;
 	ResourceManager<Shader> m_shaderResourceManager;
 
-	ResourceManager<Shader>::addResource("gizmos", std::make_unique<Shader>("gizmos.vert", "gizmos.frag"));
+	ResourceManager<Shader>::addResource("gizmos", std::make_unique<Shader>("Shaders/gizmos.vert", "Shaders/gizmos.frag"));
 	ResourceManager<Shader>::addResource("texture", std::make_unique<Shader>(
-		"texture.vert", "texture.frag"
+		"Shaders/texture.vert", "Shaders/texture.frag"
 	));
 	auto lightBulbTransform = Transform(glm::vec3(-5.0f, 7.0f, 0.0f), glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));
 

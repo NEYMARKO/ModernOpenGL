@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
-#include "./Buffers/VBO.h"
-#include "./Buffers/VAO.h"
+#include "../Buffers/VBO.h"
+#include "../Buffers/VAO.h"
 
 class Camera;
 class Shader;

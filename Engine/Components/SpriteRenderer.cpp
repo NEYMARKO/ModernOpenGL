@@ -1,9 +1,9 @@
 #include "./SpriteRenderer.h"
-#include "../Camera.h"
-#include "../Lighting.h"
+#include "../Rendering/Camera.h"
+#include "../Rendering/Lighting.h"
 #include "./Transform.h"
 #include "../ResourceManager.h"
-#include "../Shader.h"
+#include "../Rendering/Shader.h"
 #include "../Object.h"
 
 void SpriteRenderer::draw(Camera* camera, Lighting* light, Transform* transform)
