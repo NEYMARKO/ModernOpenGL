@@ -1,5 +1,5 @@
-#include "Transform.h"
-#include "Joint.h"
+#include "./Components/Transform.h"
+#include "./Joint.h"
 
 #define ERROR_MARGIN 0.5f
 #define DOT_PRODUCT_ALLOWED_ERROR 0.01f

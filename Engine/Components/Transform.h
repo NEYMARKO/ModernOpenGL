@@ -4,7 +4,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <btBulletDynamicsCommon.h>
-#include "Component.h"
+#include "./Component.h"
 
 class Transform : public Component
 {

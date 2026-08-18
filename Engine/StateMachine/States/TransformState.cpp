@@ -1,6 +1,6 @@
 #include <iostream>
 #include "../../Camera.h"
-#include "../../Transform.h"
+#include "../../Components/Transform.h"
 #include "../../Object.h"
 #include "../../EditorCollider.h"
 #include "../StateMachine.h"

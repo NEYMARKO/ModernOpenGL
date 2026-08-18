@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <btBulletDynamicsCommon.h>
-#include "Component.h"
+#include "./Component.h"
 
 class Collider;
 

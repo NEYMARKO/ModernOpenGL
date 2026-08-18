@@ -2,7 +2,8 @@
 #include "glm/glm.hpp"
 #include "./Buffers/VAO.h"
 #include "SceneEntity.h"
-#include "SpriteRenderer.h"
+#include "./Components/SpriteRenderer.h"
+#include "./Components/Transform.h"
 #include "Texture.h"
 
 class Shader;

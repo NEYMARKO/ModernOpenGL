@@ -1,10 +1,10 @@
 #pragma once
 
 #include <array>
-#include "Component.h"
-#include "Texture.h"
-#include "Mesh.h"
-#include "Vertex.h"
+#include "./Component.h"
+#include "../Texture.h"
+#include "../Mesh.h"
+#include "../Vertex.h"
 
 class Camera;
 class Lighting;

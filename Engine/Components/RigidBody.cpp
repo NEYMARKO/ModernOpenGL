@@ -1,8 +1,8 @@
 //#include "Object.h"
-#include "SceneEntity.h"
-#include "Transform.h"
-#include "Collider.h"
-#include "RigidBody.h"
+#include "../SceneEntity.h"
+#include "./Transform.h"
+#include "./Collider.h"
+#include "./RigidBody.h"
 #include <stdexcept>
 
 RigidBody::RigidBody(float mass, float restitution)

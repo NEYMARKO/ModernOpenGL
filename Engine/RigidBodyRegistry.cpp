@@ -1,4 +1,4 @@
-#include "RigidBody.h"
+#include "./Components/RigidBody.h"
 #include "RigidBodyRegistry.h"
 
 std::vector<RigidBodyQueueItem> RigidBodyRegistry::m_queue;

@@ -1,8 +1,8 @@
-#include "Joint.h"
+#include "./Joint.h"
 #include "Mesh.h"
-#include "Transform.h"
-#include "MeshRenderer.h"
-#include "KinematicChain.h"
+#include "./Components/Transform.h"
+#include "./Components/MeshRenderer.h"
+#include "./KinematicChain.h"
 
 #define DISTANCE_BETWEEN_JOINTS 0.025f
 #define ERROR_MARGIN 0.1f

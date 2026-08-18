@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Collider.h"
+#include "./Components/Collider.h"
 #include "Object.h"
-#include "Transform.h"
-#include "MeshRenderer.h"
+#include "./Components/Transform.h"
+#include "./Components/MeshRenderer.h"
 #include "Mesh.h"
 class SphereCollider : public Collider
 {

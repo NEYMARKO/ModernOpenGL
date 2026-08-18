@@ -2,8 +2,8 @@
 #include <iostream>
 #include "glm/gtx/string_cast.hpp"
 #include "SceneEntity.h"
-#include "Transform.h"
-#include "EditorCollider.h"
+#include "./Components/Transform.h"
+#include "./EditorCollider.h"
 
 #ifndef EC_ENABLE_VISUAL_DEBUG
 #define EC_ENABLE_VISUAL_DEBUG

@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 #include <btBulletDynamicsCommon.h>
 
-#include "Material.h"
-#include "Component.h";
+#include "../Material.h"
+#include "./Component.h";
 
 class Collider : public Component
 {

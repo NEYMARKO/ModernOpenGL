@@ -8,8 +8,8 @@
 #include <memory>
 #include "PhysicsWorld.h"
 #include "Object.h"
-#include "Transform.h"
-#include "MeshRenderer.h"
+#include "./Components/Transform.h"
+#include "./Components/MeshRenderer.h"
 #include "MeshLoader.h"
 #include "Mesh.h"
 #include "Material.h"

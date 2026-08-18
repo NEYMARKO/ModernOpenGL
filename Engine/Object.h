@@ -4,9 +4,10 @@
 #include <vector>
 #include <stdexcept>
 
-#include "SceneEntity.h"
-#include "MeshRenderer.h"
-
+#include "./SceneEntity.h"
+#include "./Components/Transform.h"
+#include "./Components/MeshRenderer.h"
+#include "./Components/Component.h"
 
 class Component;
 

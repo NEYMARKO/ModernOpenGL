@@ -143,7 +143,11 @@
     <ClCompile Include="Buffers\VBO.cpp" />
     <ClCompile Include="BulletGizmos.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Components\Component.cpp" />
+    <ClCompile Include="Components\MeshRenderer.cpp" />
+    <ClCompile Include="Components\RigidBody.cpp" />
+    <ClCompile Include="Components\SpriteRenderer.cpp" />
+    <ClCompile Include="Components\Transform.cpp" />
     <ClCompile Include="EditorCollider.cpp" />
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="glad.c" />
@@ -155,17 +159,14 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshLoader.cpp" />
-    <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="PhysicsWorld.cpp" />
     <ClCompile Include="PrintClass.cpp" />
     <ClCompile Include="Ragdoll.cpp" />
     <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="RigidBodyRegistry.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="StateMachine\StateMachine.cpp" />
     <ClCompile Include="StateMachine\States\CameraMoveState.cpp" />
     <ClCompile Include="StateMachine\States\CameraRotateState.cpp" />
@@ -176,7 +177,6 @@
     <ClCompile Include="StateMachine\States\TransformState.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TransformPlane.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -188,8 +188,12 @@
     <ClInclude Include="BulletGizmos.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CapsuleCollider.h" />
-    <ClInclude Include="Collider.h" />
-    <ClInclude Include="Component.h" />
+    <ClInclude Include="Components\Collider.h" />
+    <ClInclude Include="Components\Component.h" />
+    <ClInclude Include="Components\MeshRenderer.h" />
+    <ClInclude Include="Components\RigidBody.h" />
+    <ClInclude Include="Components\SpriteRenderer.h" />
+    <ClInclude Include="Components\Transform.h" />
     <ClInclude Include="EditorCollider.h" />
     <ClInclude Include="EmptyObject.h" />
     <ClInclude Include="Gizmos.h" />
@@ -203,7 +207,6 @@
     <ClInclude Include="SceneEntity.h" />
     <ClInclude Include="SortingAlgorithms.h" />
     <ClInclude Include="RigidBodyRegistry.h" />
-    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="StateMachine\StateMachine.h" />
     <ClInclude Include="StateMachine\States\CameraMoveState.h" />
     <ClInclude Include="StateMachine\States\CameraRotateState.h" />
@@ -220,18 +223,15 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshLoader.h" />
-    <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="PlaneCollider.h" />
     <ClInclude Include="PrintClass.h" />
     <ClInclude Include="Ray.h" />
-    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Transform.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

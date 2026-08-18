@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <glm/gtx/quaternion.hpp>
-#include "../../Transform.h"
+#include "../../Components/Transform.h"
 #include "TransformState.h"
 
 class RotateState : public TransformState

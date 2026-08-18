@@ -5,9 +5,9 @@
 #include <typeindex>
 #include <stdexcept>
 #include <memory>
-#include "Component.h"
-#include "Transform.h"
-#include "EditorCollider.h"
+#include "./Components/Component.h"
+#include "./Components/Transform.h"
+#include "./EditorCollider.h"
 
 struct SceneEntity
 {

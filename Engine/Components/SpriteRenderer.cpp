@@ -1,11 +1,10 @@
-#include "SpriteRenderer.h"
-#include "Camera.h"
-#include "Lighting.h"
-#include "Transform.h"
-#include "ResourceManager.h"
-#include "Shader.h"
-#include "Object.h"
-#include "Transform.h"
+#include "./SpriteRenderer.h"
+#include "../Camera.h"
+#include "../Lighting.h"
+#include "./Transform.h"
+#include "../ResourceManager.h"
+#include "../Shader.h"
+#include "../Object.h"
 
 void SpriteRenderer::draw(Camera* camera, Lighting* light, Transform* transform)
 {

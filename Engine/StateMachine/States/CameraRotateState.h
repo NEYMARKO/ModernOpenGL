@@ -3,7 +3,7 @@
 #include "../../Camera.h"
 #include "./State.h"
 #include "../../Lighting.h"
-#include "../../Transform.h"
+#include "../../Components/Transform.h"
 
 class CameraRotateState : public State
 {

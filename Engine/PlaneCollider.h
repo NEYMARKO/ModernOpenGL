@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Collider.h"
+#include "./Components/Collider.h"
 
 class PlaneCollider : public Collider
 {
