@@ -152,8 +152,8 @@
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Grid.cpp" />
-    <ClCompile Include="Joint.cpp" />
-    <ClCompile Include="KinematicChain.cpp" />
+    <ClCompile Include="IK\IKJoint.cpp" />
+    <ClCompile Include="IK\KinematicChain.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -201,6 +201,8 @@
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Hit.h" />
+    <ClInclude Include="IK\IKJoint.h" />
+    <ClInclude Include="IK\KinematicChain.h" />
     <ClInclude Include="MyBulletDebugDrawer.h" />
     <ClInclude Include="OpenGLIncludes.h" />
     <ClInclude Include="Ragdoll.h" />
@@ -219,8 +221,6 @@
     <ClInclude Include="StateMachine\States\TransformState.h" />
     <ClInclude Include="TransformPlane.h" />
     <ClInclude Include="World.h" />
-    <ClInclude Include="Joint.h" />
-    <ClInclude Include="KinematicChain.h" />
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
@@ -236,22 +236,22 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="CapsuleJoint.txt" />
-    <Text Include="cone.txt" />
-    <Text Include="cubeFlat.txt" />
-    <Text Include="dragonSmooth.txt" />
-    <Text Include="dragonSmoothRotated.txt" />
-    <Text Include="frogSmooth.txt" />
-    <Text Include="joint.txt" />
-    <Text Include="joint1.txt" />
-    <Text Include="joint2.txt" />
-    <Text Include="joint3.txt" />
-    <Text Include="joint4.txt" />
+    <Text Include="Assets\Models\CapsuleJoint.txt" />
+    <Text Include="Assets\Models\cone.txt" />
+    <Text Include="Assets\Models\cubeFlat.txt" />
+    <Text Include="Assets\Models\dragonSmooth.txt" />
+    <Text Include="Assets\Models\dragonSmoothRotated.txt" />
+    <Text Include="Assets\Models\frogSmooth.txt" />
+    <Text Include="Assets\Models\joint.txt" />
+    <Text Include="Assets\Models\joint1.txt" />
+    <Text Include="Assets\Models\joint2.txt" />
+    <Text Include="Assets\Models\joint3.txt" />
+    <Text Include="Assets\Models\joint4.txt" />
+    <Text Include="Assets\Models\planeFlat.txt" />
+    <Text Include="Assets\Models\sphere.txt" />
+    <Text Include="Assets\Models\teddyFlat.txt" />
+    <Text Include="Assets\Models\templeFlat.txt" />
     <Text Include="lightBulb.txt" />
-    <Text Include="planeFlat.txt" />
-    <Text Include="sphere.txt" />
-    <Text Include="teddyFlat.txt" />
-    <Text Include="templeFlat.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="borderBox.frag" />
@@ -268,9 +268,9 @@
     <None Include="texture.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="container.jpg" />
-    <Image Include="light-bulb.png" />
-    <Image Include="sun.png" />
+    <Image Include="Assets\Textures\container.jpg" />
+    <Image Include="Assets\Textures\light-bulb.png" />
+    <Image Include="Assets\Textures\sun.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

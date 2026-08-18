@@ -30,12 +30,6 @@
     <ClCompile Include="Grid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Joint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="KinematicChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Lighting.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -144,11 +138,14 @@
     <ClCompile Include="Components\EditorCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IK\IKJoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IK\KinematicChain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Joint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -156,9 +153,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Gizmos.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KinematicChain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Lighting.h">
@@ -305,54 +299,62 @@
     <ClInclude Include="Components\EditorCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IK\IKJoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IK\KinematicChain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cone.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
-    <Text Include="dragonSmoothRotated.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
-    <Text Include="dragonSmooth.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
-    <Text Include="cubeFlat.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
-    <Text Include="frogSmooth.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
-    <Text Include="joint.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
-    <Text Include="joint1.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
-    <Text Include="joint2.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
-    <Text Include="joint3.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
-    <Text Include="joint4.txt">
-      <Filter>Resource Files\Objects</Filter>
-    </Text>
     <Text Include="lightBulb.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
-    <Text Include="sphere.txt">
+    <Text Include="Assets\Models\CapsuleJoint.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
-    <Text Include="planeFlat.txt">
+    <Text Include="Assets\Models\cone.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
-    <Text Include="teddyFlat.txt">
+    <Text Include="Assets\Models\cubeFlat.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
-    <Text Include="templeFlat.txt">
+    <Text Include="Assets\Models\dragonSmooth.txt">
       <Filter>Resource Files\Objects</Filter>
     </Text>
-    <Text Include="CapsuleJoint.txt" />
+    <Text Include="Assets\Models\dragonSmoothRotated.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\frogSmooth.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\joint.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\joint1.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\joint2.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\joint3.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\joint4.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\planeFlat.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\sphere.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\teddyFlat.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
+    <Text Include="Assets\Models\templeFlat.txt">
+      <Filter>Resource Files\Objects</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="borderBox.frag">
@@ -393,13 +395,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="container.jpg">
-      <Filter>Source Files</Filter>
-    </Image>
-    <Image Include="light-bulb.png">
+    <Image Include="Assets\Textures\container.jpg">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="sun.png">
+    <Image Include="Assets\Textures\light-bulb.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\Textures\sun.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

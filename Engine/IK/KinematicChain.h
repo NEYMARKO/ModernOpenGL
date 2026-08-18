@@ -4,7 +4,7 @@
 #include <memory>
 #include <glm/glm.hpp>
 
-class Joint;
+class IKJoint;
 class Transform;
 class MeshRenderer;
 
@@ -12,7 +12,7 @@ class KinematicChain
 {
 	private:
 		
-		std::vector<std::unique_ptr<Joint>> m_chain;
+		std::vector<std::unique_ptr<IKJoint>> m_chain;
 		std::vector<Transform*> m_jointsTransforms;
 		std::unique_ptr<MeshRenderer> m_jointsMeshRenderer;
 
@@ -45,7 +45,7 @@ class KinematicChain
 		bool ErrorTooSmall();
 		bool targetOutOfReach();
 		glm::vec3 getTargetPos();
-		std::vector<std::unique_ptr<Joint>>* GetAllJoints() { return &m_chain; };
+		std::vector<std::unique_ptr<IKJoint>>* GetAllJoints() { return &m_chain; };
 		std::vector<Transform*>& getJointsTransforms();
 		MeshRenderer* getMeshRenderer();
 		~KinematicChain();

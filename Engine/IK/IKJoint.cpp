@@ -1,9 +1,9 @@
-#include "./Components/Transform.h"
-#include "./Joint.h"
+#include "../Components/Transform.h"
+#include "./IKJoint.h"
 
 #define ERROR_MARGIN 0.5f
 #define DOT_PRODUCT_ALLOWED_ERROR 0.01f
-Joint::Joint(int id, float angleConstraint, float length) :
+IKJoint::IKJoint(int id, float angleConstraint, float length) :
 	m_id{ id }, mAngleConstraint{ angleConstraint },
 	m_parent{ nullptr }, m_child{ nullptr },
 	m_length{ length },
@@ -11,14 +11,14 @@ Joint::Joint(int id, float angleConstraint, float length) :
 
 {}
 
-void Joint::RotateTowardsTarget(const glm::vec3& targetPos)
+void IKJoint::RotateTowardsTarget(const glm::vec3& targetPos)
 {
 	glm::vec3 directionToTarget = glm::normalize(targetPos - m_transform->getPosition());
 	glm::quat rotationQuaternion = glm::rotation(-m_transform->getRightVector(), directionToTarget);
 	m_transform->rotate(rotationQuaternion);
 }
 
-bool Joint::CanRotate()
+bool IKJoint::CanRotate()
 {
 	float parentToChildAngle = glm::acos(glm::dot(m_transform->getForwardVector(), 
 		m_parent->getForwardVector()));
@@ -26,48 +26,48 @@ bool Joint::CanRotate()
 	return abs(parentToChildAngle) < mAngleConstraint ? true : false;
 }
 
-Joint::~Joint()
+IKJoint::~IKJoint()
 {
 	std::cout << "Joint deleted " << std::endl;
 }
 
-void Joint::SetParent(Joint* parent)
+void IKJoint::SetParent(IKJoint* parent)
 {
 	m_parent = parent;
 }
 
-void Joint::SetChild(Joint* child)
+void IKJoint::SetChild(IKJoint* child)
 {
 	m_child = child;
 }
 
-void Joint::SetTempPosition(const glm::vec3& tempPosition)
+void IKJoint::SetTempPosition(const glm::vec3& tempPosition)
 {
 	m_tempPosition = tempPosition;
 }
 
-void Joint::SetPosition(const glm::vec3& position)
+void IKJoint::SetPosition(const glm::vec3& position)
 {
 	m_transform.get()->setPosition(position);
 	//mJointEnd = m_position + (mForward * m_length);
 }
 
-glm::vec3 Joint::getPosition() 
+glm::vec3 IKJoint::getPosition() 
 { 
 	return m_transform->getPosition(); 
 };
 
-glm::vec3 Joint::getTempPosition() 
+glm::vec3 IKJoint::getTempPosition() 
 { 
 	return m_tempPosition; 
 };
 
-glm::vec3 Joint::getForwardVector() 
+glm::vec3 IKJoint::getForwardVector() 
 { 
 	return -m_transform.get()->getRightVector();
 };
 
-glm::vec3 Joint::getJointEnd() 
+glm::vec3 IKJoint::getJointEnd() 
 {
 	return m_transform.get()->getPosition() -
 		m_transform.get()->getRightVector() * m_length;
@@ -75,7 +75,7 @@ glm::vec3 Joint::getJointEnd()
 		m_transform.get()->getForwardVector() * m_length;*/
 };
 
-Transform* Joint::getTransform()
+Transform* IKJoint::getTransform()
 {
 	return m_transform.get();
 }

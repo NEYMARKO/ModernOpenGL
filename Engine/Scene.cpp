@@ -26,12 +26,12 @@ void Scene::loadDefaultScene()
 	//BLENDER: rotate around X for 270 (-90) degrees,	EXPORT: forward: -X, up: Z
 	//forward: -X, up: Z - file: joint.blend
 
-	MeshLoader templeLoader("templeFlat.txt");
+	MeshLoader templeLoader("Assets/Models/templeFlat.txt");
 	std::cout << "DRAGON: \n";
-	MeshLoader dragonLoader("dragonSmooth.txt");
-	MeshLoader frogLoader("frogSmooth.txt");
+	MeshLoader dragonLoader("Assets/Models/dragonSmooth.txt");
+	MeshLoader frogLoader("Assets/Models/frogSmooth.txt");
 	std::cout << "FLOOR: \n";
-	MeshLoader floorLoader("planeFlat.txt");
+	MeshLoader floorLoader("Assets/Models/planeFlat.txt");
 
 	auto templeTransform = Transform(glm::vec3(-5.0f, 4.0f, 0.0f), 
 		glm::quat(), glm::vec3(1.25f, 1.25f, 1.25f));
@@ -116,8 +116,8 @@ void Scene::loadDefaultScene()
 	auto floorRigidBody3 = std::make_unique<RigidBody>(0.0f, 0.8f);
 	m_objectsInScene.back()->addComponent(std::move(floorRigidBody3));
 
-	MeshLoader cubeLoader("cubeFlat.txt");
-	MeshLoader jointLoader("CapsuleJoint.txt");
+	MeshLoader cubeLoader("Assets/Models/cubeFlat.txt");
+	MeshLoader jointLoader("Assets/Models/CapsuleJoint.txt");
 
 	auto cubeTransform = Transform(glm::vec3(3.2f, 1.7f, 0.0f), 
 		glm::quat(), glm::vec3(1.0f, 1.0f, 1.0f));

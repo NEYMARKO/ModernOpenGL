@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include "KinematicChain.h"
+#include "./IK/KinematicChain.h"
 #include "RigidBodyRegistry.h"
 #include "ResourceManager.h"
 #include "Object.h"

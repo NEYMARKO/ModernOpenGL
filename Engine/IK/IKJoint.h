@@ -7,7 +7,7 @@
 
 class Transform;
 
-class Joint
+class IKJoint
 {
 	private:
 
@@ -15,13 +15,13 @@ class Joint
 		glm::vec3 m_tempPosition;
 		int m_id;
 		float mAngleConstraint;
-		Joint* m_parent;
-		Joint* m_child;
+		IKJoint* m_parent;
+		IKJoint* m_child;
 		float m_length;
 
 	public:
 
-		Joint(int id, float angleConstraint, float length/*, Mesh* meshContainer*/);
+		IKJoint(int id, float angleConstraint, float length/*, Mesh* meshContainer*/);
 
 		//Rotates joint's forward vector to face the target
 		void RotateTowardsTarget(const glm::vec3& targetPos);
@@ -29,13 +29,13 @@ class Joint
 		//Returns false if joint has rotated past it's constraint (angle is too big)
 		bool CanRotate();
 
-		void SetParent(Joint* parent);
-		void SetChild(Joint* child);
+		void SetParent(IKJoint* parent);
+		void SetChild(IKJoint* child);
 		void SetPosition(const glm::vec3& position);
 		void SetTempPosition(const glm::vec3& tempPosition);
 
-		Joint* GetChild() { return m_child; };
-		Joint* GetParent() { return m_parent; };
+		IKJoint* GetChild() { return m_child; };
+		IKJoint* GetParent() { return m_parent; };
 		float GetSegmentLength() { return m_length; };
 		int GetID() { return m_id; };
 		glm::vec3 getPosition();
@@ -43,5 +43,5 @@ class Joint
 		glm::vec3 getForwardVector();
 		glm::vec3 getJointEnd();
 		Transform* getTransform();
-		~Joint();
+		~IKJoint();
 };

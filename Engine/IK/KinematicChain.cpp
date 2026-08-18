@@ -1,7 +1,7 @@
-#include "./Joint.h"
-#include "Mesh.h"
-#include "./Components/Transform.h"
-#include "./Components/MeshRenderer.h"
+#include "./IKJoint.h"
+#include "../Mesh.h"
+#include "../Components/Transform.h"
+#include "../Components/MeshRenderer.h"
 #include "./KinematicChain.h"
 
 #define DISTANCE_BETWEEN_JOINTS 0.025f
@@ -13,12 +13,12 @@ KinematicChain::KinematicChain(int numberOfJoints, float angleConstraint,
 	:
 	m_chainOrigin{ chainStartPos }, m_targetTransform{ targetTransform }
 {
-	m_chain.push_back(std::make_unique<Joint>(m_id, angleConstraint, m_hardcodedLength/*, meshContainer*/));
+	m_chain.push_back(std::make_unique<IKJoint>(m_id, angleConstraint, m_hardcodedLength/*, meshContainer*/));
 	m_chain[0]->SetPosition(m_chainOrigin);
 	m_chain[0]->SetTempPosition(m_chainOrigin);
 	for (int i = 1; i < numberOfJoints; i++)
 	{
-		m_chain.push_back(std::make_unique<Joint>(m_id, angleConstraint, m_hardcodedLength));
+		m_chain.push_back(std::make_unique<IKJoint>(m_id, angleConstraint, m_hardcodedLength));
 
 		m_chain[i]->SetPosition(m_chainOrigin + (glm::vec3(-DISTANCE_BETWEEN_JOINTS, 0.0f, 0.0f) *
 			m_chain[i]->GetSegmentLength()  * (float)i));
@@ -43,7 +43,7 @@ void KinematicChain::setMeshRenderer(std::unique_ptr<MeshRenderer> meshRenderer)
 
 void KinematicChain::BackwardsPass()
 {
-	Joint* currentJoint = m_chain.back().get();
+	IKJoint* currentJoint = m_chain.back().get();
 
 	currentJoint->SetTempPosition(m_targetTransform->getPosition() - (currentJoint->getForwardVector() * currentJoint->GetSegmentLength()));
 	currentJoint = currentJoint->GetParent();
@@ -64,7 +64,7 @@ void KinematicChain::ForwardPass()
 {
 	for (int i = 0; i < m_chain.size(); i++)
 	{
-		Joint* joint = m_chain[i].get();
+		IKJoint* joint = m_chain[i].get();
 		if (!joint->GetParent())
 		{
 			continue;
@@ -115,7 +115,7 @@ void KinematicChain::simulate(const int steps)
 	FabrikAlgorithm(steps);
 
 	glm::vec3 jointTargetPos;
-	Joint* joint;
+	IKJoint* joint;
 
 	for (int i = 0; i < m_chain.size(); i++)
 	{
