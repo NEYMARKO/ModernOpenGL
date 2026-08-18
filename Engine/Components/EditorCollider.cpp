@@ -1,8 +1,8 @@
 #include <math.h>
 #include <iostream>
 #include "glm/gtx/string_cast.hpp"
-#include "SceneEntity.h"
-#include "./Components/Transform.h"
+#include "../SceneEntity.h"
+#include "./Transform.h"
 #include "./EditorCollider.h"
 
 #ifndef EC_ENABLE_VISUAL_DEBUG

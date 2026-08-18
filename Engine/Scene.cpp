@@ -9,9 +9,9 @@
 #include "./Components/SpriteRenderer.h"
 //#include "SceneEntity.h"
 //#include "Object.h"
-#include "SphereCollider.h"
-#include "BoxCollider.h"
-#include "./Components/RigidBody.h"
+#include "./Components/Physics/SphereCollider.h"
+#include "./Components/Physics/BoxCollider.h"
+#include "./Components/Physics/RigidBody.h"
 #include "Ragdoll.h"
 #include "Scene.h"
 Scene::Scene(Camera* camera, Lighting* lightSource, std::vector<std::unique_ptr<SceneEntity>>& objectsInScene, Shader* objectShader) 

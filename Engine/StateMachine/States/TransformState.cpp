@@ -2,7 +2,7 @@
 #include "../../Camera.h"
 #include "../../Components/Transform.h"
 #include "../../Object.h"
-#include "../../EditorCollider.h"
+#include "../../Components/EditorCollider.h"
 #include "../StateMachine.h"
 #include "../../PhysicsWorld.h"
 #include "./TransformState.h"

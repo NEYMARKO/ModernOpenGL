@@ -1,8 +1,8 @@
 #include "Camera.h"
 #include "Shader.h"
-#include "EditorCollider.h"
+#include "./Components/EditorCollider.h"
 #include "ResourceManager.h"
-#include "Gizmos.h"
+#include "./Gizmos.h"
 
 Gizmos::Gizmos(Camera* camera, size_t bufferCapacity) :
 	m_camera{ camera }, 

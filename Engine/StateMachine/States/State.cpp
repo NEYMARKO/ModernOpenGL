@@ -8,7 +8,7 @@
 #include "../../Object.h"
 #include "../../Components/Transform.h"
 #include "../../Components/MeshRenderer.h"
-#include "../../EditorCollider.h"
+#include "../../Components/EditorCollider.h"
 #include "../../PhysicsWorld.h"
 #include "./State.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "./Components/Collider.h"
+#include "./Components/Physics/Collider.h"
 #include "Object.h"
 #include "./Components/Transform.h"
 #include "./Components/MeshRenderer.h"

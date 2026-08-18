@@ -7,7 +7,7 @@
 #include <memory>
 #include "./Components/Component.h"
 #include "./Components/Transform.h"
-#include "./EditorCollider.h"
+#include "./Components/EditorCollider.h"
 
 struct SceneEntity
 {
