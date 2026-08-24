@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "../Rendering/Vertex.h"
+#include "../Vertex.h"
 //class for vertex buffer object
 //constructor takes in:
 //		vertices - pointer to the array of data that we want to feed VBO with

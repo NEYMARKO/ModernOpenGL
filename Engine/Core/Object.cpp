@@ -7,7 +7,7 @@
 #include "../Components/Physics/SphereCollider.h"
 #include "../Components/Component.h"
 //#include "PhysicsWorld.h"
-#include "../World.h"
+#include "../Core/World.h"
 #include "../Physics/RigidBodyRegistry.h"
 #include "./Object.h"
 

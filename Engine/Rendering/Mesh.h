@@ -5,9 +5,9 @@
 #include <array>
 #include <glm/glm.hpp>
 
-#include "../Buffers/VAO.h"
-#include "../Buffers/VBO.h"
-#include "../Buffers/EBO.h"
+#include "../Rendering/Buffers/VAO.h"
+#include "../Rendering/Buffers/VBO.h"
+#include "../Rendering/Buffers/EBO.h"
 
 struct Vertex;
 struct VertexTex;

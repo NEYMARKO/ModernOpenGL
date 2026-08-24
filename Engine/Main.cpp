@@ -4,7 +4,7 @@
 #include "./Rendering/Lighting.h"
 #include "./Rendering/Grid.h"
 #include "./Rendering/Gizmos.h"
-#include "Window.h"
+#include "./Window/Window.h"
 #include <memory>
 #include "./Physics/PhysicsWorld.h"
 #include "./Core/Object.h"

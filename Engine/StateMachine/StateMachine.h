@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <btBulletDynamicsCommon.h>
 //#include "OpenGLIncludes.h"
-#include "../Window.h"
+#include "../Window/Window.h"
 #include "./States/State.h"
 #include "../Core/SceneEntity.h"
 #include "../Core/Object.h"

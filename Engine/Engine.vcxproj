@@ -138,9 +138,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Buffers\EBO.cpp" />
-    <ClCompile Include="Buffers\VAO.cpp" />
-    <ClCompile Include="Buffers\VBO.cpp" />
     <ClCompile Include="Components\Component.cpp" />
     <ClCompile Include="Components\EditorCollider.cpp" />
     <ClCompile Include="Components\MeshRenderer.cpp" />
@@ -148,14 +145,17 @@
     <ClCompile Include="Components\SpriteRenderer.cpp" />
     <ClCompile Include="Components\Transform.cpp" />
     <ClCompile Include="Core\Object.cpp" />
+    <ClCompile Include="Core\PrintClass.cpp" />
     <ClCompile Include="IK\IKJoint.cpp" />
     <ClCompile Include="IK\KinematicChain.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Physics\PhysicsWorld.cpp" />
     <ClCompile Include="Physics\Ragdoll.cpp" />
     <ClCompile Include="Physics\RigidBodyRegistry.cpp" />
-    <ClCompile Include="PrintClass.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="Rendering\Buffers\EBO.cpp" />
+    <ClCompile Include="Rendering\Buffers\VAO.cpp" />
+    <ClCompile Include="Rendering\Buffers\VBO.cpp" />
     <ClCompile Include="Rendering\BulletGizmos.cpp" />
     <ClCompile Include="Rendering\Camera.cpp" />
     <ClCompile Include="Rendering\Gizmos.cpp" />
@@ -178,12 +178,9 @@
     <ClCompile Include="StateMachine\States\TransformState.cpp" />
     <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="TransformPlane.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Buffers\EBO.h" />
-    <ClInclude Include="Buffers\VAO.h" />
-    <ClInclude Include="Buffers\VBO.h" />
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Components\EditorCollider.h" />
     <ClInclude Include="Components\MeshRenderer.h" />
@@ -197,7 +194,9 @@
     <ClInclude Include="Components\Transform.h" />
     <ClInclude Include="Core\EmptyObject.h" />
     <ClInclude Include="Core\Object.h" />
+    <ClInclude Include="Core\PrintClass.h" />
     <ClInclude Include="Core\SceneEntity.h" />
+    <ClInclude Include="Core\World.h" />
     <ClInclude Include="Hit.h" />
     <ClInclude Include="IK\IKJoint.h" />
     <ClInclude Include="IK\KinematicChain.h" />
@@ -205,6 +204,9 @@
     <ClInclude Include="Physics\Ragdoll.h" />
     <ClInclude Include="Physics\RigidBodyPicker.h" />
     <ClInclude Include="Physics\RigidBodyRegistry.h" />
+    <ClInclude Include="Rendering\Buffers\EBO.h" />
+    <ClInclude Include="Rendering\Buffers\VAO.h" />
+    <ClInclude Include="Rendering\Buffers\VBO.h" />
     <ClInclude Include="Rendering\BulletGizmos.h" />
     <ClInclude Include="Rendering\Camera.h" />
     <ClInclude Include="Rendering\Gizmos.h" />
@@ -229,10 +231,8 @@
     <ClInclude Include="StateMachine\States\State.h" />
     <ClInclude Include="StateMachine\States\TransformState.h" />
     <ClInclude Include="TransformPlane.h" />
-    <ClInclude Include="World.h" />
-    <ClInclude Include="PrintClass.h" />
     <ClInclude Include="Ray.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="Window\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\Models\CapsuleJoint.txt" />

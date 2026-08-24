@@ -5,7 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <cerrno>
-#include "../PrintClass.h"
+#include "../Core/PrintClass.h"
 
 std::string get_file_contents(const char* filename);
 

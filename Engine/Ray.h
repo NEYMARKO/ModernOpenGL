@@ -3,9 +3,9 @@
 //#include "OpenGLIncludes.h"
 #include <glm/glm.hpp>
 //#include <glm/gtc/matrix_transform.hpp>
-#include "./Buffers/VAO.h"
-#include "./Buffers/VBO.h"
-#include "./Buffers/EBO.h"
+#include "./Rendering/Buffers/VAO.h"
+#include "./Rendering/Buffers/VBO.h"
+#include "./Rendering/Buffers/EBO.h"
 
 class Shader;
 class Camera;

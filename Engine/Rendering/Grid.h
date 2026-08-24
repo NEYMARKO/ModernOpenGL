@@ -1,7 +1,7 @@
 #pragma once
-#include "../Buffers/VBO.h"
-#include "../Buffers/EBO.h"
-#include "../Buffers/VAO.h"
+#include "./Buffers/VBO.h"
+#include "./Buffers/EBO.h"
+#include "./Buffers/VAO.h"
 #include "glm/glm.hpp"
 
 class Shader;

@@ -1,6 +1,6 @@
 #pragma once
-#include "../Buffers/VAO.h"
-#include "../Buffers/VBO.h"
+#include "../Rendering/Buffers/VAO.h"
+#include "../Rendering/Buffers/VBO.h"
 #include "MyBulletDebugDrawer.h"
 
 class Camera;
