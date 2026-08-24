@@ -1,5 +1,5 @@
 #include "../Rendering/Mesh.h"
-#include "../Object.h"
+#include "../Core/Object.h"
 #include "./Transform.h"
 #include "../Rendering/Camera.h"
 #include "../Rendering/Lighting.h"

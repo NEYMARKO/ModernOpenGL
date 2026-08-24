@@ -6,8 +6,8 @@
 //#include "OpenGLIncludes.h"
 #include "../Window.h"
 #include "./States/State.h"
-#include "../SceneEntity.h"
-#include "../Object.h"
+#include "../Core/SceneEntity.h"
+#include "../Core/Object.h"
 //#include "Camera.h"
 class Camera;
 class Lighting;

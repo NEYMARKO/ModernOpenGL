@@ -1,5 +1,5 @@
 //#include "Object.h"
-#include "../../SceneEntity.h"
+#include "../../Core/SceneEntity.h"
 #include "../Transform.h"
 #include "./Collider.h"
 #include "./RigidBody.h"

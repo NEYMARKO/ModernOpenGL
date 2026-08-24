@@ -6,7 +6,7 @@
 //#include "Object.h"
 #include "./RigidBodyRegistry.h"
 #include "./PhysicsWorld.h"
-#include "../SceneEntity.h"
+#include "../Core/SceneEntity.h"
 
 #define DEFAULT_WORLD_ID 1
 

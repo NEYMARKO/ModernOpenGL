@@ -1,7 +1,7 @@
 #include <iostream>
 #include "../../Rendering/Camera.h"
 #include "../../Components/Transform.h"
-#include "../../Object.h"
+#include "../../Core/Object.h"
 #include "../../Components/EditorCollider.h"
 #include "../StateMachine.h"
 #include "../../Physics/PhysicsWorld.h"

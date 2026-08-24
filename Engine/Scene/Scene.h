@@ -3,11 +3,11 @@
 #include <vector>
 #include <memory>
 
-#include "./IK/KinematicChain.h"
-#include "./Physics/RigidBodyRegistry.h"
-#include "ResourceManager.h"
-#include "Object.h"
-#include "SceneEntity.h"
+#include "../IK/KinematicChain.h"
+#include "../Physics/RigidBodyRegistry.h"
+#include "./ResourceManager.h"
+#include "../Core/Object.h"
+#include "../Core/SceneEntity.h"
 
 //Forward declaration
 class Shader;

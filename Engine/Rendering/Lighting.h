@@ -1,7 +1,7 @@
 #pragma once
 #include "glm/glm.hpp"
 #include "../Buffers/VAO.h"
-#include "../SceneEntity.h"
+#include "../Core/SceneEntity.h"
 #include "../Components/SpriteRenderer.h"
 #include "../Components/Transform.h"
 #include "./Texture.h"

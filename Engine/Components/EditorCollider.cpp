@@ -1,7 +1,7 @@
 #include <math.h>
 #include <iostream>
 #include "glm/gtx/string_cast.hpp"
-#include "../SceneEntity.h"
+#include "../Core/SceneEntity.h"
 #include "./Transform.h"
 #include "./EditorCollider.h"
 

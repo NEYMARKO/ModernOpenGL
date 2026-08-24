@@ -2,10 +2,10 @@
 
 #include <glm/glm.hpp>
 
-#include "Scene.h"
+#include "./Scene/Scene.h"
 #include "./Physics/PhysicsWorld.h"
 #include "./Physics/RigidBodyRegistry.h"
-#include "ResourceManager.h"
+#include "./Scene/ResourceManager.h"
 
 class World
 {

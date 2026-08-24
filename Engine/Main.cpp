@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "./Scene/Scene.h"
 #include "./StateMachine/StateMachine.h"
 #include "./Rendering/Camera.h"
 #include "./Rendering/Lighting.h"
@@ -7,7 +7,7 @@
 #include "Window.h"
 #include <memory>
 #include "./Physics/PhysicsWorld.h"
-#include "Object.h"
+#include "./Core/Object.h"
 #include "./Components/Transform.h"
 #include "./Components/MeshRenderer.h"
 #include "./Rendering/MeshLoader.h"
@@ -16,7 +16,7 @@
 #include "Ray.h"
 #include "./Physics/Ragdoll.h"
 #include "./Rendering/BulletGizmos.h"
-#include "SceneEntity.h"
+#include "./Core/SceneEntity.h"
 
 #include <filesystem>
 

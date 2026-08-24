@@ -5,7 +5,7 @@
 #include "../../Rendering/Camera.h"
 #include "../../Rendering/Lighting.h"
 #include "../../Ray.h"
-#include "../../Object.h"
+#include "../../Core/Object.h"
 #include "../../Components/Transform.h"
 #include "../../Components/MeshRenderer.h"
 #include "../../Components/EditorCollider.h"

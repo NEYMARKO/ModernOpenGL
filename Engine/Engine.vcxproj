@@ -147,10 +147,10 @@
     <ClCompile Include="Components\Physics\RigidBody.cpp" />
     <ClCompile Include="Components\SpriteRenderer.cpp" />
     <ClCompile Include="Components\Transform.cpp" />
+    <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="IK\IKJoint.cpp" />
     <ClCompile Include="IK\KinematicChain.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Object.cpp" />
     <ClCompile Include="Physics\PhysicsWorld.cpp" />
     <ClCompile Include="Physics\Ragdoll.cpp" />
     <ClCompile Include="Physics\RigidBodyRegistry.cpp" />
@@ -167,7 +167,7 @@
     <ClCompile Include="Rendering\MeshLoader.cpp" />
     <ClCompile Include="Rendering\Shader.cpp" />
     <ClCompile Include="Rendering\Texture.cpp" />
-    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="StateMachine\StateMachine.cpp" />
     <ClCompile Include="StateMachine\States\CameraMoveState.cpp" />
     <ClCompile Include="StateMachine\States\CameraRotateState.cpp" />
@@ -195,7 +195,9 @@
     <ClInclude Include="Components\Physics\SphereCollider.h" />
     <ClInclude Include="Components\SpriteRenderer.h" />
     <ClInclude Include="Components\Transform.h" />
-    <ClInclude Include="EmptyObject.h" />
+    <ClInclude Include="Core\EmptyObject.h" />
+    <ClInclude Include="Core\Object.h" />
+    <ClInclude Include="Core\SceneEntity.h" />
     <ClInclude Include="Hit.h" />
     <ClInclude Include="IK\IKJoint.h" />
     <ClInclude Include="IK\KinematicChain.h" />
@@ -216,9 +218,8 @@
     <ClInclude Include="Rendering\Shader.h" />
     <ClInclude Include="Rendering\Texture.h" />
     <ClInclude Include="Rendering\Vertex.h" />
-    <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="SceneEntity.h" />
-    <ClInclude Include="SortingAlgorithms.h" />
+    <ClInclude Include="Scene\ResourceManager.h" />
+    <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="StateMachine\StateMachine.h" />
     <ClInclude Include="StateMachine\States\CameraMoveState.h" />
     <ClInclude Include="StateMachine\States\CameraRotateState.h" />
@@ -229,10 +230,8 @@
     <ClInclude Include="StateMachine\States\TransformState.h" />
     <ClInclude Include="TransformPlane.h" />
     <ClInclude Include="World.h" />
-    <ClInclude Include="Object.h" />
     <ClInclude Include="PrintClass.h" />
     <ClInclude Include="Ray.h" />
-    <ClInclude Include="Scene.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
